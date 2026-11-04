@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="跑步课表">
+<title>跑步课表</title>
+<style>
+:root{
+  --bg:#F5F4F0; --card:#FFFFFF; --line:#E5E3DC;
+  --ink:#2C2C2A; --ink2:#6B6A64; --ink3:#9B9A93;
+  --green:#3B6D11; --green-l:#EAF3DE; --amber:#854F0B; --amber-l:#FAEEDA;
+  --blue:#185FA5; --blue-l:#E6F1FB; --red:#A32D2D;
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif;
+  background:var(--bg); color:var(--ink);
+  padding-bottom:90px; font-size:15px;
+}
+.wrap{max-width:520px;margin:0 auto;padding:0 16px}
+header{
+  padding:calc(env(safe-area-inset-top,0px) + 18px) 0 6px;
+  display:flex;align-items:baseline;justify-content:space-between;
+}
+header h1{font-size:22px;font-weight:600;letter-spacing:.5px}
+header .sub{font-size:12px;color:var(--ink3)}
+.tabs{
+  position:fixed;bottom:0;left:0;right:0;background:var(--card);
+  border-top:1px solid var(--line);display:flex;
+  padding-bottom:env(safe-area-inset-bottom,0px);z-index:50;
+}
+.tabs button{
+  flex:1;background:none;border:none;padding:10px 0 8px;
+  font-size:11px;color:var(--ink3);font-family:inherit;cursor:pointer;
+}
+.tabs button .ic{display:block;font-size:20px;margin-bottom:2px}
+.tabs button.on{color:var(--green)}
+.page{display:none;padding-top:10px}
+.page.on{display:block}
+.seg{display:flex;align-items:center;justify-content:space-between;margin:6px 0 12px}
+.seg .wk{font-size:14px;font-weight:500}
+.seg button{
+  background:var(--card);border:1px solid var(--line);border-radius:8px;
+  padding:5px 12px;font-size:13px;color:var(--ink2);font-family:inherit;cursor:pointer;
+}
+.seg button.today{color:var(--green);border-color:var(--green)}
+.day{margin-bottom:14px}
+.dayname{font-size:12px;color:var(--ink3);margin:0 4px 6px;display:flex;justify-content:space-between}
+.dayname .d{
+  background:var(--green);color:#fff;border-radius:10px;padding:1px 8px;
+  font-size:11px;
+}
+.dayname .d.rest{background:transparent;color:var(--ink3)}
+.item{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:13px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;
+  cursor:pointer;position:relative;
+}
+.item:active{background:#FBFAF7}
+.item .check{
+  width:24px;height:24px;border-radius:50%;border:1.5px solid #C9C7BF;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:#fff;transition:.15s;
+}
+.item.done .check{background:var(--green);border-color:var(--green)}
+.item .info{flex:1;min-width:0}
+.item .type{font-size:15px;font-weight:500}
+.item .meta{font-size:12px;color:var(--ink2);margin-top:3px}
+.item .act{font-size:12px;color:var(--green);margin-top:3px}
+.item.done{border-color:var(--green)}
+.item.done .type{color:var(--ink2)}
+.addrow{
+  border:1px dashed #C9C7BF;border-radius:var(--radius);padding:11px;
+  text-align:center;color:var(--ink3);font-size:13px;cursor:pointer;background:transparent;
+  width:100%;font-family:inherit;margin-bottom:8px;
+}
+.statcard{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;margin-bottom:12px;
+}
+.statcard h3{font-size:13px;color:var(--ink2);font-weight:500;margin-bottom:10px}
+.bignum{font-size:30px;font-weight:600;color:var(--green)}
+.bignum small{font-size:14px;color:var(--ink2);font-weight:400}
+.bar{height:10px;background:#EDEBE5;border-radius:5px;overflow:hidden;margin-top:10px}
+.bar i{display:block;height:100%;background:var(--green);border-radius:5px;transition:.3s}
+.grid{display:grid;grid-template-columns:repeat(14,1fr);gap:4px}
+.cell{aspect-ratio:1;border-radius:3px;background:#EDEBE5}
+.cell.l1{background:#C0DD97}.cell.l2{background:#97C459}.cell.l3{background:#3B6D11}
+.row{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:13px 14px;margin-bottom:8px;
+}
+.row .top{display:flex;justify-content:space-between;align-items:baseline}
+.row .dt{font-size:12px;color:var(--ink3)}
+.row .tag{
+  font-size:11px;background:var(--green-l);color:var(--green);
+  border-radius:6px;padding:2px 8px;
+}
+.row .tag.manual{background:var(--blue-l);color:var(--blue)}
+.row .main{font-size:16px;font-weight:500;margin-top:5px}
+.row .meta{font-size:12px;color:var(--ink2);margin-top:4px}
+.fab{
+  position:fixed;right:18px;bottom:calc(env(safe-area-inset-bottom,0px) + 70px);
+  width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;
+  border:none;font-size:26px;cursor:pointer;z-index:40;
+  box-shadow:0 4px 14px rgba(59,109,17,.35);line-height:1;
+}
+.mask{
+  position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;
+  display:none;align-items:flex-end;justify-content:center;
+}
+.mask.on{display:flex}
+.sheet{
+  background:var(--card);width:100%;max-width:520px;
+  border-radius:18px 18px 0 0;padding:20px 18px calc(env(safe-area-inset-bottom,0px) + 20px);
+}
+.sheet h2{font-size:16px;font-weight:600;margin-bottom:14px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;color:var(--ink2);margin-bottom:5px}
+.field input,.field select{
+  width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;
+  font-size:15px;font-family:inherit;background:var(--bg);color:var(--ink);
+  -webkit-appearance:none;appearance:none;
+}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B6A64' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.btnrow{display:flex;gap:10px;margin-top:16px}
+.btnrow button{
+  flex:1;padding:13px;border-radius:12px;font-size:15px;font-weight:500;
+  font-family:inherit;border:none;cursor:pointer;
+}
+.primary{background:var(--green);color:#fff}
+.ghost{background:var(--bg);color:var(--ink2);border:1px solid var(--line)!important}
+.danger{background:#FCEBEB;color:var(--red)}
+.empty{text-align:center;color:var(--ink3);font-size:13px;padding:36px 0}
+.toast{
+  position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);
+  background:#2C2C2A;color:#fff;font-size:13px;padding:9px 18px;border-radius:20px;
+  opacity:0;transition:.25s;z-index:200;pointer-events:none;
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.linklist{margin-top:4px}
+.linklist button{
+  display:flex;justify-content:space-between;width:100%;background:var(--card);
+  border:1px solid var(--line);border-radius:var(--radius);padding:14px;
+  font-size:14px;font-family:inherit;color:var(--ink);margin-bottom:8px;cursor:pointer;
+}
+.linklist button span{color:var(--ink3);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>跑步课表</h1>
+    <span class="sub" id="subline"></span>
+  </header>
+
+  <!-- 课表页 -->
+  <div class="page on" id="page-plan">
+    <div class="seg">
+      <button id="prevWeek">‹ 上周</button>
+      <span class="wk" id="weekLabel"></span>
+      <button id="nextWeek" class="today" style="display:none">回到本周 ›</button>
+    </div>
+    <div id="planList"></div>
+    <button class="addrow" onclick="openEditor('plan')">＋ 添加课表项</button>
+  </div>
+
+  <!-- 记录页 -->
+  <div class="page" id="page-log">
+    <div id="logList"></div>
+    <div class="empty" id="logEmpty" style="display:none">还没有记录<br>跑完在课表里点完成，或手动补一条</div>
+  </div>
+
+  <!-- 统计页 -->
+  <div class="page" id="page-stat">
+    <div class="statcard">
+      <h3>本周完成</h3>
+      <div class="bignum" id="stWeek"><small></small></div>
+      <div class="bar"><i id="stWeekBar" style="width:0%"></i></div>
+    </div>
+    <div class="statcard">
+      <h3>累计</h3>
+      <div style="display:flex;gap:26px" id="stTotal"></div>
+    </div>
+    <div class="statcard">
+      <h3>最近 14 周打卡</h3>
+      <div class="grid" id="heatmap"></div>
+      <div style="font-size:11px;color:var(--ink3);margin-top:8px">每格一天 · 颜色越深完成越多</div>
+    </div>
+  </div>
+
+  <!-- 设置页 -->
+  <div class="page" id="page-set">
+    <div class="linklist">
+      <button onclick="exportData()">导出备份（JSON 文件）<span>存到文件 App / 网盘</span></button>
+      <button onclick="document.getElementById('impFile').click()">导入备份<span>从 JSON 恢复</span></button>
+      <button onclick="clearAll()" style="color:var(--red)">清空全部数据<span>不可恢复，先导出</span></button>
+    </div>
+    <input type="file" id="impFile" accept=".json" style="display:none" onchange="importData(this)">
+    <div class="statcard" style="margin-top:14px">
+      <h3>iPhone 使用方法</h3>
+      <div style="font-size:13px;color:var(--ink2);line-height:1.8">
+        1. 用 Safari 打开本页<br>
+        2. 点分享按钮 → 添加到主屏幕<br>
+        3. 以后从主屏幕图标进入，就是全屏 App
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="tabs">
+  <button class="on" data-p="page-plan" onclick="tab(this)"><span class="ic">📅</span>课表</button>
+  <button data-p="page-log" onclick="tab(this)"><span class="ic">📝</span>记录</button>
+  <button data-p="page-stat" onclick="tab(this)"><span class="ic">📊</span>统计</button>
+  <button data-p="page-set" onclick="tab(this)"><span class="ic">⚙️</span>设置</button>
+</nav>
+
+<button class="fab" onclick="openEditor('manual')" title="手动补一条">＋</button>
+
+<div class="mask" id="mask" onclick="if(event.target===this)closeSheet()">
+  <div class="sheet" id="sheet"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const TYPES=["轻松跑","配速跑","间歇跑","长距离","恢复跑","其他"];
+const DN=["周一","周二","周三","周四","周五","周六","周日"];
+const KEY="runplan_v1";
+let db=JSON.parse(localStorage.getItem(KEY)||'{"tpl":[],"recs":[]}');
+let weekOffset=0;
+
+function save(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function esc(s){return String(s??"").replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]))}
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),1600)}
+
+function monday(d){const x=new Date(d);const w=(x.getDay()+6)%7;x.setDate(x.getDate()-w);x.setHours(0,0,0,0);return x}
+function iso(d){const p=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())}
+function fmtCN(s){const [y,m,d]=s.split("-");return m+"月"+(+d)+"日"}
+function weekBase(){const b=monday(new Date());b.setDate(b.getDate()+weekOffset*7);return b}
+function pace(km,min){if(!km||!min||km<=0)return"";const t=min/km*60;return Math.floor(t)+"'"+String(Math.round(t%60)).padStart(2,"0")+'"}
+
+function tab(btn){
+  document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("on"));
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("on"));
+  btn.classList.add("on");
+  document.getElementById(btn.dataset.p).classList.add("on");
+  renderAll();
+}
+
+/* ---------- 课表 ---------- */
+function renderPlan(){
+  const base=weekBase();
+  const end=new Date(base);end.setDate(end.getDate()+6);
+  document.getElementById("weekLabel").textContent=
+    (weekOffset===0?"本周 · ":"")+(base.getMonth()+1)+"/"+base.getDate()+" - "+(end.getMonth()+1)+"/"+end.getDate();
+  document.getElementById("nextWeek").style.display=weekOffset<0?"":"none";
+  const box=document.getElementById("planList");box.innerHTML="";
+  const wk=(weekOffset===0);
+  for(let i=0;i<7;i++){
+    const d=new Date(base);d.setDate(d.getDate()+i);
+    const ds=iso(d);
+    const items=db.tpl.filter(t=>t.weekday===i);
+    const recsHere=db.recs.filter(r=>r.date===ds);
+    const isToday=ds===iso(new Date());
+    const h=`<div class="day"><div class="dayname">
+      <span>${DN[i]}${isToday?'<span class="d">今天</span>':""}</span>
+      <span style="font-size:11px">${(+d.getMonth()+1)}/${d.getDate()}</span></div>`;
+    let inner="";
+    items.forEach(t=>{
+      const rec=recsHere.find(r=>r.tplId===t.id);
+      const done=!!rec;
+      inner+=`<div class="item ${done?"done":""}" onclick="openEditor('done','${t.id}','${ds}')">
+        <div class="check">${done?"✓":""}</div>
+        <div class="info">
+          <div class="type">${esc(t.type)}${t.km?" · "+t.km+" km":""}</div>
+          ${t.note?`<div class="meta">${esc(t.note)}</div>`:""}
+          ${done?`<div class="act">已完成 ${rec.km?rec.km+" km":""}${rec.km&&rec.min?" · ":""}${rec.min?rec.min+" 分钟":""}${pace(rec.km,rec.min)?" · 配速 "+pace(rec.km,rec.min):""}</div>`:""}
+        </div></div>`;
+    });
+    recsHere.filter(r=>!r.tplId).forEach(r=>{
+      inner+=`<div class="item done" onclick="openEditor('recEdit','${r.id}')">
+        <div class="check">✓</div>
+        <div class="info"><div class="type">加练 · ${esc(r.type||"跑步")}${r.km?" · "+r.km+" km":""}</div>
+        <div class="act">已完成 ${r.km?r.km+" km":""}${r.min?r.min+" 分钟":""}</div></div></div>`;
+    });
+    if(!items.length&&!recsHere.length)
+      inner=`<div style="font-size:13px;color:var(--ink3);padding:6px 4px">休息日 / 无安排</div>`;
+    box.insertAdjacentHTML("beforeend",h+inner+"</div>");
+  }
+  document.getElementById("subline").textContent="共 "+db.tpl.length+" 项课表 · "+db.recs.length+" 条记录";
+}
+
+/* ---------- 记录 ---------- */
+function renderLog(){
+  const list=[...db.recs].sort((a,b)=>b.date.localeCompare(a.date));
+  const box=document.getElementById("logList");box.innerHTML="";
+  document.getElementById("logEmpty").style.display=list.length?"none":"";
+  let cur="";
+  list.forEach(r=>{
+    if(r.date!==cur){cur=r.date;
+      box.insertAdjacentHTML("beforeend",`<div style="font-size:12px;color:var(--ink3);margin:10px 4px 6px">${fmtCN(r.date)}</div>`);}
+    box.insertAdjacentHTML("beforeend",`<div class="row" onclick="openEditor('${r.tplId?"doneTpl":"recEdit"}','${r.tplId||r.id}','${r.date}')">
+      <div class="top"><span class="dt">${r.tplId?"课表完成":"手动补录"}</span>
+      <span class="tag ${r.tplId?"":"manual"}">${esc(r.type)}</span></div>
+      <div class="main">${r.km?r.km+" km":""}${r.min?" · "+r.min+" 分钟":""}</div>
+      ${pace(r.km,r.min)?`<div class="meta">平均配速 ${pace(r.km,r.min)} /km</div>`:""}
+      ${r.note?`<div class="meta">${esc(r.note)}</div>`:""}</div>`);
+  });
+}
+
+/* ---------- 统计 ---------- */
+function renderStat(){
+  const base=weekBase(),end=new Date(base);end.setDate(end.getDate()+6);
+  const wkRecs=db.recs.filter(r=>r.date>=iso(base)&&r.date<=iso(end));
+  const wkDone=wkRecs.filter(r=>r.tplId).length;
+  const wkTotal=db.tpl.length;
+  const wkKm=wkRecs.reduce((s,r)=>s+(+r.km||0),0);
+  document.getElementById("stWeek").innerHTML=
+    wkDone+" / "+wkTotal+' <small>次 · '+wkKm.toFixed(1)+' km</small>';
+  document.getElementById("stWeekBar").style.width=(wkTotal?wkDone/wkTotal*100:0)+"%";
+  const totalKm=db.recs.reduce((s,r)=>s+(+r.km||0),0);
+  const totalMin=db.recs.reduce((s,r)=>s+(+r.min||0),0);
+  document.getElementById("stTotal").innerHTML=
+    `<div><div class="bignum">${db.recs.length}<small> 次</small></div><div style="font-size:12px;color:var(--ink2)">打卡</div></div>
+     <div><div class="bignum">${totalKm.toFixed(1)}<small> km</small></div><div style="font-size:12px;color:var(--ink2)">总里程</div></div>
+     <div><div class="bignum">${Math.round(totalMin/60)}<small> h</small></div><div style="font-size:12px;color:var(--ink2)">总时长</div></div>`;
+  const hm=document.getElementById("heatmap");hm.innerHTML="";
+  const today=new Date();const endH=monday(today);endH.setDate(endH.getDate()+6);
+  for(let w=13;w>=0;w--){
+    for(let i=0;i<7;i++){
+      const d=new Date(endH);d.setDate(d.getDate()-w*7+(6-i)*0+(i-6));d.setTime(endH.getTime());d.setDate(endH.getDate()-w*7+i);
+      const ds=iso(d);
+      const n=db.recs.filter(r=>r.date===ds).length;
+      const c=document.createElement("div");c.className="cell"+(n?(n===1?" l1":n===2?" l2":" l3"):"");
+      hm.appendChild(c);
+    }
+  }
+}
+
+/* ---------- 弹层 ---------- */
+function openSheet(html){document.getElementById("sheet").innerHTML=html;document.getElementById("mask").classList.add("on")}
+function closeSheet(){document.getElementById("mask").classList.remove("on")}
+
+function openEditor(kind,id,date){
+  if(kind==="plan"){
+    openSheet(`<h2>添加课表项</h2>
+      <div class="field"><label>星期几</label><select id="fWd">${DN.map((n,i)=>`<option value="${i}">${n}</option>`).join("")}</select></div>
+      <div class="field"><label>课表类型</label><select id="fType">${TYPES.map(t=>`<option>${t}</option>`).join("")}</select></div>
+      <div class="field"><label>目标距离（km，可留空）</label><input id="fKm" type="number" inputmode="decimal" step="0.1" placeholder="如 6"></div>
+      <div class="field"><label>备注（可选）</label><input id="fNote" placeholder="如：有氧心率 140-150"></div>
+      <div class="btnrow"><button class="primary" onclick="addTpl()">添加</button><button class="ghost" onclick="closeSheet()">取消</button></div>`);
+  }
+  else if(kind==="done"){
+    const t=db.tpl.find(x=>x.id===id);
+    const rec=db.recs.find(r=>r.tplId===id&&r.date===date);
+    openSheet(`<h2>${esc(t.type)} · ${fmtCN(date)}</h2>
+      <div class="field"><label>实际距离（km）</label><input id="fKm" type="number" inputmode="decimal" step="0.1" value="${rec?rec.km||"":""}" placeholder="手表/华为上看到的"></div>
+      <div class="field"><label>用时（分钟）</label><input id="fMin" type="number" inputmode="numeric" value="${rec?rec.min||"":""}" placeholder="如 35"></div>
+      <div class="field"><label>备注</label><input id="fNote" value="${rec?esc(rec.note||""):""}" placeholder="今天状态如何"></div>
+      <div class="btnrow">
+        <button class="primary" onclick="saveDone('${id}','${date}')">${rec?"保存修改":"✓ 标记完成"}</button>
+        ${rec?`<button class="danger" onclick="delRec('${rec.id}')">删除记录</button>`:`<button class="ghost" onclick="closeSheet()">取消</button>`}
+      </div>`);
+  }
+  else if(kind==="doneTpl"){
+    const r=db.recs.find(x=>x.id===id);
+    if(!r)return;id=r.id;
+    openSheet(`<h2>记录 · ${fmtCN(r.date)}</h2>
+      <div class="field"><label>实际距离（km）</label><input id="fKm" type="number" inputmode="decimal" step="0.1" value="${r.km||""}"></div>
+      <div class="field"><label>用时（分钟）</label><input id="fMin" type="number" inputmode="numeric" value="${r.min||""}"></div>
+      <div class="field"><label>备注</label><input id="fNote" value="${esc(r.note||"")}"></div>
+      <div class="btnrow"><button class="primary" onclick="saveRecEdit('${r.id}')">保存</button>
+      <button class="danger" onclick="delRec('${r.id}')">删除</button></div>`);
+  }
+  else if(kind==="recEdit"){
+    const r=db.recs.find(x=>x.id===id);
+    openSheet(`<h2>${r?"编辑记录":"手动补一条"}</h2>
+      <div class="field"><label>日期</label><input id="fDate" type="date" value="${r?r.date:iso(new Date())}"></div>
+      <div class="field"><label>类型</label><select id="fType">${TYPES.map(t=>`<option ${r&&r.type===t?"selected":""}>${t}</option>`).join("")}</select></div>
+      <div class="field"><label>距离（km）</label><input id="fKm" type="number" inputmode="decimal" step="0.1" value="${r?r.km||"":""}" placeholder="如 8.2"></div>
+      <div class="field"><label>用时（分钟）</label><input id="fMin" type="number" inputmode="numeric" value="${r?r.min||"":""}" placeholder="如 42"></div>
+      <div class="field"><label>备注</label><input id="fNote" value="${r?esc(r.note||""):""}"></div>
+      <div class="btnrow">${r?`<button class="primary" onclick="saveRecEdit('${r.id}')">保存</button><button class="danger" onclick="delRec('${r.id}')">删除</button>`
+        :`<button class="primary" onclick="addManual()">保存</button><button class="ghost" onclick="closeSheet()">取消</button>`}</div>`);
+  }
+}
+
+function addTpl(){
+  const wd=+document.getElementById("fWd").value;
+  db.tpl.push({id:uid(),weekday:wd,type:document.getElementById("fType").value,
+    km:document.getElementById("fKm").value||"",note:document.getElementById("fNote").value.trim()});
+  save();closeSheet();toast("已加入课表");
+}
+function saveDone(tplId,date){
+  const t=db.tpl.find(x=>x.id===tplId);if(!t)return;
+  const km=document.getElementById("fKm").value,min=document.getElementById("fMin").value,note=document.getElementById("fNote").value.trim();
+  let r=db.recs.find(x=>x.tplId===tplId&&x.date===date);
+  if(!r){r={id:uid(),tplId,date,type:t.type};db.recs.push(r)}
+  r.km=km?+km:"";r.min=min?+min:"";r.note=note;
+  save();closeSheet();toast("打卡完成 ✓");
+}
+function addManual(){
+  const km=document.getElementById("fKm").value,min=document.getElementById("fMin").value;
+  if(!km&&!min){toast("至少填距离或用时");return}
+  db.recs.push({id:uid(),date:document.getElementById("fDate").value,type:document.getElementById("fType").value,
+    km:km?+km:"",min:min?+min:"",note:document.getElementById("fNote").value.trim()});
+  save();closeSheet();toast("已记录");
+}
+function saveRecEdit(id){
+  const r=db.recs.find(x=>x.id===id);if(!r)return;
+  const dEl=document.getElementById("fDate");
+  if(dEl)r.date=dEl.value;
+  const tEl=document.getElementById("fType");if(tEl)r.type=tEl.value;
+  const km=document.getElementById("fKm").value,min=document.getElementById("fMin").value;
+  r.km=km?+km:"";r.min=min?+min:"";r.note=document.getElementById("fNote").value.trim();
+  save();closeSheet();
+}
+function delRec(id){
+  db.recs=db.recs.filter(r=>r.id!==id);save();closeSheet();toast("已删除");
+}
+
+/* ---------- 备份 ---------- */
+function exportData(){
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:"application/json"}));
+  a.download="跑步课表备份-"+iso(new Date())+".json";a.click();
+}
+function importData(input){
+  const f=input.files[0];if(!f)return;
+  const rd=new FileReader();
+  rd.onload=()=>{try{
+    const d=JSON.parse(rd.result);
+    if(!d.tpl||!d.recs)throw 0;
+    db=d;save();toast("导入成功");
+  }catch(e){toast("文件格式不对")}};
+  rd.readAsText(f);input.value="";
+}
+function clearAll(){
+  openSheet(`<h2>清空全部数据？</h2><p style="font-size:13px;color:var(--ink2);line-height:1.7">课表和所有记录都会删除，且无法恢复。<br>建议先去导出备份。</p>
+    <div class="btnrow"><button class="danger" onclick="db={tpl:[],recs:[]};save();closeSheet();toast('已清空')">确认清空</button>
+    <button class="ghost" onclick="closeSheet()">取消</button></div>`);
+}
+
+function renderAll(){renderPlan();renderLog();renderStat()}
+document.getElementById("prevWeek").onclick=()=>{weekOffset--;renderAll()};
+document.getElementById("nextWeek").onclick=()=>{weekOffset++;renderAll()};
+renderAll();
+</script>
+</body>
+</html>
