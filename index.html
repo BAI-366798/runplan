@@ -586,15 +586,29 @@ header h1{font-size:20px;font-weight:700;letter-spacing:-.4px}
     <div class="group" style="margin-bottom:12px">
       <div class="gitem" style="cursor:default;align-items:flex-start">
         <span class="gi"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M18.5 15.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2z"/></svg></span>
-        <span class="gt">智谱 AI 助手（GLM）
-          <span class="gs">API Key 只保存在你手机本地，不会上传 · 到 open.bigmodel.cn 申请</span>
-          <input class="ginput" id="apiKey" type="password" placeholder="粘贴你的智谱 API Key" onchange="saveKey()">
+        <span class="gt">AI 助手 API Key
+          <span class="gs">只保存在你手机本地，不会上传 · 智谱 open.bigmodel.cn / 硅基流动 cloud.siliconflow.cn 均可免费申请</span>
+          <input class="ginput" id="apiKey" type="password" placeholder="粘贴你的 API Key（智谱或硅基流动）" onchange="saveKey()">
+        </span>
+      </div>
+      <div class="gitem" style="cursor:default;align-items:flex-start">
+        <span class="gi"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10" stroke-width="2" stroke-linecap="round" fill="none" stroke="currentColor"/></svg></span>
+        <span class="gt">模型名称
+          <span class="gs">留空 = 智谱 glm-4.7-flash；硅基流动可填 Qwen/Qwen2.5-7B-Instruct（免费）</span>
+          <input class="ginput" id="aiModel" type="text" placeholder="glm-4.7-flash（默认）" onchange="saveModelName()">
+        </span>
+      </div>
+      <div class="gitem" style="cursor:default;align-items:flex-start">
+        <span class="gi"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10" stroke-width="2" stroke-linecap="round" fill="none" stroke="currentColor"/></svg></span>
+        <span class="gt">AI 接口地址（换服务商时才需要改）
+          <span class="gs">留空 = 智谱；硅基流动填 https://api.siliconflow.cn/v1/chat/completions</span>
+          <input class="ginput" id="aiApi" type="text" placeholder="默认智谱，换硅基流动时填新地址" onchange="saveApiBase()">
         </span>
       </div>
       <div class="gitem" style="cursor:default;align-items:flex-start">
         <span class="gi"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10" stroke-width="2" stroke-linecap="round" fill="none" stroke="currentColor"/></svg></span>
         <span class="gt">AI 代理地址（解决浏览器跨域）
-          <span class="gs">智谱接口不允许浏览器直连，需填入你的 Netlify 代理，如 https://runplan-ai.netlify.app/.netlify/functions/proxy</span>
+          <span class="gs">国内大模型接口基本不允许浏览器直连，需填入你的 Netlify 代理地址</span>
           <input class="ginput" id="apiProxy" type="text" placeholder="粘贴你的 Netlify 代理地址" onchange="saveProxy()">
         </span>
       </div>
@@ -1042,6 +1056,22 @@ let chat=[];
 
 function getKey(){return localStorage.getItem(AI_KEY_NAME)||""}
 function saveKey(){localStorage.setItem(AI_KEY_NAME,$("apiKey").value.trim());toast("Key 已保存到本机")}
+function getApiBase(){return localStorage.getItem("runplan_aiapi")||AI_API}
+function saveApiBase(){
+  let v=$("aiApi").value.trim().replace(/\/+$/,"");
+  if(!v){localStorage.removeItem("runplan_aiapi");toast("已恢复默认智谱接口")}
+  else{
+    if(!/^https?:\/\//i.test(v))v="https://"+v;
+    localStorage.setItem("runplan_aiapi",v);
+    toast("接口地址已保存");
+  }
+}
+function getModelName(){return localStorage.getItem("runplan_aimodel")||""}
+function saveModelName(){
+  const v=$("aiModel").value.trim();
+  if(!v){localStorage.removeItem("runplan_aimodel");toast("已恢复默认模型 glm-4.7-flash")}
+  else{localStorage.setItem("runplan_aimodel",v);toast("模型名称已保存")}
+}
 function getProxy(){return localStorage.getItem("runplan_glmproxy")||""}
 function saveProxy(){
   let v=$("apiProxy").value.trim();
@@ -1075,10 +1105,11 @@ function sendChat(preset){
   renderChat();
   askGLM();
 }
-async function askGLM(){
-  const key=getKey(),list=$("chatList");
+const AI_MODEL_FB="glm-4-flash-250414";
+async function askGLM(fb){
+  const key=getKey(),list=$("chatList"),base=getApiBase(),model=fb||getModelName()||"glm-4.7-flash";
   if(!key){
-    pushErr("还没有配置智谱 API Key：到「设置」页粘贴你的 Key（open.bigmodel.cn 免费申请），保存后回来就能聊了。");
+    pushErr("还没有配置 AI Key：到「设置」页粘贴你的 API Key（智谱 open.bigmodel.cn 或硅基流动 cloud.siliconflow.cn 都免费申请），保存后回来就能聊了。");
     return;
   }
   $("chatSend").disabled=true;
@@ -1086,18 +1117,23 @@ async function askGLM(){
   scrollChat();
   try{
     const proxy=getProxy();
-    const endpoint=proxy?proxy+(proxy.includes("?")?"&":"?")+"target="+encodeURIComponent(AI_API):AI_API;
+    const endpoint=proxy?proxy+(proxy.includes("?")?"&":"?")+"target="+encodeURIComponent(base):base;
     const res=await fetch(endpoint,{
       method:"POST",
       headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},
       body:JSON.stringify({
-        model:"glm-4.7-flash",
+        model:model,
         messages:[{role:"system",content:"你是一位专业、务实的跑步教练助手。用中文回答，简洁直接，重点内容用短句分行列出，控制在 300 字以内。以下是用户的训练背景数据：\n"+buildContext()}].concat(chat.slice(-10))
       })
     });
     if(!res.ok){
       let extra="";
       try{const eb=await res.json();if(eb.error&&eb.error.message)extra="："+eb.error.message}catch(e){}
+      if((res.status===429||res.status>=500)&&/open\.bigmodel\.cn/.test(base)&&model!==AI_MODEL_FB){
+        const tip0=$("tipTyping");if(tip0)tip0.remove();
+        $("chatSend").disabled=false;
+        return askGLM(AI_MODEL_FB);
+      }
       throw new Error("HTTP "+res.status+extra);
     }
     const d=await res.json();
@@ -1107,11 +1143,19 @@ async function askGLM(){
     renderChat();
     scrollChat();
   }catch(e){
-    const proxy=getProxy();
-    const hint=proxy
-      ?"① 检查代理地址是否填对（Netlify 站点是否部署成功，可电脑浏览器直接打开代理地址看是否 404 之外的页面）② Key 是否填对 ③ 手机网络是否正常"
-      :"最常见原因是浏览器跨域限制：请到「设置」页填入「AI 代理地址」（Netlify 函数，部署教程已发给你）。也可能是 Key 填错或手机网络问题";
-    pushErr("请求失败了（"+e.message+"）。"+hint);
+    const em=e.message||"网络错误";
+    let text;
+    if(/429|访问量过大|繁忙/.test(em)){
+      text="智谱服务器正忙（免费模型高峰期限流），等 1-2 分钟点下面的「重试」就行，不是你的设置问题。";
+    }else{
+      const proxy=getProxy();
+      const hint=proxy
+        ?"① 检查代理地址是否填对 ② Key 是否填对 ③ 当前网络能否连上代理站点（部分蜂窝网络连不上 netlify.app，换 WiFi 试试）"
+        :"最常见原因是浏览器跨域限制：请到「设置」页填入「AI 代理地址」。也可能是 Key 填错或手机网络问题";
+      text="请求失败了（"+em+"）。"+hint;
+    }
+    const canRetry=chat.length&&chat[chat.length-1].role==="user";
+    pushErr(text,canRetry);
   }
   const tip=$("tipTyping");if(tip)tip.remove();
   $("chatSend").disabled=false;
@@ -1119,7 +1163,7 @@ async function askGLM(){
 function renderChat(){
   const list=$("chatList");
   if(!chat.length){
-    list.innerHTML='<div class="msg a"><span class="av ai">'+AI_SVG+'</span><div class="bub">你好，我是你的跑步助手。我已经了解你的课表、最近记录和今天的天气——点上面的快捷问题，或者直接输入。第一次使用请先到「设置」页填入智谱 API Key。</div></div>';
+    list.innerHTML='<div class="msg a"><span class="av ai">'+AI_SVG+'</span><div class="bub">你好，我是你的跑步助手。我已经了解你的课表、最近记录和今天的天气——点上面的快捷问题，或者直接输入。第一次使用请先到「设置」页填入 API Key。</div></div>';
     return;
   }
   list.innerHTML=chat.map(m=>m.role==="user"
@@ -1127,10 +1171,11 @@ function renderChat(){
     :'<div class="msg a"><span class="av ai">'+AI_SVG+'</span><div class="bub">'+esc(m.content)+"</div></div>"
   ).join("");
 }
-function pushErr(text){
-  $("chatList").insertAdjacentHTML("beforeend",'<div class="msg a"><span class="av ai">'+AI_SVG+'</span><div class="bub err">'+esc(text)+"</div></div>");
+function pushErr(text,retry){
+  $("chatList").insertAdjacentHTML("beforeend",'<div class="msg a"><span class="av ai">'+AI_SVG+'</span><div class="bub err">'+esc(text)+(retry?'<div><button onclick="retryAsk()" style="margin-top:8px;padding:6px 14px;border:0;border-radius:999px;background:#0F6E56;color:#fff;font-size:12.5px;font-weight:600">↻ 重试</button></div>':"")+"</div></div>");
   scrollChat();
 }
+function retryAsk(){renderChat();askGLM()}
 function scrollChat(){window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"})}
 
 /* ---------- 备份 ---------- */
@@ -1163,6 +1208,8 @@ renderAll();
 loadWeather();
 $("apiKey").value=getKey();
 $("apiProxy").value=getProxy();
+$("aiModel").value=getModelName();
+$("aiApi").value=localStorage.getItem("runplan_aiapi")||"";
 renderChat();
 $("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();sendChat()}});
 </script>
