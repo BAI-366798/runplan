@@ -32,9 +32,15 @@ export default async (req) => {
     return new Response("Method Not Allowed", { status: 405, headers: cors });
   }
 
-  // 目标地址通过 ?target= 传入，只允许转发到智谱域名，防止被滥用
+  // 目标地址通过 ?target= 传入，只允许转发到以下免费/低成本大模型平台，防止被滥用
+  const ALLOWED = [
+    "https://open.bigmodel.cn/",            // 智谱 GLM（glm-4.7-flash 永久免费）
+    "https://api.siliconflow.cn/",          // 硅基流动（Qwen/DeepSeek 等开源模型永久免费）
+    "https://api.hunyuan.cloud.tencent.com/", // 腾讯混元（hunyuan-lite 永久免费）
+    "https://spark-api-open.xf-yun.com/",   // 讯飞星火（spark-lite 永久免费）
+  ];
   const target = new URL(req.url).searchParams.get("target");
-  if (!target || !target.startsWith("https://open.bigmodel.cn/")) {
+  if (!target || !ALLOWED.some((p) => target.startsWith(p))) {
     return new Response(
       JSON.stringify({ error: { message: "缺少 target 参数或目标地址不在允许范围内" } }),
       { status: 400, headers: { ...cors, "Content-Type": "application/json" } }
