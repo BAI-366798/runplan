@@ -284,6 +284,90 @@ header h1{font-size:20px;font-weight:700;letter-spacing:-.4px}
   justify-content:center;flex-shrink:0;margin-top:2px;
 }
 
+/* ---------- weather（hero 内玻璃条） ---------- */
+.wx{
+  position:relative;display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);
+  border-radius:13px;padding:9px 12px;margin-top:12px;
+}
+.wx svg{width:22px;height:22px;flex-shrink:0;stroke:#FFD666;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.wx svg.cloud{stroke:#CFE8FF}
+.wx svg.rain{stroke:#9FD3FF}
+.wx svg.snow{stroke:#EAF4FF}
+.wx .wx-t{flex:1;min-width:0}
+.wx .wx-main{font-size:12.5px;font-weight:600;color:#fff;letter-spacing:-.1px}
+.wx .wx-sub{font-size:10px;color:rgba(255,255,255,.62);margin-top:2.5px}
+.wx .wx-temp{font-size:21px;font-weight:700;color:#fff;letter-spacing:-.6px;font-variant-numeric:tabular-nums;flex-shrink:0}
+.wx .wx-temp span{font-size:10.5px;font-weight:500;color:rgba(255,255,255,.6);letter-spacing:0}
+
+/* ---------- mini edit ---------- */
+.mini-edit{
+  width:24px;height:24px;margin-top:2px;flex-shrink:0;border:none;background:transparent;
+  color:#C0C8C2;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  border-radius:8px;transition:.15s;
+}
+.mini-edit:active{color:var(--green);background:var(--green-l)}
+.mini-edit svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- chat ---------- */
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin:2px 0 14px}
+.chip{
+  font-size:12px;font-weight:500;color:var(--green);background:var(--green-l);
+  border:1px solid rgba(21,122,82,.18);border-radius:99px;
+  padding:7px 13px;font-family:inherit;cursor:pointer;transition:.15s;
+}
+.chip:active{transform:scale(.94)}
+#chatList{padding-bottom:4px}
+.msg{display:flex;gap:8px;margin-bottom:12px;animation:fadeUp .25s ease}
+.msg.u{flex-direction:row-reverse}
+.msg .av{
+  width:28px;height:28px;border-radius:9px;flex-shrink:0;margin-top:2px;
+  display:flex;align-items:center;justify-content:center;
+}
+.msg .av.user{background:#E8EBE9;color:var(--ink2);font-size:10.5px;font-weight:700}
+.msg .av.ai{background:linear-gradient(145deg,#1A8B5E,#0C4A32)}
+.msg .av.ai svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.msg .bub{
+  max-width:76%;padding:10px 13px;border-radius:16px;font-size:13.5px;line-height:1.7;
+  white-space:pre-wrap;word-break:break-word;letter-spacing:-.1px;
+}
+.msg.u .bub{background:linear-gradient(145deg,#1A8B5E,#0F5C3E);color:#fff;border-bottom-right-radius:6px}
+.msg.a .bub{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-bottom-left-radius:6px}
+.msg .bub.err{background:#FCECEA;border:0;box-shadow:none;color:var(--red);font-size:12.5px}
+.typing{display:inline-flex;gap:4px;padding:4px 2px}
+.typing i{width:6px;height:6px;border-radius:50%;background:#B9C2BC;animation:blink 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}
+.typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+.chatbar{
+  position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 62px);
+  display:flex;gap:8px;padding:10px 0 6px;
+  background:linear-gradient(180deg,rgba(244,246,244,0),var(--bg) 34%);
+}
+.chatbar input{
+  flex:1;padding:12px 16px;border:1px solid #E4E9E5;border-radius:99px;
+  font-size:14px;font-family:inherit;background:#fff;color:var(--ink);
+}
+.chatbar input::placeholder{color:#B4BCB7}
+.chatbar input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(21,122,82,.1)}
+.chatbar button{
+  width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;
+  background:linear-gradient(145deg,#1A8B5E,#0C4A32);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 18px -8px rgba(14,82,56,.7);transition:.15s;
+}
+.chatbar button:disabled{opacity:.45}
+.chatbar button:active{transform:scale(.92)}
+.chatbar button svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- settings inline input ---------- */
+.ginput{
+  display:block;width:100%;margin-top:9px;padding:11px 12px;
+  border:1px solid #E4E9E5;border-radius:11px;font-size:13.5px;font-family:inherit;
+  background:#F7F9F7;color:var(--ink);
+}
+.ginput:focus{outline:none;border-color:var(--green);background:#fff;box-shadow:0 0 0 3px rgba(21,122,82,.1)}
+
 /* ---------- tabs ---------- */
 .tabs{
   position:fixed;bottom:0;left:0;right:0;z-index:50;display:flex;
@@ -411,6 +495,11 @@ header h1{font-size:20px;font-weight:700;letter-spacing:-.4px}
         </div>
       </div>
       <div class="strip" id="strip"></div>
+      <div class="wx" id="wxbar">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+        <div class="wx-t"><div class="wx-main" id="wxMain">天气加载中</div><div class="wx-sub" id="wxSub"></div></div>
+        <div class="wx-temp" id="wxTemp">--<span>°</span></div>
+      </div>
     </div>
 
     <div class="wkbar">
@@ -477,8 +566,32 @@ header h1{font-size:20px;font-weight:700;letter-spacing:-.4px}
     </div>
   </div>
 
+  <!-- 助手页 -->
+  <div class="page" id="page-ai">
+    <div class="chips">
+      <button class="chip" onclick="sendChat('结合我的课表和最近记录，分析一下我本周的训练质量')">分析本周训练</button>
+      <button class="chip" onclick="sendChat('结合今天的天气和我的课表，今天这堂课该怎么跑？')">今天怎么跑</button>
+      <button class="chip" onclick="sendChat('根据我最近的完成情况，下周课表怎么调整更合理？')">调整下周课表</button>
+      <button class="chip" onclick="sendChat('我是大学生跑者，每周 4 跑，给我讲讲怎么预防跑步伤病')">预防伤病</button>
+    </div>
+    <div id="chatList"></div>
+    <div class="chatbar">
+      <input id="chatInput" placeholder="问问你的跑步助手…">
+      <button id="chatSend" onclick="sendChat()"><svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button>
+    </div>
+  </div>
+
   <!-- 设置页 -->
   <div class="page" id="page-set">
+    <div class="group" style="margin-bottom:12px">
+      <div class="gitem" style="cursor:default;align-items:flex-start">
+        <span class="gi"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M18.5 15.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2z"/></svg></span>
+        <span class="gt">智谱 AI 助手（GLM）
+          <span class="gs">API Key 只保存在你手机本地，不会上传 · 到 open.bigmodel.cn 申请</span>
+          <input class="ginput" id="apiKey" type="password" placeholder="粘贴你的智谱 API Key" onchange="saveKey()">
+        </span>
+      </div>
+    </div>
     <div class="group">
       <button class="gitem" onclick="exportData()">
         <span class="gi"><svg viewBox="0 0 24 24"><path d="M12 3v11M8 10l4 4 4-4"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></span>
@@ -518,6 +631,9 @@ header h1{font-size:20px;font-weight:700;letter-spacing:-.4px}
   </button>
   <button data-p="page-stat" onclick="tab(this)">
     <svg viewBox="0 0 24 24"><path d="M5 19V11M12 19V5M19 19v-6"/></svg>统计
+  </button>
+  <button data-p="page-ai" onclick="tab(this)">
+    <svg viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M18.5 15.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2z"/></svg>助手
   </button>
   <button data-p="page-set" onclick="tab(this)">
     <svg viewBox="0 0 24 24"><path d="M4 7h9M18.5 7H20M4 17h5M14 17h6"/><circle cx="15.5" cy="7" r="2.2"/><circle cx="11" cy="17" r="2.2"/></svg>设置
@@ -638,6 +754,7 @@ function renderPlan(){
           ${t.note?`<div class="ti-note">${esc(t.note)}</div>`:""}
           ${isDone?`<div class="ti-done">已完成 ${rec.km?rec.km+" km":""}${rec.km&&rec.min?" · ":""}${rec.min?rec.min+" 分钟":""}${pace(rec.km,rec.min)?" · "+pace(rec.km,rec.min)+"/km":""}</div>`:""}
         </div>
+        <button class="mini-edit" onclick="event.stopPropagation();openTplEditor('${t.id}')" aria-label="编辑课表项"><svg viewBox="0 0 24 24"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></button>
         <div class="ti-check">${isDone?CHECK_SVG:""}</div>
       </div>`;
     });
@@ -742,7 +859,7 @@ function openEditor(kind,id,date){
     openSheet(`<h2>添加课表项</h2>
       <div class="field"><label>星期几</label><select id="fWd">${DN.map((n,i)=>`<option value="${i}">${n}</option>`).join("")}</select></div>
       <div class="field"><label>课表类型</label><select id="fType">${TYPES.map(t=>`<option>${t}</option>`).join("")}</select></div>
-      <div class="field"><label>目标距离（km，可留空）</label><input id="fKm" type="number" inputmode="decimal" step="0.1" placeholder="如 6"></div>
+      <div class="field"><label>目标距离（km，可留空）</label><input id="fKm" type="text" inputmode="decimal" step="0.1" placeholder="如 6"></div>
       <div class="field"><label>备注（可选）</label><input id="fNote" placeholder="如：有氧心率 141-161"></div>
       <div class="btnrow"><button class="primary" onclick="addTpl()">添加</button><button class="ghost" onclick="closeSheet()">取消</button></div>`);
   }
@@ -756,19 +873,23 @@ function openEditor(kind,id,date){
         <span style="font-size:11px;font-weight:600;color:${c};background:${c}14;padding:4px 9px;border-radius:7px">${t.km?esc(t.km)+" km":"未设距离"}</span>
         ${t.note?`<span style="font-size:11px;color:var(--ink3);padding:4px 0">${esc(t.note)}</span>`:""}
       </div>
-      <div class="field"><label>实际距离（km）</label><input id="fKm" type="number" inputmode="decimal" step="0.1" value="${rec?rec.km||"":""}" placeholder="手表上看到的"></div>
+      <div class="field"><label>实际距离（km）</label><input id="fKm" type="text" inputmode="decimal" step="0.1" value="${rec?rec.km||"":""}" placeholder="手表上看到的"></div>
       <div class="field"><label>用时（分钟）</label><input id="fMin" type="number" inputmode="numeric" value="${rec?rec.min||"":""}" placeholder="如 35"></div>
       <div class="field"><label>备注</label><input id="fNote" value="${rec?esc(rec.note||""):""}" placeholder="今天状态如何"></div>
       <div class="btnrow">
         <button class="primary" onclick="saveDone('${id}','${date}')">${rec?"保存修改":"标记完成"}</button>
         ${rec?`<button class="danger" onclick="delRec('${rec.id}')">删除</button>`:`<button class="ghost" onclick="closeSheet()">取消</button>`}
+      </div>
+      <div class="btnrow" style="margin-top:9px">
+        <button class="ghost" onclick="openTplEditor('${id}')">编辑课表项</button>
+        <button class="danger" onclick="delTpl('${id}')">删除课表项</button>
       </div>`);
   }
   else if(kind==="doneTpl"){
     const r=db.recs.find(x=>x.id===id);
     if(!r)return;
     openSheet(`<h2>记录 · ${fmtCN(r.date)}</h2>
-      <div class="field"><label>实际距离（km）</label><input id="fKm" type="number" inputmode="decimal" step="0.1" value="${r.km||""}"></div>
+      <div class="field"><label>实际距离（km）</label><input id="fKm" type="text" inputmode="decimal" step="0.1" value="${r.km||""}"></div>
       <div class="field"><label>用时（分钟）</label><input id="fMin" type="number" inputmode="numeric" value="${r.min||""}"></div>
       <div class="field"><label>备注</label><input id="fNote" value="${esc(r.note||"")}"></div>
       <div class="btnrow"><button class="primary" onclick="saveRecEdit('${r.id}')">保存</button>
@@ -779,7 +900,7 @@ function openEditor(kind,id,date){
     openSheet(`<h2>${r?"编辑记录":"手动补一条"}</h2>
       <div class="field"><label>日期</label><input id="fDate" type="date" value="${r?r.date:iso(new Date())}"></div>
       <div class="field"><label>类型</label><select id="fType">${TYPES.map(t=>`<option ${r&&r.type===t?"selected":""}>${t}</option>`).join("")}</select></div>
-      <div class="field"><label>距离（km）</label><input id="fKm" type="number" inputmode="decimal" step="0.1" value="${r?r.km||"":""}" placeholder="如 8.2"></div>
+      <div class="field"><label>距离（km）</label><input id="fKm" type="text" inputmode="decimal" step="0.1" value="${r?r.km||"":""}" placeholder="如 8.2"></div>
       <div class="field"><label>用时（分钟）</label><input id="fMin" type="number" inputmode="numeric" value="${r?r.min||"":""}" placeholder="如 42"></div>
       <div class="field"><label>备注</label><input id="fNote" value="${r?esc(r.note||""):""}"></div>
       <div class="btnrow">${r?`<button class="primary" onclick="saveRecEdit('${r.id}')">保存</button><button class="danger" onclick="delRec('${r.id}')">删除</button>`
@@ -818,6 +939,25 @@ function saveRecEdit(id){
 function delRec(id){
   db.recs=db.recs.filter(r=>r.id!==id);save();closeSheet();toast("已删除");
 }
+function openTplEditor(id){
+  const t=db.tpl.find(x=>x.id===id);if(!t)return;
+  openSheet(`<h2>编辑课表项</h2>
+    <div class="field"><label>星期几</label><select id="eWd">${DN.map((n,i)=>`<option value="${i}" ${t.weekday===i?"selected":""}>${n}</option>`).join("")}</select></div>
+    <div class="field"><label>课表类型</label><select id="eType">${TYPES.map(x=>`<option ${t.type===x?"selected":""}>${x}</option>`).join("")}</select></div>
+    <div class="field"><label>目标距离（km，可留空）</label><input id="eKm" type="text" inputmode="decimal" step="0.1" value="${t.km||""}" placeholder="如 8，或 14-18"></div>
+    <div class="field"><label>备注（心率要求等）</label><input id="eNote" value="${esc(t.note||"")}" placeholder="如：心率 141-161"></div>
+    <div class="btnrow"><button class="primary" onclick="saveTplEdit('${t.id}')">保存</button>
+    <button class="danger" onclick="delTpl('${t.id}')">删除此课表项</button></div>`);
+}
+function saveTplEdit(id){
+  const t=db.tpl.find(x=>x.id===id);if(!t)return;
+  t.weekday=+$("eWd").value;t.type=$("eType").value;
+  t.km=$("eKm").value||"";t.note=$("eNote").value.trim();
+  save();closeSheet();toast("课表已更新");
+}
+function delTpl(id){
+  db.tpl=db.tpl.filter(x=>x.id!==id);save();closeSheet();toast("已删除课表项");
+}
 
 /* ---------- 训练模板 ---------- */
 const POLAR=[
@@ -846,6 +986,125 @@ function doImport(){
   weekOffset=0;save();closeSheet();toast("模板已导入");
 }
 
+/* ---------- 天气（Open-Meteo，免 Key，缓存 1 小时） ---------- */
+const WX_CODES={0:["晴","sun"],1:["基本晴","sun"],2:["多云","cloud"],3:["阴","cloud"],45:["雾","cloud"],48:["雾凇","cloud"],51:["毛毛雨","rain"],53:["毛毛雨","rain"],55:["毛毛雨","rain"],56:["冻毛毛雨","rain"],57:["冻毛毛雨","rain"],61:["小雨","rain"],63:["中雨","rain"],65:["大雨","rain"],66:["冻雨","rain"],67:["冻雨","rain"],71:["小雪","snow"],73:["中雪","snow"],75:["大雪","snow"],77:["雪粒","snow"],80:["阵雨","rain"],81:["阵雨","rain"],82:["强阵雨","rain"],85:["阵雪","snow"],86:["阵雪","snow"],95:["雷雨","rain"],96:["雷雨伴冰雹","rain"],99:["雷雨伴冰雹","rain"]};
+const WX_SVG={
+ sun:'<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/>',
+ cloud:'<path d="M17.5 18H7a4.5 4.5 0 01-.4-9A5.5 5.5 0 0117.3 8.5 4.75 4.75 0 0117.5 18z"/>',
+ rain:'<path d="M17.5 14.5H7a4.5 4.5 0 01-.4-9A5.5 5.5 0 0117.3 5 4.75 4.75 0 0117.5 14.5z"/><path d="M8.5 17.5l-1 2.5M12.5 17.5l-1 2.5M16.5 17.5l-1 2.5"/>',
+ snow:'<path d="M17.5 14.5H7a4.5 4.5 0 01-.4-9A5.5 5.5 0 0117.3 5 4.75 4.75 0 0117.5 14.5z"/><path d="M8 19h.01M12 21.5h.01M16 19h.01"/>'
+};
+const HOME={lat:23.366,lon:103.375,name:"蒙自"};
+let wxData=null;
+
+function loadWeather(){
+  try{
+    const c=JSON.parse(localStorage.getItem("runplan_wx")||"null");
+    if(c&&Date.now()-c.t<3600000){renderWeather(c.d);return}
+  }catch(e){}
+  const url="https://api.open-meteo.com/v1/forecast?latitude="+HOME.lat+"&longitude="+HOME.lon
+    +"&current_weather=true&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode&timezone=auto&forecast_days=1";
+  fetch(url).then(r=>r.json()).then(d=>{
+    const w={code:d.current_weather.weathercode,temp:Math.round(d.current_weather.temperature),
+      wind:Math.round(d.current_weather.windspeed),
+      tmax:Math.round(d.daily.temperature_2m_max[0]),tmin:Math.round(d.daily.temperature_2m_min[0]),
+      pop:(d.daily.precipitation_probability_max&&d.daily.precipitation_probability_max[0])||0};
+    localStorage.setItem("runplan_wx",JSON.stringify({t:Date.now(),d:w}));
+    renderWeather(w);
+  }).catch(()=>renderWeather(null));
+}
+function renderWeather(w){
+  const bar=$("wxbar");
+  if(!w){$("wxMain").textContent="天气暂不可用";$("wxSub").textContent="";$("wxTemp").innerHTML="--<span>°</span>";return}
+  const info=WX_CODES[w.code]||["未知","cloud"];
+  const icon=bar.querySelector("svg");
+  if(icon)icon.outerHTML='<svg viewBox="0 0 24 24" class="'+info[1]+'">'+(WX_SVG[info[1]]||WX_SVG.cloud)+"</svg>";
+  $("wxMain").textContent=HOME.name+" · "+info[0]+" · 风 "+w.wind+" km/h";
+  const tip = w.pop>=50 ? "降水 "+w.pop+"%，安排要灵活"
+    : (w.tmax>=30 ? "偏热，注意补水" : (w.tmin<=5 ? "偏冷，充分热身" : "适合跑步的天气"));
+  $("wxSub").textContent=tip+" · "+w.tmin+"~"+w.tmax+"°";
+  $("wxTemp").innerHTML=w.temp+"<span>°</span>";
+  wxData=w;
+}
+
+/* ---------- AI 训练助手（智谱 GLM） ---------- */
+const AI_SVG='<svg viewBox="0 0 24 24"><path d="M12 2.5l1.7 4.8L18.5 9l-4.8 1.7L12 15.5l-1.7-4.8L5.5 9l4.8-1.7L12 2.5z"/><path d="M19 15l.8 2.2 2.2.8-2.2.8L19 21l-.8-2.2-2.2-.8 2.2-.8L19 15z"/></svg>';
+const AI_KEY_NAME="runplan_glmkey";
+const AI_API="https://open.bigmodel.cn/api/paas/v4/chat/completions";
+let chat=[];
+
+function getKey(){return localStorage.getItem(AI_KEY_NAME)||""}
+function saveKey(){localStorage.setItem(AI_KEY_NAME,$("apiKey").value.trim());toast("Key 已保存到本机")}
+function buildContext(){
+  const base=monday(new Date()),end=new Date(base);end.setDate(end.getDate()+6);
+  const ds0=iso(base),ds1=iso(end);
+  const wk=db.recs.filter(r=>r.date>=ds0&&r.date<=ds1);
+  const wkKm=wk.reduce((s,r)=>s+(+r.km||0),0);
+  const recent=db.recs.slice(-14).map(r=>r.date+" "+r.type+" "+(r.km||"?")+"km "+(r.min||"?")+"min"+(r.note?" 备注:"+r.note:"")).join("\n");
+  const plan=db.tpl.map(t=>DN[t.weekday]+" "+t.type+" "+(t.km||"")+"km "+(t.note||"")).join("\n");
+  const wx=wxData?"今天"+HOME.name+"："+(WX_CODES[wxData.code]||["未知"])[0]+" "+wxData.temp+"°C（"+wxData.tmin+"~"+wxData.tmax+"°），风速"+wxData.wind+"km/h，降水概率"+wxData.pop+"%":"天气未知";
+  return "用户是一名大学生跑步爱好者，用华为手表记录跑步，正在执行每周 4 跑的极化训练（80% 低心率有氧 + 20% 强度），最大心率 198。储备心率分区：有氧基础 141-161，有氧进阶 162-175，乳酸阈值 176-180，无氧基础 181-190。\n"
+    +"本周课表：\n"+(plan||"（未排课表）")+"\n"
+    +"本周已完成 "+wk.filter(r=>r.tplId).length+"/"+db.tpl.length+" 次，跑量 "+wkKm.toFixed(1)+" km。\n"
+    +wx+"\n最近记录：\n"+(recent||"（无）");
+}
+function sendChat(preset){
+  const input=$("chatInput");
+  const text=(preset||input.value).trim();
+  if(!text)return;
+  if(!preset)input.value="";
+  chat.push({role:"user",content:text});
+  renderChat();
+  askGLM();
+}
+async function askGLM(){
+  const key=getKey(),list=$("chatList");
+  if(!key){
+    pushErr("还没有配置智谱 API Key：到「设置」页粘贴你的 Key（open.bigmodel.cn 免费申请），保存后回来就能聊了。");
+    return;
+  }
+  $("chatSend").disabled=true;
+  list.insertAdjacentHTML("beforeend",'<div class="msg a" id="tipTyping"><span class="av ai">'+AI_SVG+'</span><div class="bub"><span class="typing"><i></i><i></i><i></i></span></div></div>');
+  scrollChat();
+  try{
+    const res=await fetch(AI_API,{
+      method:"POST",
+      headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},
+      body:JSON.stringify({
+        model:"glm-4.7-flash",
+        messages:[{role:"system",content:"你是一位专业、务实的跑步教练助手。用中文回答，简洁直接，重点内容用短句分行列出，控制在 300 字以内。以下是用户的训练背景数据：\n"+buildContext()}].concat(chat.slice(-10))
+      })
+    });
+    if(!res.ok)throw new Error("HTTP "+res.status);
+    const d=await res.json();
+    const msg=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content;
+    if(!msg)throw new Error("返回内容为空");
+    chat.push({role:"assistant",content:msg});
+    renderChat();
+    scrollChat();
+  }catch(e){
+    pushErr("请求失败了（"+e.message+"）。请检查：① Key 是否填对 ② 手机网络是否正常 ③ 智谱账户是否可用。反复失败的话，把这条报错发给我看。");
+  }
+  const tip=$("tipTyping");if(tip)tip.remove();
+  $("chatSend").disabled=false;
+}
+function renderChat(){
+  const list=$("chatList");
+  if(!chat.length){
+    list.innerHTML='<div class="msg a"><span class="av ai">'+AI_SVG+'</span><div class="bub">你好，我是你的跑步助手。我已经了解你的课表、最近记录和今天的天气——点上面的快捷问题，或者直接输入。第一次使用请先到「设置」页填入智谱 API Key。</div></div>';
+    return;
+  }
+  list.innerHTML=chat.map(m=>m.role==="user"
+    ?'<div class="msg u"><span class="av user">我</span><div class="bub">'+esc(m.content)+"</div></div>"
+    :'<div class="msg a"><span class="av ai">'+AI_SVG+'</span><div class="bub">'+esc(m.content)+"</div></div>"
+  ).join("");
+}
+function pushErr(text){
+  $("chatList").insertAdjacentHTML("beforeend",'<div class="msg a"><span class="av ai">'+AI_SVG+'</span><div class="bub err">'+esc(text)+"</div></div>");
+  scrollChat();
+}
+function scrollChat(){window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"})}
+
 /* ---------- 备份 ---------- */
 function exportData(){
   const a=document.createElement("a");
@@ -873,6 +1132,10 @@ function renderAll(){renderPlan();renderLog();renderStat()}
 $("prevWeek").onclick=()=>{weekOffset--;renderAll()};
 $("nextWeek").onclick=()=>{weekOffset++;renderAll()};
 renderAll();
+loadWeather();
+$("apiKey").value=getKey();
+renderChat();
+$("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();sendChat()}});
 </script>
 </body>
 </html>
