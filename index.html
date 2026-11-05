@@ -6,220 +6,527 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="跑步课表">
+<meta name="theme-color" content="#F4F6F4">
 <title>跑步课表</title>
 <style>
 :root{
-  --bg:#F5F4F0; --card:#FFFFFF; --line:#E5E3DC;
-  --ink:#2C2C2A; --ink2:#6B6A64; --ink3:#9B9A93;
-  --green:#3B6D11; --green-l:#EAF3DE; --amber:#854F0B; --amber-l:#FAEEDA;
-  --blue:#185FA5; --blue-l:#E6F1FB; --red:#A32D2D;
-  --radius:14px;
+  --bg:#F4F6F4;
+  --card:#FFFFFF;
+  --line:rgba(17,32,24,.07);
+  --ink:#111815;
+  --ink2:#5A635E;
+  --ink3:#9AA39D;
+  --green:#157A52;
+  --green-d:#0E5238;
+  --green-l:#E9F4EE;
+  --red:#C4453A;
+  --amber:#B8741B;
+  --radius:18px;
+  --shadow:0 1px 2px rgba(16,32,24,.04),0 10px 24px -16px rgba(16,32,24,.3);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
 body{
-  font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif;
-  background:var(--bg); color:var(--ink);
-  padding-bottom:90px; font-size:15px;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+  background:var(--bg);
+  background-image:radial-gradient(120% 55% at 50% -8%,#E4EFE9 0%,rgba(244,246,244,0) 62%);
+  background-attachment:fixed;
+  color:var(--ink);font-size:15px;line-height:1.4;
+  padding-bottom:calc(env(safe-area-inset-bottom,0px) + 92px);
+  -webkit-font-smoothing:antialiased;
 }
 .wrap{max-width:520px;margin:0 auto;padding:0 16px}
+
+/* ---------- header ---------- */
 header{
-  padding:calc(env(safe-area-inset-top,0px) + 18px) 0 6px;
-  display:flex;align-items:baseline;justify-content:space-between;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:calc(env(safe-area-inset-top,0px) + 16px) 0 14px;
 }
-header h1{font-size:22px;font-weight:600;letter-spacing:.5px}
-header .sub{font-size:12px;color:var(--ink3)}
+header h1{font-size:20px;font-weight:700;letter-spacing:-.4px}
+.hsub{
+  font-size:11.5px;font-weight:600;color:var(--green);
+  background:rgba(21,122,82,.09);padding:5px 11px;border-radius:99px;
+  letter-spacing:.2px;
+}
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative;overflow:hidden;border-radius:22px;padding:18px 18px 14px;
+  color:#fff;margin-bottom:14px;
+  background:linear-gradient(145deg,#0B4A32 0%,#12704C 48%,#1D8F5F 100%);
+  box-shadow:0 14px 32px -18px rgba(14,82,56,.75);
+}
+.hero::after{
+  content:"";position:absolute;right:-46px;top:-70px;width:190px;height:190px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.2),rgba(255,255,255,0) 68%);
+  pointer-events:none;
+}
+.hero-top{display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative}
+.hero-lab{font-size:11px;color:rgba(255,255,255,.62);letter-spacing:1.2px;font-weight:600}
+.hero-val{display:flex;align-items:baseline;gap:5px;margin-top:6px}
+.hero-val b{font-size:34px;font-weight:700;letter-spacing:-1px;font-variant-numeric:tabular-nums;line-height:1}
+.hero-val i{font-style:normal;font-size:13px;color:rgba(255,255,255,.72);font-weight:500}
+.hero-meta{font-size:11.5px;color:rgba(255,255,255,.66);margin-top:8px;font-variant-numeric:tabular-nums}
+.ringwrap{position:relative;width:86px;height:86px;flex-shrink:0}
+.ring{width:86px;height:86px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:7;stroke-linecap:round}
+.rbg{stroke:rgba(255,255,255,.18)}
+.rfg{stroke:#6FE3A6;stroke-dasharray:201;stroke-dashoffset:201;transition:stroke-dashoffset .7s cubic-bezier(.4,0,.2,1)}
+.ringpct{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:700;letter-spacing:-.3px;font-variant-numeric:tabular-nums;
+}
+
+/* week strip */
+.strip{display:flex;gap:5px;margin-top:15px;position:relative}
+.strip .sc{
+  flex:1;text-align:center;padding:6px 0 6px;border-radius:9px;
+  background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);
+  transition:.2s;
+}
+.strip .sc b{display:block;font-size:10.5px;font-weight:600;margin-bottom:5px}
+.strip .sc i{display:block;width:4px;height:4px;border-radius:50%;margin:0 auto;background:rgba(255,255,255,.28)}
+.strip .sc.done{background:rgba(255,255,255,.95);color:#0E5238}
+.strip .sc.done i{background:var(--green);width:5px;height:5px}
+.strip .sc.today{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.7)}
+.strip .sc.done.today{box-shadow:inset 0 0 0 1.5px rgba(14,82,56,.35)}
+
+/* ---------- week bar ---------- */
+.wkbar{display:flex;align-items:center;gap:6px;margin:0 0 14px}
+.navbtn{
+  width:32px;height:32px;border-radius:10px;border:1px solid var(--line);background:#fff;
+  display:flex;align-items:center;justify-content:center;color:var(--ink2);cursor:pointer;
+  box-shadow:0 1px 2px rgba(16,32,24,.04);flex-shrink:0;
+}
+.navbtn:disabled{opacity:.3;box-shadow:none}
+.navbtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.wklab{flex:1;text-align:center;font-size:12.5px;font-weight:600;color:var(--ink2);letter-spacing:.2px;font-variant-numeric:tabular-nums}
+
+/* ---------- day ---------- */
+.day{margin-bottom:9px}
+.dhd{display:flex;align-items:center;gap:7px;padding:0 4px 7px}
+.dhd .dn{font-size:12.5px;font-weight:600;color:var(--ink2)}
+.dhd .dd{font-size:11px;color:var(--ink3);margin-left:auto;font-variant-numeric:tabular-nums}
+.tbadge{
+  font-size:9.5px;font-weight:700;color:#fff;background:var(--green);
+  padding:2.5px 7px;border-radius:99px;letter-spacing:.4px;
+}
+
+.ti{
+  position:relative;display:flex;align-items:flex-start;gap:10px;
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:13px 14px 13px 17px;margin-bottom:7px;cursor:pointer;
+  box-shadow:var(--shadow);transition:transform .12s ease,box-shadow .2s;
+}
+.ti:active{transform:scale(.985);box-shadow:0 1px 2px rgba(16,32,24,.05)}
+.ti::before{
+  content:"";position:absolute;left:0;top:13px;bottom:13px;width:3px;
+  border-radius:0 3px 3px 0;background:var(--tc,#7C8590);
+}
+.ti-body{flex:1;min-width:0}
+.ti-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.ti-type{font-size:15px;font-weight:600;letter-spacing:-.2px}
+.ti-km{
+  font-size:11.5px;font-weight:500;color:var(--ink2);
+  background:#F2F5F2;padding:1.5px 7px;border-radius:6px;
+  font-variant-numeric:tabular-nums;
+}
+.ti-note{font-size:11.5px;color:var(--ink3);line-height:1.6;margin-top:5px}
+.ti-done{
+  font-size:11.5px;color:var(--green);margin-top:6px;font-weight:600;
+  font-variant-numeric:tabular-nums;
+}
+.ti-check{
+  width:25px;height:25px;border-radius:50%;border:1.5px solid #DBDFDC;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  color:#fff;margin-top:1px;transition:.2s;
+}
+.ti.done{background:linear-gradient(180deg,#FBFDFB,#F7FAF8)}
+.ti.done .ti-check{background:var(--green);border-color:var(--green)}
+.ti.done .ti-type{color:var(--ink2);font-weight:500}
+
+.rest{
+  display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink3);
+  background:rgba(255,255,255,.55);border:1px dashed #DDE2DE;border-radius:14px;
+  padding:11px 14px;margin-bottom:7px;
+}
+.rest i{width:5px;height:5px;border-radius:50%;background:#CFD6D1;flex-shrink:0}
+
+/* ---------- action buttons ---------- */
+.actions{display:flex;gap:8px;margin-top:14px}
+.abtn{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:12px;border-radius:14px;border:1px dashed #CFD5D0;background:transparent;
+  font-size:13px;font-family:inherit;color:var(--ink2);cursor:pointer;
+  transition:.15s;
+}
+.abtn:active{transform:scale(.97)}
+.abtn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.abtn.solid{border:1px solid rgba(21,122,82,.22);background:var(--green-l);color:var(--green);font-weight:600}
+
+/* ---------- log ---------- */
+.lhd{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:16px 4px 9px;font-size:11.5px;color:var(--ink3);
+  font-variant-numeric:tabular-nums;
+}
+.lhd b{font-size:13px;color:var(--ink);font-weight:700;letter-spacing:-.2px}
+.lr{
+  display:flex;align-items:center;gap:11px;background:#fff;border:1px solid var(--line);
+  border-radius:16px;padding:13px 14px;margin-bottom:7px;cursor:pointer;
+  box-shadow:var(--shadow);transition:transform .12s ease;
+}
+.lr:active{transform:scale(.985)}
+.lr-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--tc,#7C8590);
+  flex-shrink:0;box-shadow:0 0 0 4px rgba(21,122,82,.06);
+}
+.lr-l{flex:1;min-width:0}
+.lr-t{font-size:14.5px;font-weight:600;letter-spacing:-.2px}
+.lr-d{font-size:11px;color:var(--ink3);margin-top:3px}
+.lr-r{text-align:right;flex-shrink:0}
+.lr-km{font-size:18px;font-weight:700;letter-spacing:-.6px;font-variant-numeric:tabular-nums;line-height:1.1}
+.lr-km span{font-size:10.5px;font-weight:500;color:var(--ink3);margin-left:2px;letter-spacing:0}
+.lr-m{font-size:10.5px;color:var(--ink3);margin-top:3px;font-variant-numeric:tabular-nums}
+
+/* ---------- stat ---------- */
+.card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;box-shadow:var(--shadow);margin-bottom:12px;
+}
+.cardhd{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12.5px;font-weight:600;color:var(--ink2);margin-bottom:13px;
+}
+.cardhd em{font-style:normal;font-size:11px;color:var(--ink3);font-weight:400}
+.stathero{display:flex;align-items:center;gap:16px;padding:18px 16px}
+.ringbig{position:relative;width:110px;height:110px;flex-shrink:0}
+.ringbig svg{width:110px;height:110px;transform:rotate(-90deg)}
+.ringbig circle{fill:none;stroke-width:9;stroke-linecap:round}
+.ringbig .rbg{stroke:#EDF1EE}
+.ringbig .rfg{stroke:var(--green);stroke-dasharray:327;stroke-dashoffset:327;transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1)}
+.rcenter{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1px;
+}
+.rcenter b{font-size:22px;font-weight:700;letter-spacing:-.8px;font-variant-numeric:tabular-nums;color:var(--ink)}
+.rcenter span{font-size:10px;color:var(--ink3);letter-spacing:.5px}
+.srows{flex:1;min-width:0}
+.srow{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px solid #F1F4F1}
+.srow:first-child{padding-top:0}
+.srow:last-child{border-bottom:0;padding-bottom:0}
+.srow span{font-size:11.5px;color:var(--ink3)}
+.srow b{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.2px}
+
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.tile{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:14px 8px 12px;text-align:center;box-shadow:var(--shadow);
+}
+.tile b{
+  display:block;font-size:20px;font-weight:700;letter-spacing:-.8px;
+  color:var(--green);font-variant-numeric:tabular-nums;line-height:1.1;
+}
+.tile span{display:block;font-size:10px;color:var(--ink3);margin-top:5px}
+
+.hmrow{display:flex;gap:6px}
+.hmlab{
+  display:grid;grid-template-rows:repeat(7,1fr);gap:3px;
+  width:11px;font-size:9px;color:var(--ink3);flex-shrink:0;
+}
+.hmlab i{display:flex;align-items:center;justify-content:center;font-style:normal}
+.hmgrid{
+  flex:1;display:grid;grid-auto-flow:column;
+  grid-template-columns:repeat(14,minmax(0,1fr));gap:3px;
+}
+.hmcell{aspect-ratio:1;border-radius:3px;background:#EEF1EE}
+.hmcell.l1{background:#A9DCC3}
+.hmcell.l2{background:#5CB98A}
+.hmcell.l3{background:#17784F}
+.hmleg{
+  display:flex;align-items:center;gap:4px;justify-content:flex-end;
+  font-size:10px;color:var(--ink3);margin-top:11px;
+}
+.hmleg i{width:9px;height:9px;border-radius:2px;background:#EEF1EE}
+.hmleg i.l1{background:#A9DCC3}
+.hmleg i.l2{background:#5CB98A}
+.hmleg i.l3{background:#17784F}
+
+/* ---------- settings ---------- */
+.group{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;box-shadow:var(--shadow);margin-bottom:12px;
+}
+.gitem{
+  display:flex;align-items:center;gap:12px;width:100%;background:none;border:none;
+  border-bottom:1px solid #F1F4F1;padding:14px 16px;font-family:inherit;
+  font-size:14.5px;color:var(--ink);text-align:left;cursor:pointer;
+}
+.gitem:last-child{border-bottom:0}
+.gitem:active{background:#FAFBFA}
+.gitem .gi{
+  width:30px;height:30px;border-radius:9px;display:flex;align-items:center;
+  justify-content:center;background:var(--green-l);color:var(--green);flex-shrink:0;
+}
+.gitem .gi svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.gitem .gt{flex:1;min-width:0}
+.gitem .gs{display:block;font-size:11px;color:var(--ink3);margin-top:3px;font-weight:400}
+.gitem .chev{color:#C8CECA;flex-shrink:0}
+.gitem .chev svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.gitem.danger .gi{background:#FCECEA;color:var(--red)}
+.gitem.danger .gt{color:var(--red)}
+
+.tips{font-size:12.5px;color:var(--ink2);line-height:1.9}
+.tips .step{display:flex;gap:9px;margin-bottom:6px}
+.tips .step b{
+  width:17px;height:17px;border-radius:50%;background:var(--green-l);color:var(--green);
+  font-size:10px;font-weight:700;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;margin-top:2px;
+}
+
+/* ---------- tabs ---------- */
 .tabs{
-  position:fixed;bottom:0;left:0;right:0;background:var(--card);
-  border-top:1px solid var(--line);display:flex;
-  padding-bottom:env(safe-area-inset-bottom,0px);z-index:50;
+  position:fixed;bottom:0;left:0;right:0;z-index:50;display:flex;
+  padding:6px 8px calc(env(safe-area-inset-bottom,0px) + 6px);
+  background:rgba(255,255,255,.93);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  backdrop-filter:saturate(180%) blur(20px);
+  border-top:1px solid rgba(17,32,24,.06);
 }
 .tabs button{
-  flex:1;background:none;border:none;padding:10px 0 8px;
-  font-size:11px;color:var(--ink3);font-family:inherit;cursor:pointer;
+  flex:1;background:none;border:none;padding:6px 0 4px;border-radius:12px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-size:10px;font-family:inherit;color:var(--ink3);cursor:pointer;
+  transition:color .18s;
 }
-.tabs button .ic{display:block;font-size:20px;margin-bottom:2px}
-.tabs button.on{color:var(--green)}
-.page{display:none;padding-top:10px}
-.page.on{display:block}
-.seg{display:flex;align-items:center;justify-content:space-between;margin:6px 0 12px}
-.seg .wk{font-size:14px;font-weight:500}
-.seg button{
-  background:var(--card);border:1px solid var(--line);border-radius:8px;
-  padding:5px 12px;font-size:13px;color:var(--ink2);font-family:inherit;cursor:pointer;
+.tabs button svg{
+  width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round;transition:stroke-width .18s;
 }
-.seg button.today{color:var(--green);border-color:var(--green)}
-.day{margin-bottom:14px}
-.dayname{font-size:12px;color:var(--ink3);margin:0 4px 6px;display:flex;justify-content:space-between}
-.dayname .d{
-  background:var(--green);color:#fff;border-radius:10px;padding:1px 8px;
-  font-size:11px;
-}
-.dayname .d.rest{background:transparent;color:var(--ink3)}
-.item{
-  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
-  padding:13px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;
-  cursor:pointer;position:relative;
-}
-.item:active{background:#FBFAF7}
-.item .check{
-  width:24px;height:24px;border-radius:50%;border:1.5px solid #C9C7BF;
-  flex-shrink:0;display:flex;align-items:center;justify-content:center;
-  font-size:13px;color:#fff;transition:.15s;
-}
-.item.done .check{background:var(--green);border-color:var(--green)}
-.item .info{flex:1;min-width:0}
-.item .type{font-size:15px;font-weight:500}
-.item .meta{font-size:12px;color:var(--ink2);margin-top:3px}
-.item .act{font-size:12px;color:var(--green);margin-top:3px}
-.item.done{border-color:var(--green)}
-.item.done .type{color:var(--ink2)}
-.addrow{
-  border:1px dashed #C9C7BF;border-radius:var(--radius);padding:11px;
-  text-align:center;color:var(--ink3);font-size:13px;cursor:pointer;background:transparent;
-  width:100%;font-family:inherit;margin-bottom:8px;
-}
-.statcard{
-  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
-  padding:16px;margin-bottom:12px;
-}
-.statcard h3{font-size:13px;color:var(--ink2);font-weight:500;margin-bottom:10px}
-.bignum{font-size:30px;font-weight:600;color:var(--green)}
-.bignum small{font-size:14px;color:var(--ink2);font-weight:400}
-.bar{height:10px;background:#EDEBE5;border-radius:5px;overflow:hidden;margin-top:10px}
-.bar i{display:block;height:100%;background:var(--green);border-radius:5px;transition:.3s}
-.grid{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,1fr);grid-template-columns:repeat(14,1fr);gap:3px}
-.cell{aspect-ratio:1;border-radius:3px;background:#EDEBE5}
-.cell.l1{background:#C0DD97}.cell.l2{background:#97C459}.cell.l3{background:#3B6D11}
-.row{
-  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
-  padding:13px 14px;margin-bottom:8px;
-}
-.row .top{display:flex;justify-content:space-between;align-items:baseline}
-.row .dt{font-size:12px;color:var(--ink3)}
-.row .tag{
-  font-size:11px;background:var(--green-l);color:var(--green);
-  border-radius:6px;padding:2px 8px;
-}
-.row .tag.manual{background:var(--blue-l);color:var(--blue)}
-.row .main{font-size:16px;font-weight:500;margin-top:5px}
-.row .meta{font-size:12px;color:var(--ink2);margin-top:4px}
+.tabs button.on{color:var(--green);font-weight:600}
+.tabs button.on svg{stroke-width:2.1}
+
+/* ---------- fab ---------- */
 .fab{
-  position:fixed;right:18px;bottom:calc(env(safe-area-inset-bottom,0px) + 70px);
-  width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;
-  border:none;font-size:26px;cursor:pointer;z-index:40;
-  box-shadow:0 4px 14px rgba(59,109,17,.35);line-height:1;
+  position:fixed;right:18px;bottom:calc(env(safe-area-inset-bottom,0px) + 78px);
+  width:52px;height:52px;border-radius:50%;border:none;color:#fff;
+  background:linear-gradient(145deg,#1A8B5E,#0C4A32);cursor:pointer;z-index:40;
+  box-shadow:0 10px 22px -8px rgba(14,82,56,.7);
+  display:none;align-items:center;justify-content:center;
+  transition:transform .15s;
 }
+.fab.show{display:flex}
+.fab:active{transform:scale(.92)}
+.fab svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round}
+
+/* ---------- sheet ---------- */
 .mask{
-  position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;
+  position:fixed;inset:0;background:rgba(10,20,15,.46);z-index:100;
   display:none;align-items:flex-end;justify-content:center;
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);
 }
 .mask.on{display:flex}
 .sheet{
-  background:var(--card);width:100%;max-width:520px;
-  border-radius:18px 18px 0 0;padding:20px 18px calc(env(safe-area-inset-bottom,0px) + 20px);
+  background:#fff;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;
+  border-radius:24px 24px 0 0;padding:9px 18px calc(env(safe-area-inset-bottom,0px) + 20px);
+  animation:sheetUp .34s cubic-bezier(.32,.72,0,1);
+  -webkit-overflow-scrolling:touch;
 }
-.sheet h2{font-size:16px;font-weight:600;margin-bottom:14px}
-.field{margin-bottom:12px}
-.field label{display:block;font-size:12px;color:var(--ink2);margin-bottom:5px}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet::before{
+  content:"";display:block;width:36px;height:4px;border-radius:99px;
+  background:#E2E7E3;margin:0 auto 15px;
+}
+.sheet h2{font-size:17px;font-weight:700;letter-spacing:-.3px;margin-bottom:16px}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:11.5px;color:var(--ink3);margin-bottom:6px;font-weight:500;letter-spacing:.2px}
 .field input,.field select{
-  width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;
-  font-size:15px;font-family:inherit;background:var(--bg);color:var(--ink);
-  -webkit-appearance:none;appearance:none;
+  width:100%;padding:13px;border:1px solid #E4E9E5;border-radius:13px;
+  font-size:15px;font-family:inherit;background:#F7F9F7;color:var(--ink);
+  -webkit-appearance:none;appearance:none;transition:.18s;
 }
-.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B6A64' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
-.btnrow{display:flex;gap:10px;margin-top:16px}
+.field input::placeholder{color:#B4BCB7}
+.field input:focus,.field select:focus{
+  outline:none;border-color:var(--green);background:#fff;
+  box-shadow:0 0 0 3px rgba(21,122,82,.1);
+}
+.field input[type=date]{-webkit-appearance:none;appearance:none;min-height:47px}
+.field select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235A635E' fill='none' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;
+}
+.btnrow{display:flex;gap:9px;margin-top:18px}
 .btnrow button{
-  flex:1;padding:13px;border-radius:12px;font-size:15px;font-weight:500;
-  font-family:inherit;border:none;cursor:pointer;
+  flex:1;padding:14px;border-radius:14px;font-size:15px;font-weight:600;
+  font-family:inherit;border:none;cursor:pointer;transition:transform .12s;
 }
-.primary{background:var(--green);color:#fff}
-.ghost{background:var(--bg);color:var(--ink2);border:1px solid var(--line)!important}
-.danger{background:#FCEBEB;color:var(--red)}
-.empty{text-align:center;color:var(--ink3);font-size:13px;padding:36px 0}
+.btnrow button:active{transform:scale(.97)}
+.primary{background:linear-gradient(145deg,#1A8B5E,#0C4A32);color:#fff;box-shadow:0 10px 20px -10px rgba(14,82,56,.75)}
+.ghost{background:#F4F6F4;color:var(--ink2)}
+.danger{background:#FCECEA;color:var(--red)}
+
+/* ---------- misc ---------- */
+.empty{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:52px 20px;color:var(--ink3);font-size:12.5px;line-height:1.9;
+}
+.empty svg{width:54px;height:54px;stroke:#CFD6D1;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;margin-bottom:14px}
 .toast{
-  position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);
-  background:#2C2C2A;color:#fff;font-size:13px;padding:9px 18px;border-radius:20px;
-  opacity:0;transition:.25s;z-index:200;pointer-events:none;
+  position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 108px);
+  transform:translateX(-50%) translateY(14px);
+  background:rgba(22,34,27,.94);color:#fff;font-size:13px;font-weight:500;
+  padding:10px 20px;border-radius:99px;opacity:0;transition:.26s;
+  z-index:200;pointer-events:none;white-space:nowrap;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
 }
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-.linklist{margin-top:4px}
-.linklist button{
-  display:flex;justify-content:space-between;width:100%;background:var(--card);
-  border:1px solid var(--line);border-radius:var(--radius);padding:14px;
-  font-size:14px;font-family:inherit;color:var(--ink);margin-bottom:8px;cursor:pointer;
-}
-.linklist button span{color:var(--ink3);font-size:13px}
+
+.page{display:none}
+.page.on{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <h1>跑步课表</h1>
-    <span class="sub" id="subline"></span>
+    <span class="hsub" id="subline"></span>
   </header>
 
   <!-- 课表页 -->
   <div class="page on" id="page-plan">
-    <div class="seg">
-      <button id="prevWeek">‹ 上周</button>
-      <span class="wk" id="weekLabel"></span>
-      <button id="nextWeek" class="today" style="display:none">回到本周 ›</button>
+    <div class="hero">
+      <div class="hero-top">
+        <div>
+          <div class="hero-lab">本周进度</div>
+          <div class="hero-val"><b id="hDone">0</b><i>/ <span id="hTotal">0</span> 次</i></div>
+          <div class="hero-meta"><span id="hKm">0.0</span> km · <span id="hLeft">还没排课表</span></div>
+        </div>
+        <div class="ringwrap">
+          <svg class="ring" viewBox="0 0 86 86">
+            <circle class="rbg" cx="43" cy="43" r="32"></circle>
+            <circle class="rfg" id="hRing" cx="43" cy="43" r="32"></circle>
+          </svg>
+          <div class="ringpct" id="hPct">0%</div>
+        </div>
+      </div>
+      <div class="strip" id="strip"></div>
     </div>
+
+    <div class="wkbar">
+      <button class="navbtn" id="prevWeek" aria-label="上一周">
+        <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+      <div class="wklab" id="weekLabel"></div>
+      <button class="navbtn" id="nextWeek" aria-label="下一周">
+        <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+
     <div id="planList"></div>
-    <button class="addrow" onclick="openEditor('plan')">＋ 添加课表项</button>
+
+    <div class="actions">
+      <button class="abtn" onclick="openEditor('plan')">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>添加课表项
+      </button>
+      <button class="abtn solid" onclick="importTemplate()">
+        <svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>导入训练模板
+      </button>
+    </div>
   </div>
 
   <!-- 记录页 -->
   <div class="page" id="page-log">
     <div id="logList"></div>
-    <div class="empty" id="logEmpty" style="display:none">还没有记录<br>跑完在课表里点完成，或手动补一条</div>
+    <div class="empty" id="logEmpty" style="display:none">
+      <svg viewBox="0 0 48 48"><rect x="9" y="7" width="30" height="34" rx="4"/><path d="M16 17h16M16 24h16M16 31h10"/></svg>
+      还没有记录<br>跑完在课表里点一下，或者右下角手动补一条
+    </div>
   </div>
 
   <!-- 统计页 -->
   <div class="page" id="page-stat">
-    <div class="statcard">
-      <h3>本周完成</h3>
-      <div class="bignum" id="stWeek"><small></small></div>
-      <div class="bar"><i id="stWeekBar" style="width:0%"></i></div>
+    <div class="card stathero">
+      <div class="ringbig">
+        <svg viewBox="0 0 110 110">
+          <circle class="rbg" cx="55" cy="55" r="47"></circle>
+          <circle class="rfg" id="stRing" cx="55" cy="55" r="47"></circle>
+        </svg>
+        <div class="rcenter"><b id="stPct">0%</b><span>本周</span></div>
+      </div>
+      <div class="srows">
+        <div class="srow"><span>完成</span><b id="stDone">0 / 0 次</b></div>
+        <div class="srow"><span>里程</span><b id="stKm">0.0 km</b></div>
+        <div class="srow"><span>状态</span><b id="stTip">刚起步</b></div>
+      </div>
     </div>
-    <div class="statcard">
-      <h3>累计</h3>
-      <div style="display:flex;gap:26px" id="stTotal"></div>
+
+    <div class="tiles">
+      <div class="tile"><b id="tCnt">0</b><span>打卡次数</span></div>
+      <div class="tile"><b id="tKm">0</b><span>总里程 km</span></div>
+      <div class="tile"><b id="tH">0</b><span>总时长 h</span></div>
     </div>
-    <div class="statcard">
-      <h3>最近 14 周打卡</h3>
-      <div class="grid" id="heatmap"></div>
-      <div style="font-size:11px;color:var(--ink3);margin-top:8px">每格一天 · 颜色越深完成越多</div>
+
+    <div class="card">
+      <div class="cardhd">打卡热力图<em>最近 14 周</em></div>
+      <div class="hmrow">
+        <div class="hmlab"><i>一</i><i></i><i>三</i><i></i><i>五</i><i></i><i>日</i></div>
+        <div class="hmgrid" id="heatmap"></div>
+      </div>
+      <div class="hmleg"><span>少</span><i></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><span>多</span></div>
     </div>
   </div>
 
   <!-- 设置页 -->
   <div class="page" id="page-set">
-    <div class="linklist">
-      <button onclick="exportData()">导出备份（JSON 文件）<span>存到文件 App / 网盘</span></button>
-      <button onclick="document.getElementById('impFile').click()">导入备份<span>从 JSON 恢复</span></button>
-      <button onclick="clearAll()" style="color:var(--red)">清空全部数据<span>不可恢复，先导出</span></button>
+    <div class="group">
+      <button class="gitem" onclick="exportData()">
+        <span class="gi"><svg viewBox="0 0 24 24"><path d="M12 3v11M8 10l4 4 4-4"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></span>
+        <span class="gt">导出备份<span class="gs">存成 JSON 文件，放到文件 App 或网盘</span></span>
+        <span class="chev"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+      </button>
+      <button class="gitem" onclick="document.getElementById('impFile').click()">
+        <span class="gi"><svg viewBox="0 0 24 24"><path d="M12 15V4M8 8l4-4 4 4"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></span>
+        <span class="gt">导入备份<span class="gs">从之前的 JSON 文件恢复</span></span>
+        <span class="chev"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+      </button>
+      <button class="gitem danger" onclick="clearAll()">
+        <span class="gi"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2"/><path d="M6 7l1 13a1 1 0 001 1h8a1 1 0 001-1l1-13"/></svg></span>
+        <span class="gt">清空全部数据<span class="gs">不可恢复，操作前先导出</span></span>
+        <span class="chev"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+      </button>
     </div>
     <input type="file" id="impFile" accept=".json" style="display:none" onchange="importData(this)">
-    <div class="statcard" style="margin-top:14px">
-      <h3>iPhone 使用方法</h3>
-      <div style="font-size:13px;color:var(--ink2);line-height:1.8">
-        1. 用 Safari 打开本页<br>
-        2. 点分享按钮 → 添加到主屏幕<br>
-        3. 以后从主屏幕图标进入，就是全屏 App
+
+    <div class="card">
+      <div class="cardhd">装到 iPhone 主屏幕</div>
+      <div class="tips">
+        <div class="step"><b>1</b><span>用 Safari 打开本页</span></div>
+        <div class="step"><b>2</b><span>点底部「分享」按钮 → 添加到主屏幕</span></div>
+        <div class="step"><b>3</b><span>以后从主屏幕图标进入，就是全屏 App</span></div>
       </div>
     </div>
   </div>
 </div>
 
 <nav class="tabs">
-  <button class="on" data-p="page-plan" onclick="tab(this)"><span class="ic">📅</span>课表</button>
-  <button data-p="page-log" onclick="tab(this)"><span class="ic">📝</span>记录</button>
-  <button data-p="page-stat" onclick="tab(this)"><span class="ic">📊</span>统计</button>
-  <button data-p="page-set" onclick="tab(this)"><span class="ic">⚙️</span>设置</button>
+  <button class="on" data-p="page-plan" onclick="tab(this)">
+    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>课表
+  </button>
+  <button data-p="page-log" onclick="tab(this)">
+    <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="17" rx="3"/><path d="M8 9h8M8 14h8M8 18h4"/></svg>记录
+  </button>
+  <button data-p="page-stat" onclick="tab(this)">
+    <svg viewBox="0 0 24 24"><path d="M5 19V11M12 19V5M19 19v-6"/></svg>统计
+  </button>
+  <button data-p="page-set" onclick="tab(this)">
+    <svg viewBox="0 0 24 24"><path d="M4 7h9M18.5 7H20M4 17h5M14 17h6"/><circle cx="15.5" cy="7" r="2.2"/><circle cx="11" cy="17" r="2.2"/></svg>设置
+  </button>
 </nav>
 
-<button class="fab" onclick="openEditor('manual')" title="手动补一条">＋</button>
+<button class="fab" id="fab" onclick="openEditor('manual')" aria-label="手动补一条">
+  <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+</button>
 
 <div class="mask" id="mask" onclick="if(event.target===this)closeSheet()">
   <div class="sheet" id="sheet"></div>
@@ -228,6 +535,7 @@ header .sub{font-size:12px;color:var(--ink3)}
 
 <script>
 const TYPES=["轻松跑","配速跑","间歇跑","长距离","恢复跑","其他"];
+const TYPEC={"轻松跑":"#2E9E6B","配速跑":"#E08A28","间歇跑":"#D4553F","长距离":"#3E6FD9","恢复跑":"#3AA6A0","其他":"#8A928C"};
 const DN=["周一","周二","周三","周四","周五","周六","周日"];
 const KEY="runplan_v1";
 let db=JSON.parse(localStorage.getItem(KEY)||'{"tpl":[],"recs":[]}');
@@ -236,11 +544,13 @@ let weekOffset=0;
 function save(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 function esc(s){return String(s??"").replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]))}
-function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),1600)}
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("on");clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove("on"),1700)}
+function $(id){return document.getElementById(id)}
 
 function monday(d){const x=new Date(d);const w=(x.getDay()+6)%7;x.setDate(x.getDate()-w);x.setHours(0,0,0,0);return x}
 function iso(d){const p=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())}
-function fmtCN(s){const [y,m,d]=s.split("-");return m+"月"+(+d)+"日"}
+function dateObj(s){const [y,m,d]=String(s).split("-").map(Number);return new Date(y,m-1,d,0,0,0,0)}
+function fmtCN(s){const p=String(s).split("-");return (+p[1])+"月"+(+p[2])+"日"}
 function weekBase(){const b=monday(new Date());b.setDate(b.getDate()+weekOffset*7);return b}
 function pace(km,min){
   const k=+km, m=+min;
@@ -248,73 +558,136 @@ function pace(km,min){
   const sec=Math.round(m*60/k);
   return Math.floor(sec/60)+"′"+String(sec%60).padStart(2,"0")+"″";
 }
+function streakDays(){
+  const set=new Set(db.recs.map(r=>r.date));
+  let n=0,d=new Date();
+  if(!set.has(iso(d)))d.setDate(d.getDate()-1);
+  while(set.has(iso(d))&&n<9999){n++;d.setDate(d.getDate()-1)}
+  return n;
+}
+const CHECK_SVG='<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.6 4.6L19.5 6.8"/></svg>';
 
 function tab(btn){
   document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("on"));
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("on"));
   btn.classList.add("on");
-  document.getElementById(btn.dataset.p).classList.add("on");
+  $(btn.dataset.p).classList.add("on");
+  $("fab").classList.toggle("show",btn.dataset.p==="page-log");
+  window.scrollTo({top:0,behavior:"smooth"});
   renderAll();
 }
 
 /* ---------- 课表 ---------- */
 function renderPlan(){
-  const base=weekBase();
-  const end=new Date(base);end.setDate(end.getDate()+6);
-  document.getElementById("weekLabel").textContent=
-    (weekOffset===0?"本周 · ":"")+(base.getMonth()+1)+"/"+base.getDate()+" - "+(end.getMonth()+1)+"/"+end.getDate();
-  document.getElementById("nextWeek").style.display=weekOffset<0?"":"none";
-  const box=document.getElementById("planList");box.innerHTML="";
-  const wk=(weekOffset===0);
+  const base=weekBase(),end=new Date(base);end.setDate(end.getDate()+6);
+  const ds0=iso(base),ds1=iso(end),todayDS=iso(new Date());
+  const wkRecs=db.recs.filter(r=>r.date>=ds0&&r.date<=ds1);
+  const done=wkRecs.filter(r=>r.tplId).length;
+  const total=db.tpl.length;
+  const km=wkRecs.reduce((s,r)=>s+(+r.km||0),0);
+  const pct=total?Math.min(100,Math.round(done/total*100)):0;
+
+  // hero
+  $("hDone").textContent=done;
+  $("hTotal").textContent=total;
+  $("hKm").textContent=km.toFixed(1);
+  $("hLeft").textContent = total===0?"还没排课表":(done>=total?"本周全部完成":("还差 "+(total-done)+" 次"));
+  $("hPct").textContent=pct+"%";
+  const C=2*Math.PI*32;
+  const ring=$("hRing");
+  ring.style.strokeDasharray=C;
+  ring.style.strokeDashoffset=C-(C*pct/100);
+
+  // week strip
+  let strip="";
+  for(let i=0;i<7;i++){
+    const d=new Date(base);d.setDate(d.getDate()+i);
+    const ds=iso(d);
+    const hasPlan=db.tpl.some(t=>t.weekday===i);
+    const hasRec=db.recs.some(r=>r.date===ds);
+    const cls=hasRec?"done":(hasPlan?"":"rest");
+    const isToday=ds===todayDS;
+    strip+=`<div class="sc ${cls}${isToday?" today":""}"><b>${DN[i][1]}</b><i></i></div>`;
+  }
+  $("strip").innerHTML=strip;
+
+  // week label
+  $("weekLabel").textContent=(weekOffset===0?"本周 · ":"")+(base.getMonth()+1)+"/"+base.getDate()+" — "+(end.getMonth()+1)+"/"+end.getDate();
+  $("nextWeek").disabled=weekOffset>=0;
+
+  // days
+  let html="";
   for(let i=0;i<7;i++){
     const d=new Date(base);d.setDate(d.getDate()+i);
     const ds=iso(d);
     const items=db.tpl.filter(t=>t.weekday===i);
     const recsHere=db.recs.filter(r=>r.date===ds);
-    const isToday=ds===iso(new Date());
-    const h=`<div class="day"><div class="dayname">
-      <span>${DN[i]}${isToday?'<span class="d">今天</span>':""}</span>
-      <span style="font-size:11px">${(+d.getMonth()+1)}/${d.getDate()}</span></div>`;
-    let inner="";
+    const isToday=ds===todayDS;
+
+    html+=`<div class="day"><div class="dhd">
+      <span class="dn">${DN[i]}</span>${isToday?'<span class="tbadge">今天</span>':""}
+      <span class="dd">${d.getMonth()+1}/${d.getDate()}</span></div>`;
+
     items.forEach(t=>{
       const rec=recsHere.find(r=>r.tplId===t.id);
-      const done=!!rec;
-      inner+=`<div class="item ${done?"done":""}" onclick="openEditor('done','${t.id}','${ds}')">
-        <div class="check">${done?"✓":""}</div>
-        <div class="info">
-          <div class="type">${esc(t.type)}${t.km?" · "+t.km+" km":""}</div>
-          ${t.note?`<div class="meta">${esc(t.note)}</div>`:""}
-          ${done?`<div class="act">已完成 ${rec.km?rec.km+" km":""}${rec.km&&rec.min?" · ":""}${rec.min?rec.min+" 分钟":""}${pace(rec.km,rec.min)?" · 配速 "+pace(rec.km,rec.min):""}</div>`:""}
-        </div></div>`;
+      const isDone=!!rec;
+      const c=TYPEC[t.type]||TYPEC["其他"];
+      html+=`<div class="ti ${isDone?"done":""}" style="--tc:${c}" onclick="openEditor('done','${t.id}','${ds}')">
+        <div class="ti-body">
+          <div class="ti-top"><span class="ti-type">${esc(t.type)}</span>${t.km?`<span class="ti-km">${esc(t.km)} km</span>`:""}</div>
+          ${t.note?`<div class="ti-note">${esc(t.note)}</div>`:""}
+          ${isDone?`<div class="ti-done">已完成 ${rec.km?rec.km+" km":""}${rec.km&&rec.min?" · ":""}${rec.min?rec.min+" 分钟":""}${pace(rec.km,rec.min)?" · "+pace(rec.km,rec.min)+"/km":""}</div>`:""}
+        </div>
+        <div class="ti-check">${isDone?CHECK_SVG:""}</div>
+      </div>`;
     });
+
     recsHere.filter(r=>!r.tplId).forEach(r=>{
-      inner+=`<div class="item done" onclick="openEditor('recEdit','${r.id}')">
-        <div class="check">✓</div>
-        <div class="info"><div class="type">加练 · ${esc(r.type||"跑步")}${r.km?" · "+r.km+" km":""}</div>
-        <div class="act">已完成 ${r.km?r.km+" km":""}${r.min?r.min+" 分钟":""}</div></div></div>`;
+      const c=TYPEC[r.type]||TYPEC["其他"];
+      html+=`<div class="ti done" style="--tc:${c}" onclick="openEditor('recEdit','${r.id}')">
+        <div class="ti-body">
+          <div class="ti-top"><span class="ti-type">${esc(r.type||"跑步")}</span><span class="ti-km">加练</span></div>
+          <div class="ti-done">已完成 ${r.km?r.km+" km":""}${r.km&&r.min?" · ":""}${r.min?r.min+" 分钟":""}${pace(r.km,r.min)?" · "+pace(r.km,r.min)+"/km":""}</div>
+        </div>
+        <div class="ti-check">${CHECK_SVG}</div>
+      </div>`;
     });
+
     if(!items.length&&!recsHere.length)
-      inner=`<div style="font-size:13px;color:var(--ink3);padding:6px 4px">休息日 / 无安排</div>`;
-    box.insertAdjacentHTML("beforeend",h+inner+"</div>");
+      html+=`<div class="rest"><i></i>休息日 · 好好恢复</div>`;
+
+    html+=`</div>`;
   }
-  document.getElementById("subline").textContent="共 "+db.tpl.length+" 项课表 · "+db.recs.length+" 条记录";
+  $("planList").innerHTML=html;
+
+  const st=streakDays();
+  $("subline").textContent = st>0 ? ("连续 "+st+" 天") : (db.recs.length?db.recs.length+" 次记录":"开始吧");
 }
 
 /* ---------- 记录 ---------- */
 function renderLog(){
   const list=[...db.recs].sort((a,b)=>b.date.localeCompare(a.date));
-  const box=document.getElementById("logList");box.innerHTML="";
-  document.getElementById("logEmpty").style.display=list.length?"none":"";
-  let cur="";
+  const box=$("logList");box.innerHTML="";
+  $("logEmpty").style.display=list.length?"none":"flex";
+  let curM="";
   list.forEach(r=>{
-    if(r.date!==cur){cur=r.date;
-      box.insertAdjacentHTML("beforeend",`<div style="font-size:12px;color:var(--ink3);margin:10px 4px 6px">${fmtCN(r.date)}</div>`);}
-    box.insertAdjacentHTML("beforeend",`<div class="row" onclick="openEditor('${r.tplId?"doneTpl":"recEdit"}','${r.id}','${r.date}')">
-      <div class="top"><span class="dt">${r.tplId?"课表完成":"手动补录"}</span>
-      <span class="tag ${r.tplId?"":"manual"}">${esc(r.type)}</span></div>
-      <div class="main">${r.km?r.km+" km":""}${r.min?" · "+r.min+" 分钟":""}</div>
-      ${pace(r.km,r.min)?`<div class="meta">平均配速 ${pace(r.km,r.min)} /km</div>`:""}
-      ${r.note?`<div class="meta">${esc(r.note)}</div>`:""}</div>`);
+    const m=r.date.slice(0,7);
+    if(m!==curM){
+      curM=m;
+      const arr=list.filter(x=>x.date.slice(0,7)===m);
+      const km=arr.reduce((s,x)=>s+(+x.km||0),0);
+      box.insertAdjacentHTML("beforeend",
+        `<div class="lhd"><b>${(+m.slice(5))} 月</b><span>${arr.length} 次 · ${km.toFixed(1)} km</span></div>`);
+    }
+    const c=TYPEC[r.type]||TYPEC["其他"];
+    const wd=DN[(dateObj(r.date).getDay()+6)%7];
+    box.insertAdjacentHTML("beforeend",`<div class="lr" style="--tc:${c}" onclick="openEditor('${r.tplId?"doneTpl":"recEdit"}','${r.id}')">
+      <span class="lr-dot"></span>
+      <div class="lr-l"><div class="lr-t">${esc(r.type||"跑步")}</div>
+        <div class="lr-d">${fmtCN(r.date)} · ${wd}${r.tplId?"":" · 补录"}</div></div>
+      <div class="lr-r"><div class="lr-km">${r.km||"—"}<span>km</span></div>
+        <div class="lr-m">${r.min?r.min+" 分":"—"}${pace(r.km,r.min)?" · "+pace(r.km,r.min):""}</div></div>
+    </div>`);
   });
 }
 
@@ -322,34 +695,47 @@ function renderLog(){
 function renderStat(){
   const base=weekBase(),end=new Date(base);end.setDate(end.getDate()+6);
   const wkRecs=db.recs.filter(r=>r.date>=iso(base)&&r.date<=iso(end));
-  const wkDone=wkRecs.filter(r=>r.tplId).length;
-  const wkTotal=db.tpl.length;
-  const wkKm=wkRecs.reduce((s,r)=>s+(+r.km||0),0);
-  document.getElementById("stWeek").innerHTML=
-    wkDone+" / "+wkTotal+' <small>次 · '+wkKm.toFixed(1)+' km</small>';
-  document.getElementById("stWeekBar").style.width=(wkTotal?wkDone/wkTotal*100:0)+"%";
+  const done=wkRecs.filter(r=>r.tplId).length;
+  const total=db.tpl.length;
+  const km=wkRecs.reduce((s,r)=>s+(+r.km||0),0);
+  const pct=total?Math.min(100,Math.round(done/total*100)):0;
+
+  $("stPct").textContent=pct+"%";
+  const C=2*Math.PI*47,ring=$("stRing");
+  ring.style.strokeDasharray=C;
+  ring.style.strokeDashoffset=C-(C*pct/100);
+  $("stDone").textContent=done+" / "+total+" 次";
+  $("stKm").textContent=km.toFixed(1)+" km";
+  $("stTip").textContent = total===0?"无课表":(pct>=100?"达标":(pct>=50?"进行中":"刚起步"));
+
   const totalKm=db.recs.reduce((s,r)=>s+(+r.km||0),0);
   const totalMin=db.recs.reduce((s,r)=>s+(+r.min||0),0);
-  document.getElementById("stTotal").innerHTML=
-    `<div><div class="bignum">${db.recs.length}<small> 次</small></div><div style="font-size:12px;color:var(--ink2)">打卡</div></div>
-     <div><div class="bignum">${totalKm.toFixed(1)}<small> km</small></div><div style="font-size:12px;color:var(--ink2)">总里程</div></div>
-     <div><div class="bignum">${Math.round(totalMin/60)}<small> h</small></div><div style="font-size:12px;color:var(--ink2)">总时长</div></div>`;
-  const hm=document.getElementById("heatmap");hm.innerHTML="";
-  const today=new Date();
-  const start=monday(today);start.setDate(start.getDate()-13*7);
-  for(let i=0;i<14*7;i++){
-    const d=new Date(start);d.setDate(start.getDate()+i);
-    const ds=iso(d);
-    const n=db.recs.filter(r=>r.date===ds).length;
-    const c=document.createElement("div");
-    c.className="cell"+(n?(n===1?" l1":n===2?" l2":" l3"):"");
-    hm.appendChild(c);
+  $("tCnt").textContent=db.recs.length;
+  $("tKm").textContent=totalKm.toFixed(0);
+  $("tH").textContent=Math.round(totalMin/60);
+
+  const hm=$("heatmap");hm.innerHTML="";
+  const todayDS=iso(new Date());
+  const start=monday(new Date());start.setDate(start.getDate()-13*7);
+  const cnt={};
+  db.recs.forEach(r=>{cnt[r.date]=(cnt[r.date]||0)+1});
+  for(let w=0;w<14;w++){
+    for(let i=0;i<7;i++){
+      const d=new Date(start);d.setDate(start.getDate()+w*7+i);
+      const ds=iso(d);
+      const n=cnt[ds]||0;
+      const c=document.createElement("div");
+      c.className="hmcell"+(n?(n===1?" l1":n===2?" l2":" l3"):"");
+      if(ds===todayDS)c.style.boxShadow="inset 0 0 0 1.5px rgba(21,122,82,.55)";
+      if(ds>todayDS)c.style.opacity=".4";
+      hm.appendChild(c);
+    }
   }
 }
 
 /* ---------- 弹层 ---------- */
-function openSheet(html){document.getElementById("sheet").innerHTML=html;document.getElementById("mask").classList.add("on")}
-function closeSheet(){document.getElementById("mask").classList.remove("on")}
+function openSheet(html){$("sheet").innerHTML=html;$("mask").classList.add("on");document.body.style.overflow="hidden"}
+function closeSheet(){$("mask").classList.remove("on");document.body.style.overflow=""}
 
 function openEditor(kind,id,date){
   if(kind==="plan"){
@@ -357,24 +743,30 @@ function openEditor(kind,id,date){
       <div class="field"><label>星期几</label><select id="fWd">${DN.map((n,i)=>`<option value="${i}">${n}</option>`).join("")}</select></div>
       <div class="field"><label>课表类型</label><select id="fType">${TYPES.map(t=>`<option>${t}</option>`).join("")}</select></div>
       <div class="field"><label>目标距离（km，可留空）</label><input id="fKm" type="number" inputmode="decimal" step="0.1" placeholder="如 6"></div>
-      <div class="field"><label>备注（可选）</label><input id="fNote" placeholder="如：有氧心率 140-150"></div>
+      <div class="field"><label>备注（可选）</label><input id="fNote" placeholder="如：有氧心率 141-161"></div>
       <div class="btnrow"><button class="primary" onclick="addTpl()">添加</button><button class="ghost" onclick="closeSheet()">取消</button></div>`);
   }
   else if(kind==="done"){
     const t=db.tpl.find(x=>x.id===id);
+    if(!t)return;
     const rec=db.recs.find(r=>r.tplId===id&&r.date===date);
+    const c=TYPEC[t.type]||TYPEC["其他"];
     openSheet(`<h2>${esc(t.type)} · ${fmtCN(date)}</h2>
-      <div class="field"><label>实际距离（km）</label><input id="fKm" type="number" inputmode="decimal" step="0.1" value="${rec?rec.km||"":""}" placeholder="手表/华为上看到的"></div>
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+        <span style="font-size:11px;font-weight:600;color:${c};background:${c}14;padding:4px 9px;border-radius:7px">${t.km?esc(t.km)+" km":"未设距离"}</span>
+        ${t.note?`<span style="font-size:11px;color:var(--ink3);padding:4px 0">${esc(t.note)}</span>`:""}
+      </div>
+      <div class="field"><label>实际距离（km）</label><input id="fKm" type="number" inputmode="decimal" step="0.1" value="${rec?rec.km||"":""}" placeholder="手表上看到的"></div>
       <div class="field"><label>用时（分钟）</label><input id="fMin" type="number" inputmode="numeric" value="${rec?rec.min||"":""}" placeholder="如 35"></div>
       <div class="field"><label>备注</label><input id="fNote" value="${rec?esc(rec.note||""):""}" placeholder="今天状态如何"></div>
       <div class="btnrow">
-        <button class="primary" onclick="saveDone('${id}','${date}')">${rec?"保存修改":"✓ 标记完成"}</button>
-        ${rec?`<button class="danger" onclick="delRec('${rec.id}')">删除记录</button>`:`<button class="ghost" onclick="closeSheet()">取消</button>`}
+        <button class="primary" onclick="saveDone('${id}','${date}')">${rec?"保存修改":"标记完成"}</button>
+        ${rec?`<button class="danger" onclick="delRec('${rec.id}')">删除</button>`:`<button class="ghost" onclick="closeSheet()">取消</button>`}
       </div>`);
   }
   else if(kind==="doneTpl"){
     const r=db.recs.find(x=>x.id===id);
-    if(!r)return;id=r.id;
+    if(!r)return;
     openSheet(`<h2>记录 · ${fmtCN(r.date)}</h2>
       <div class="field"><label>实际距离（km）</label><input id="fKm" type="number" inputmode="decimal" step="0.1" value="${r.km||""}"></div>
       <div class="field"><label>用时（分钟）</label><input id="fMin" type="number" inputmode="numeric" value="${r.min||""}"></div>
@@ -396,37 +788,62 @@ function openEditor(kind,id,date){
 }
 
 function addTpl(){
-  const wd=+document.getElementById("fWd").value;
-  db.tpl.push({id:uid(),weekday:wd,type:document.getElementById("fType").value,
-    km:document.getElementById("fKm").value||"",note:document.getElementById("fNote").value.trim()});
+  db.tpl.push({id:uid(),weekday:+$("fWd").value,type:$("fType").value,
+    km:$("fKm").value||"",note:$("fNote").value.trim()});
   save();closeSheet();toast("已加入课表");
 }
 function saveDone(tplId,date){
   const t=db.tpl.find(x=>x.id===tplId);if(!t)return;
-  const km=document.getElementById("fKm").value,min=document.getElementById("fMin").value,note=document.getElementById("fNote").value.trim();
+  const km=$("fKm").value,min=$("fMin").value,note=$("fNote").value.trim();
   let r=db.recs.find(x=>x.tplId===tplId&&x.date===date);
   if(!r){r={id:uid(),tplId,date,type:t.type};db.recs.push(r)}
   r.km=km?+km:"";r.min=min?+min:"";r.note=note;
-  save();closeSheet();toast("打卡完成 ✓");
+  save();closeSheet();toast("打卡完成");
 }
 function addManual(){
-  const km=document.getElementById("fKm").value,min=document.getElementById("fMin").value;
+  const km=$("fKm").value,min=$("fMin").value;
   if(!km&&!min){toast("至少填距离或用时");return}
-  db.recs.push({id:uid(),date:document.getElementById("fDate").value,type:document.getElementById("fType").value,
-    km:km?+km:"",min:min?+min:"",note:document.getElementById("fNote").value.trim()});
+  db.recs.push({id:uid(),date:$("fDate").value,type:$("fType").value,
+    km:km?+km:"",min:min?+min:"",note:$("fNote").value.trim()});
   save();closeSheet();toast("已记录");
 }
 function saveRecEdit(id){
   const r=db.recs.find(x=>x.id===id);if(!r)return;
-  const dEl=document.getElementById("fDate");
-  if(dEl)r.date=dEl.value;
-  const tEl=document.getElementById("fType");if(tEl)r.type=tEl.value;
-  const km=document.getElementById("fKm").value,min=document.getElementById("fMin").value;
-  r.km=km?+km:"";r.min=min?+min:"";r.note=document.getElementById("fNote").value.trim();
-  save();closeSheet();
+  const dEl=$("fDate");if(dEl)r.date=dEl.value;
+  const tEl=$("fType");if(tEl)r.type=tEl.value;
+  const km=$("fKm").value,min=$("fMin").value;
+  r.km=km?+km:"";r.min=min?+min:"";r.note=$("fNote").value.trim();
+  save();closeSheet();toast("已保存");
 }
 function delRec(id){
   db.recs=db.recs.filter(r=>r.id!==id);save();closeSheet();toast("已删除");
+}
+
+/* ---------- 训练模板 ---------- */
+const POLAR=[
+ {weekday:1,type:"轻松跑",km:"6-8",note:"心率 141-161 · 鼻吸口呼能聊天，打有氧底子"},
+ {weekday:3,type:"配速跑",km:"8-10",note:"前 2km 热身 · 中段 4-6km 心率 176-180（微喘能说短句）· 后 2km 放松"},
+ {weekday:5,type:"间歇跑",km:"8-10",note:"5×800m 心率 181-190 · 组间慢跑/走至心率<140 再下一组"},
+ {weekday:6,type:"长距离",km:"14-18",note:"心率 141-161 · 最后可升至 162-170 · 求时长不求配速"}
+];
+function importTemplate(){
+  openSheet(`<h2>极化训练模板</h2>
+    <div style="font-size:12px;color:var(--ink3);margin:-8px 0 16px">每周 4 跑 · 80% 低心率有氧 + 20% 强度</div>
+    <div class="group" style="margin-bottom:14px;box-shadow:none">
+      ${POLAR.map(t=>`<div class="gitem" style="cursor:default">
+        <span class="gi" style="background:${(TYPEC[t.type]||TYPEC["其他"])}14;color:${TYPEC[t.type]||TYPEC["其他"]};font-size:10px;font-weight:700">${DN[t.weekday][1]}</span>
+        <span class="gt" style="font-size:13px">${t.type} · ${t.km} km
+          <span class="gs">${t.note}</span></span>
+      </div>`).join("")}
+    </div>
+    <div style="font-size:12px;color:var(--ink3);line-height:1.8">周一/周五完全休息，周三核心力量或交叉训练。<br>
+    <span style="color:var(--red)">导入会覆盖当前全部课表项（已打卡的记录会保留）</span></div>
+    <div class="btnrow"><button class="primary" onclick="doImport()">确认导入</button>
+    <button class="ghost" onclick="closeSheet()">取消</button></div>`);
+}
+function doImport(){
+  db.tpl=POLAR.map(t=>Object.assign({id:uid()},t));
+  weekOffset=0;save();closeSheet();toast("模板已导入");
 }
 
 /* ---------- 备份 ---------- */
@@ -446,14 +863,15 @@ function importData(input){
   rd.readAsText(f);input.value="";
 }
 function clearAll(){
-  openSheet(`<h2>清空全部数据？</h2><p style="font-size:13px;color:var(--ink2);line-height:1.7">课表和所有记录都会删除，且无法恢复。<br>建议先去导出备份。</p>
+  openSheet(`<h2>清空全部数据？</h2>
+    <p style="font-size:13px;color:var(--ink2);line-height:1.8;margin-bottom:4px">课表和所有记录都会删除，且无法恢复。建议先去导出备份。</p>
     <div class="btnrow"><button class="danger" onclick="db={tpl:[],recs:[]};save();closeSheet();toast('已清空')">确认清空</button>
     <button class="ghost" onclick="closeSheet()">取消</button></div>`);
 }
 
 function renderAll(){renderPlan();renderLog();renderStat()}
-document.getElementById("prevWeek").onclick=()=>{weekOffset--;renderAll()};
-document.getElementById("nextWeek").onclick=()=>{weekOffset++;renderAll()};
+$("prevWeek").onclick=()=>{weekOffset--;renderAll()};
+$("nextWeek").onclick=()=>{weekOffset++;renderAll()};
 renderAll();
 </script>
 </body>
