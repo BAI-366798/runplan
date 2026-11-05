@@ -87,7 +87,7 @@ header .sub{font-size:12px;color:var(--ink3)}
 .bignum small{font-size:14px;color:var(--ink2);font-weight:400}
 .bar{height:10px;background:#EDEBE5;border-radius:5px;overflow:hidden;margin-top:10px}
 .bar i{display:block;height:100%;background:var(--green);border-radius:5px;transition:.3s}
-.grid{display:grid;grid-template-columns:repeat(14,1fr);gap:4px}
+.grid{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,1fr);grid-template-columns:repeat(14,1fr);gap:3px}
 .cell{aspect-ratio:1;border-radius:3px;background:#EDEBE5}
 .cell.l1{background:#C0DD97}.cell.l2{background:#97C459}.cell.l3{background:#3B6D11}
 .row{
@@ -242,7 +242,12 @@ function monday(d){const x=new Date(d);const w=(x.getDay()+6)%7;x.setDate(x.getD
 function iso(d){const p=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())}
 function fmtCN(s){const [y,m,d]=s.split("-");return m+"月"+(+d)+"日"}
 function weekBase(){const b=monday(new Date());b.setDate(b.getDate()+weekOffset*7);return b}
-function pace(km,min){if(!km||!min||km<=0)return"";const t=min/km*60;return Math.floor(t)+"'"+String(Math.round(t%60)).padStart(2,"0")+'"}
+function pace(km,min){
+  const k=+km, m=+min;
+  if(!k||!m||k<=0||m<=0)return "";
+  const sec=Math.round(m*60/k);
+  return Math.floor(sec/60)+"′"+String(sec%60).padStart(2,"0")+"″";
+}
 
 function tab(btn){
   document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("on"));
@@ -304,7 +309,7 @@ function renderLog(){
   list.forEach(r=>{
     if(r.date!==cur){cur=r.date;
       box.insertAdjacentHTML("beforeend",`<div style="font-size:12px;color:var(--ink3);margin:10px 4px 6px">${fmtCN(r.date)}</div>`);}
-    box.insertAdjacentHTML("beforeend",`<div class="row" onclick="openEditor('${r.tplId?"doneTpl":"recEdit"}','${r.tplId||r.id}','${r.date}')">
+    box.insertAdjacentHTML("beforeend",`<div class="row" onclick="openEditor('${r.tplId?"doneTpl":"recEdit"}','${r.id}','${r.date}')">
       <div class="top"><span class="dt">${r.tplId?"课表完成":"手动补录"}</span>
       <span class="tag ${r.tplId?"":"manual"}">${esc(r.type)}</span></div>
       <div class="main">${r.km?r.km+" km":""}${r.min?" · "+r.min+" 分钟":""}</div>
@@ -330,15 +335,15 @@ function renderStat(){
      <div><div class="bignum">${totalKm.toFixed(1)}<small> km</small></div><div style="font-size:12px;color:var(--ink2)">总里程</div></div>
      <div><div class="bignum">${Math.round(totalMin/60)}<small> h</small></div><div style="font-size:12px;color:var(--ink2)">总时长</div></div>`;
   const hm=document.getElementById("heatmap");hm.innerHTML="";
-  const today=new Date();const endH=monday(today);endH.setDate(endH.getDate()+6);
-  for(let w=13;w>=0;w--){
-    for(let i=0;i<7;i++){
-      const d=new Date(endH);d.setDate(d.getDate()-w*7+(6-i)*0+(i-6));d.setTime(endH.getTime());d.setDate(endH.getDate()-w*7+i);
-      const ds=iso(d);
-      const n=db.recs.filter(r=>r.date===ds).length;
-      const c=document.createElement("div");c.className="cell"+(n?(n===1?" l1":n===2?" l2":" l3"):"");
-      hm.appendChild(c);
-    }
+  const today=new Date();
+  const start=monday(today);start.setDate(start.getDate()-13*7);
+  for(let i=0;i<14*7;i++){
+    const d=new Date(start);d.setDate(start.getDate()+i);
+    const ds=iso(d);
+    const n=db.recs.filter(r=>r.date===ds).length;
+    const c=document.createElement("div");
+    c.className="cell"+(n?(n===1?" l1":n===2?" l2":" l3"):"");
+    hm.appendChild(c);
   }
 }
 
