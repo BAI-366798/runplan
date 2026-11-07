@@ -407,6 +407,7 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
 .mini-edit svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
 /* ---------- chat ---------- */
+#page-ai{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 178px)}
 .aitop{display:flex;align-items:center;justify-content:space-between;margin:0 0 9px}
 .aimod{font-size:11px;color:var(--ink3);display:inline-flex;align-items:center;gap:5px}
 .aimod::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--green-br);box-shadow:0 0 0 3px rgba(15,157,99,.14)}
@@ -454,6 +455,15 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 .bub .caret{display:inline-block;width:2px;height:13px;background:var(--green);
   vertical-align:-2px;margin-left:2px;animation:blink 1s steps(1) infinite}
+.thinkbox{border-left:2px solid var(--line);padding:1px 0 1px 9px;margin:1px 0 2px}
+.thinkhd{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:var(--ink3)}
+.thinkhd i{width:4px;height:4px;border-radius:50%;background:var(--green-br);opacity:.35;
+  animation:tbob 1.1s ease-in-out infinite;display:inline-block}
+.thinkhd i:nth-child(2){animation-delay:.15s}
+.thinkhd i:nth-child(3){animation-delay:.3s}
+.thinktail{margin-top:5px;font-size:11.5px;line-height:1.6;color:var(--ink3);opacity:.85;
+  max-height:3.2em;overflow:hidden;word-break:break-word}
+@keyframes tbob{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-2px)}}
 .msgops{display:flex;gap:6px;margin-top:8px}
 .msgops button{
   display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:99px;
@@ -473,9 +483,10 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
 .typing i:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
 .chatbar{
-  position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 84px);
-  display:flex;gap:8px;padding:10px 0 6px;
-  background:linear-gradient(180deg,rgba(242,245,242,0),var(--bg) 34%);
+  position:fixed;left:0;right:0;max-width:520px;margin:0 auto;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 84px);
+  display:flex;gap:8px;padding:10px 16px 6px;
+  background:linear-gradient(180deg,rgba(242,245,242,0),var(--bg) 40%);
 }
 .chatbar input{
   flex:1;padding:12px 16px;border:1px solid #E4E9E5;border-radius:99px;
@@ -811,6 +822,7 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
 /* --- 桌面 / iPad 双列 --- */
 @media (min-width:820px){
   .wrap{max-width:880px}
+  .chatbar{max-width:880px}
   #page-plan.on{display:grid;grid-template-columns:340px minmax(0,1fr);
     grid-template-areas:"bk bk" "hero list" "wk list" "act list";gap:0 22px;align-items:start}
   #page-plan.on .bkbar{grid-area:bk}
@@ -2212,6 +2224,16 @@ function paintStream(t){
   b.innerHTML=mdToHtml(t)+'<span class="caret"></span>';
   if(autoScroll)window.scrollTo({top:document.body.scrollHeight});
 }
+function paintThink(t){
+  const now=Date.now();
+  if(now-_paintT<80)return;
+  _paintT=now;
+  const b=$("streamBub");
+  if(!b)return;
+  b.innerHTML='<div class="thinkbox"><div class="thinkhd"><i></i><i></i><i></i>深度思考中 · '+t.length+' 字</div>'
+    +'<div class="thinktail">'+esc(t.slice(-120))+'</div></div>';
+  if(autoScroll)window.scrollTo({top:document.body.scrollHeight});
+}
 function rmStream(){const m=$("streamMsg");if(m)m.remove()}
 
 async function askGLM(fb){
@@ -2233,7 +2255,7 @@ async function askGLM(fb){
   const list=$("chatList");
   list.insertAdjacentHTML("beforeend",'<div class="msg a" id="streamMsg"><span class="av ai">'+AI_SVG+'</span><div class="bub" id="streamBub"><span class="typing"><i></i><i></i><i></i></span></div></div>');
   scrollChat(true);
-  let full="",ok=false;
+  let full="",think="",ok=false;
   const ctl=(typeof AbortController!=="undefined")?new AbortController():null;
   chatAbort=ctl;
   try{
@@ -2242,7 +2264,8 @@ async function askGLM(fb){
     const history=chat.slice(-12).map(m=>({role:m.role,content:m.content}));
     const msgs=[{role:"system",content:AI_SYS+"\n\n# 用户当前数据\n"+buildContext()}].concat(history);
     const payload={model:model,messages:msgs,stream:true,temperature:0.55,top_p:0.9};
-    if(/siliconflow/.test(base)&&/qwen3/i.test(model))payload.enable_thinking=false;
+    if(/siliconflow/.test(base)&&/qwen3/i.test(model)&&!/deepseek|r1|distill/i.test(model))payload.enable_thinking=false;
+    if(/deepseek-r1|glm-z1|\/r1/i.test(model))payload.max_tokens=4096;
     const res=await fetch(endpoint,{
       method:"POST",
       headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},
@@ -2280,7 +2303,10 @@ async function askGLM(fb){
           try{
             const j=JSON.parse(data);
             const c=j.choices&&j.choices[0];
-            const delta=(c&&c.delta&&c.delta.content)||(c&&c.message&&c.message.content)||"";
+            const dl=(c&&c.delta)||{};
+            const rsn=dl.reasoning_content||dl.reasoning||"";
+            if(rsn){think+=rsn;if(!full)paintThink(think)}
+            const delta=dl.content||(c&&c.message&&c.message.content)||"";
             if(delta){full+=delta;paintStream(full)}
           }catch(e){}
         }
@@ -2365,7 +2391,8 @@ async function aiText(sys,user){
     messages:[{role:"system",content:sys},{role:"user",content:user}],
     temperature:0.4
   };
-  if(/siliconflow/.test(base)&&/qwen3/i.test(model))payload.enable_thinking=false;
+  if(/siliconflow/.test(base)&&/qwen3/i.test(model)&&!/deepseek|r1|distill/i.test(model))payload.enable_thinking=false;
+  if(/deepseek-r1|glm-z1|\/r1/i.test(model))payload.max_tokens=4096;
   const res=await fetch(endpoint,{
     method:"POST",
     headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},
