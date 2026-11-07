@@ -407,8 +407,16 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
 .mini-edit svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
 /* ---------- chat ---------- */
-.chips{display:flex;gap:7px;flex-wrap:wrap;margin:2px 0 14px}
+.aitop{display:flex;align-items:center;justify-content:space-between;margin:0 0 9px}
+.aimod{font-size:11px;color:var(--ink3);display:inline-flex;align-items:center;gap:5px}
+.aimod::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--green-br);box-shadow:0 0 0 3px rgba(15,157,99,.14)}
+.aictl{font-size:11.5px;color:var(--ink3);border:1px solid var(--line);background:var(--card2);
+  border-radius:99px;padding:5px 12px;font-family:inherit;cursor:pointer}
+.aictl:active{color:var(--green);background:var(--soft)}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:2px 0 9px;margin-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.chips::-webkit-scrollbar{display:none}
 .chip{
+  flex-shrink:0;white-space:nowrap;
   font-size:12px;font-weight:500;color:var(--green);
   background:linear-gradient(180deg,#EDF8F2,#E2F3EA);
   border:1px solid rgba(18,138,90,.18);border-radius:99px;
@@ -427,9 +435,32 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
 .msg .av.ai{background:linear-gradient(145deg,#16A56B,#0A5238);box-shadow:0 4px 10px -4px rgba(15,122,82,.55)}
 .msg .av.ai svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .msg .bub{
-  max-width:76%;padding:10px 13px;border-radius:16px;font-size:13.5px;line-height:1.7;
-  white-space:pre-wrap;word-break:break-word;letter-spacing:-.1px;
+  max-width:84%;padding:11px 14px;border-radius:16px;font-size:13.5px;line-height:1.72;
+  word-break:break-word;letter-spacing:-.1px;
 }
+.msg.u .bub{white-space:pre-wrap;max-width:80%}
+/* 助手回答的 Markdown 排版 */
+.bub>p{margin:0 0 9px}
+.bub>p:last-child{margin-bottom:0}
+.bub h3,.bub h4{font-size:13.5px;font-weight:700;color:var(--green-d);margin:13px 0 6px;letter-spacing:-.2px}
+.bub h3:first-child,.bub h4:first-child{margin-top:0}
+.bub ul,.bub ol{margin:5px 0 9px;padding-left:19px}
+.bub li{margin:3px 0}
+.bub li::marker{color:var(--green);font-weight:600}
+.bub strong{font-weight:700}
+.bub em{font-style:normal;color:var(--ink2)}
+.bub hr{border:0;border-top:1px solid var(--line);margin:12px 0}
+.bub code{background:var(--soft);border-radius:5px;padding:1px 5px;font-size:12px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.bub .caret{display:inline-block;width:2px;height:13px;background:var(--green);
+  vertical-align:-2px;margin-left:2px;animation:blink 1s steps(1) infinite}
+.msgops{display:flex;gap:6px;margin-top:8px}
+.msgops button{
+  display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:99px;
+  border:1px solid var(--line);background:var(--card2);color:var(--ink3);
+  font-size:11px;font-family:inherit;font-weight:500;cursor:pointer;
+}
+.msgops button:active{background:var(--soft);color:var(--green)}
 .msg.u .bub{
   background:linear-gradient(145deg,#16A56B,#0C5C3E);color:#fff;border-bottom-right-radius:6px;
   box-shadow:0 8px 18px -10px rgba(15,122,82,.6);
@@ -448,7 +479,7 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
 }
 .chatbar input{
   flex:1;padding:12px 16px;border:1px solid #E4E9E5;border-radius:99px;
-  font-size:14px;font-family:inherit;background:#fff;color:var(--ink);
+  font-size:16px;font-family:inherit;background:#fff;color:var(--ink);
   box-shadow:var(--shadow);
 }
 .chatbar input::placeholder{color:#B4BCB7}
@@ -466,10 +497,13 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
 /* ---------- settings inline input ---------- */
 .ginput{
   display:block;width:100%;margin-top:9px;padding:11px 12px;
-  border:1px solid #E4E9E5;border-radius:11px;font-size:13.5px;font-family:inherit;
+  border:1px solid #E4E9E5;border-radius:11px;font-size:16px;font-family:inherit;
   background:#F7F9F7;color:var(--ink);
 }
 .ginput:focus{outline:none;border-color:var(--green-br);background:#fff;box-shadow:0 0 0 3px rgba(15,157,99,.14)}
+.mpre{display:flex;gap:6px;margin-top:9px;overflow-x:auto;scrollbar-width:none}
+.mpre::-webkit-scrollbar{display:none}
+.mpre .chip{font-size:11px;padding:6px 11px}
 
 /* ---------- 类型图标 / 柱状图 / 配速折线 / 徽章 / 月度进度 ---------- */
 .ti-ic{
@@ -987,17 +1021,24 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
 
   <!-- 助手页 -->
   <div class="page" id="page-ai">
+    <div class="aitop">
+      <span class="aimod" id="aiModTag">AI 教练</span>
+      <button class="aictl" onclick="clearChat()">清空对话</button>
+    </div>
     <div class="chips">
-      <button class="chip" onclick="sendChat('结合我的课表和最近记录，分析一下我本周的训练质量')">分析本周训练</button>
-      <button class="chip" onclick="sendChat('结合今天的天气和我的课表，今天这堂课该怎么跑？')">今天怎么跑</button>
-      <button class="chip" onclick="sendChat('根据我最近的完成情况，下周课表怎么调整更合理？')">调整下周课表</button>
-      <button class="chip" onclick="genWeekPlan()">AI 排下周课表</button>
-      <button class="chip" onclick="sendChat('我是大学生跑者，每周 4 跑，给我讲讲怎么预防跑步伤病')">预防伤病</button>
+      <button class="chip" onclick="sendChat('结合我的课表和最近记录，分析一下我本周的训练质量，指出具体问题')">分析本周训练</button>
+      <button class="chip" onclick="sendChat('结合今天的天气和我的课表，今天这堂课具体该怎么跑？给出心率区间、配速范围和注意事项')">今天怎么跑</button>
+      <button class="chip" onclick="sendChat('根据我最近四周的完成情况和配速变化，下周课表该怎么调整？给出具体安排和理由')">下周怎么调</button>
+      <button class="chip" onclick="genWeekPlan()">AI 排周课表</button>
+      <button class="chip" onclick="sendChat('我的配速最近上不去，从运动生理角度讲讲瓶颈在哪，给一个六周突破方案')">配速怎么提升</button>
+      <button class="chip" onclick="sendChat('我跑步时膝盖外侧疼，帮我分析可能的原因、现在该怎么处理、多久能恢复跑步')">膝外侧疼</button>
+      <button class="chip" onclick="sendChat('大学生跑者一天该怎么吃？结合食堂条件，给具体的三餐和加餐建议')">怎么吃</button>
+      <button class="chip" onclick="sendChat('最近训练有点提不起劲，随便聊聊')">随便聊聊</button>
     </div>
     <div id="chatList"></div>
     <div class="chatbar">
-      <input id="chatInput" placeholder="问问你的跑步助手…">
-      <button id="chatSend" onclick="sendChat()"><svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button>
+      <input id="chatInput" placeholder="问训练、聊日常都行…" enterkeyhint="send">
+      <button id="chatSend" onclick="onSendClick()" aria-label="发送"><svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button>
     </div>
   </div>
 
@@ -1014,8 +1055,14 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
       <div class="gitem" style="cursor:default;align-items:flex-start">
         <span class="gi"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10" stroke-width="2" stroke-linecap="round" fill="none" stroke="currentColor"/></svg></span>
         <span class="gt">模型名称
-          <span class="gs">留空 = 智谱 glm-4.7-flash；硅基流动可填 Qwen/Qwen2.5-7B-Instruct（免费）</span>
+          <span class="gs">点下面的预设最省事（会自动改好接口地址）；也可以手填任意模型 ID</span>
           <input class="ginput" id="aiModel" type="text" placeholder="glm-4.7-flash（默认）" onchange="saveModelName()">
+          <span class="mpre">
+            <button class="chip" onclick="usePreset('qwen3')">Qwen3-8B · 免费</button>
+            <button class="chip" onclick="usePreset('r1')">R1 蒸馏 8B · 会推理</button>
+            <button class="chip" onclick="usePreset('glm')">GLM-4.7-Flash · 智谱</button>
+          </span>
+          <span class="gs" style="margin-top:6px">换平台后 Key 也要换成对应平台的，两家不通用。</span>
         </span>
       </div>
       <div class="gitem" style="cursor:default;align-items:flex-start">
@@ -1838,10 +1885,15 @@ function loadWeather(){
     if(c&&Date.now()-c.t<3600000){renderWeather(c.d);return}
   }catch(e){}
   const url="https://api.open-meteo.com/v1/forecast?latitude="+HOME.lat+"&longitude="+HOME.lon
-    +"&current_weather=true&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode&timezone=auto&forecast_days=1";
+    +"&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m"
+    +"&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode&timezone=auto&forecast_days=1";
   fetch(url).then(r=>r.json()).then(d=>{
-    const w={code:d.current_weather.weathercode,temp:Math.round(d.current_weather.temperature),
-      wind:Math.round(d.current_weather.windspeed),
+    const cur=d.current||{};
+    const w={code:cur.weather_code??(d.current_weather&&d.current_weather.weathercode)??0,
+      temp:Math.round(cur.temperature_2m??(d.current_weather&&d.current_weather.temperature)??0),
+      app:Math.round(cur.apparent_temperature??cur.temperature_2m??0),
+      hum:Math.round(cur.relative_humidity_2m??0),
+      wind:Math.round(cur.wind_speed_10m??(d.current_weather&&d.current_weather.windspeed)??0),
       tmax:Math.round(d.daily.temperature_2m_max[0]),tmin:Math.round(d.daily.temperature_2m_min[0]),
       pop:(d.daily.precipitation_probability_max&&d.daily.precipitation_probability_max[0])||0};
     localStorage.setItem("runplan_wx",JSON.stringify({t:Date.now(),d:w}));
@@ -1866,7 +1918,12 @@ function renderWeather(w){
 const AI_SVG='<svg viewBox="0 0 24 24"><path d="M12 2.5l1.7 4.8L18.5 9l-4.8 1.7L12 15.5l-1.7-4.8L5.5 9l4.8-1.7L12 2.5z"/><path d="M19 15l.8 2.2 2.2.8-2.2.8L19 21l-.8-2.2-2.2-.8 2.2-.8L19 15z"/></svg>';
 const AI_KEY_NAME="runplan_glmkey";
 const AI_API="https://open.bigmodel.cn/api/paas/v4/chat/completions";
-let chat=[];
+let chat=(function(){
+  try{
+    const a=JSON.parse(localStorage.getItem("runplan_chat")||"[]");
+    return Array.isArray(a)?a.filter(x=>x&&x.role&&typeof x.content==="string"):[];
+  }catch(e){return []}
+})();
 
 function getKey(){return localStorage.getItem(AI_KEY_NAME)||""}
 function saveKey(){localStorage.setItem(AI_KEY_NAME,$("apiKey").value.trim());toast("Key 已保存到本机")}
@@ -1885,6 +1942,22 @@ function saveModelName(){
   const v=$("aiModel").value.trim();
   if(!v){localStorage.removeItem("runplan_aimodel");toast("已恢复默认模型 glm-4.7-flash")}
   else{localStorage.setItem("runplan_aimodel",v);toast("模型名称已保存")}
+  setModTag();
+}
+const MPRESET={
+  qwen3:{name:"Qwen3-8B",api:"https://api.siliconflow.cn/v1/chat/completions",model:"Qwen/Qwen3-8B"},
+  r1:{name:"R1-8B",api:"https://api.siliconflow.cn/v1/chat/completions",model:"deepseek-ai/DeepSeek-R1-0528-Qwen3-8B"},
+  glm:{name:"GLM-4.7-Flash",api:"",model:"glm-4.7-flash"}
+};
+function usePreset(k){
+  const p=MPRESET[k];if(!p)return;
+  localStorage.setItem("runplan_aimodel",p.model);
+  if(p.api)localStorage.setItem("runplan_aiapi",p.api);
+  else localStorage.removeItem("runplan_aiapi");
+  $("aiModel").value=p.model;
+  $("aiApi").value=p.api;
+  setModTag();
+  toast("已切到 "+p.name+"，确认 Key 与该平台一致");
 }
 function getProxy(){return localStorage.getItem("runplan_glmproxy")||""}
 function saveProxy(){
@@ -1902,120 +1975,401 @@ function buildContext(){
   const ds0=iso(base),ds1=iso(end);
   const wk=db.recs.filter(r=>r.date>=ds0&&r.date<=ds1);
   const wkKm=wk.reduce((s,r)=>s+(+r.km||0),0);
-  const recent=db.recs.slice(-14).map(r=>r.date+" "+r.type+" "+(r.km||"?")+"km "+(r.min||"?")+"min"+(r.note?" 备注:"+r.note:"")).join("\n");
-  const plan=db.tpl.map(t=>DN[t.weekday]+" "+t.type+" "+(t.km||"")+"km "+(t.note||"")).join("\n");
-  const wx=wxData?"今天"+HOME.name+"："+(WX_CODES[wxData.code]||["未知"])[0]+" "+wxData.temp+"°C（"+wxData.tmin+"~"+wxData.tmax+"°），风速"+wxData.wind+"km/h，降水概率"+wxData.pop+"%":"天气未知";
-  return "用户是一名大学生跑步爱好者，用华为手表记录跑步，正在执行每周 4 跑的极化训练（80% 低心率有氧 + 20% 强度），最大心率 198。储备心率分区：有氧基础 141-161，有氧进阶 162-175，乳酸阈值 176-180，无氧基础 181-190。\n"
-    +"本周课表：\n"+(plan||"（未排课表）")+"\n"
-    +"本周已完成 "+wk.filter(r=>r.tplId).length+"/"+db.tpl.length+" 次，跑量 "+wkKm.toFixed(1)+" km。\n"
-    +wx+"\n最近记录：\n"+(recent||"（无）");
+  const wkMin=wk.reduce((s,r)=>s+(+r.min||0),0);
+  const plan=db.tpl.map(t=>DN[t.weekday]+" "+t.type+" 目标"+(t.km||"?")+"km"+(t.note?"（"+t.note+"）":"")).join("\n");
+
+  // 前 4 周跑量，用于判断负荷趋势
+  const weeks=[];
+  for(let i=1;i<=4;i++){
+    const b=new Date(base);b.setDate(b.getDate()-i*7);
+    const e=new Date(b);e.setDate(e.getDate()+6);
+    const km=db.recs.filter(r=>r.date>=iso(b)&&r.date<=iso(e)).reduce((s,r)=>s+(+r.km||0),0);
+    weeks.unshift(km.toFixed(1));
+  }
+  const prev4=db.recs.filter(r=>{const b=new Date(base);b.setDate(b.getDate()-28);return r.date>=iso(b)&&r.date<ds0});
+  const prevAvg=prev4.length?(prev4.reduce((s,r)=>s+(+r.km||0),0)/4):0;
+
+  // 最近记录带配速
+  const recent=db.recs.slice(-14).map(r=>{
+    const p=(+r.km>0&&+r.min>0)?pace(+r.km,+r.min)+"/km":"";
+    return r.date+" "+r.type+" "+(r.km||"?")+"km "+(r.min||"?")+"min"+(p?" 配速"+p:"")+(r.note?" 备注:"+r.note:"");
+  }).join("\n");
+
+  // 极化比例：按课表类型估算强度
+  const lowTypes=/轻松|恢复|长距离|有氧|LSD/;
+  const last28=db.recs.filter(r=>{const b=new Date(base);b.setDate(b.getDate()-28);return r.date>=iso(b)&&r.date<=ds1});
+  const totalK=last28.reduce((s,r)=>s+(+r.km||0),0);
+  const lowK=last28.filter(r=>lowTypes.test(r.type)).reduce((s,r)=>s+(+r.km||0),0);
+  const polar=totalK>0?Math.round(lowK/totalK*100):0;
+
+  // 配速趋势
+  const paced=db.recs.filter(r=>+r.km>0&&+r.min>0).slice(-6);
+  const paceTxt=paced.length>=2?(function(){
+    const a=paced.map(r=>Math.round(+r.min*60/+r.km));
+    const d=a[a.length-1]-a[0];
+    return paced[0].date+"→"+paced[paced.length-1].date+" 从 "+pace(+paced[0].km,+paced[0].min)+" 到 "+pace(+paced[paced.length-1].km,+paced[paced.length-1].min)+"（"+(d>0?"慢了"+d+"秒":d<0?"快了"+(-d)+"秒":"持平")+"）";
+  })():"样本不足";
+
+  const mg=+localStorage.getItem("runplan_monthgoal")||0;
+  const mi=iso(new Date()).slice(0,7);
+  const mKm=db.recs.filter(r=>r.date.slice(0,7)===mi).reduce((s,r)=>s+(+r.km||0),0);
+  const totalAll=db.recs.reduce((s,r)=>s+(+r.km||0),0);
+  const notes=db.recs.filter(r=>r.note).slice(-6).map(r=>r.date+"："+r.note).join("；");
+
+  const wx=wxData?"今天"+HOME.name+"："+(WX_CODES[wxData.code]||["未知"])[0]+" "+wxData.temp+"°C（"+wxData.tmin+"~"+wxData.tmax+"°），体感"+(wxData.app??wxData.temp)+"°，湿度"+(wxData.hum!=null?wxData.hum+"%":"未知")+"，风速"+wxData.wind+"km/h，降水概率"+wxData.pop+"%":"天气数据未取到";
+
+  return [
+    "【用户画像】红河学院大学生，跑步爱好者，用华为手表记录；最大心率 198，采用储备心率分区（有氧基础 141-161 / 有氧进阶 162-175 / 乳酸阈值 176-180 / 无氧 181-190）；执行每周 4 跑极化训练。",
+    "【本周课表】\n"+(plan||"（未排课表）"),
+    "【本周进度】已完成 "+wk.filter(r=>r.tplId).length+"/"+db.tpl.length+" 次，跑量 "+wkKm.toFixed(1)+" km，时长 "+Math.round(wkMin)+" 分钟。",
+    "【负荷趋势】前 4 周跑量 "+weeks.join(" / ")+" km，四周平均 "+prevAvg.toFixed(1)+" km。",
+    "【极化比例】最近 28 天低强度占比 "+polar+"%（目标 75-85%）。",
+    "【配速趋势】"+paceTxt,
+    "【长期数据】累计 "+db.recs.length+" 次、"+totalAll.toFixed(1)+" km，连续打卡 "+streakDays()+" 天。",
+    mg?"【本月目标】"+mKm.toFixed(1)+" / "+mg+" km，完成 "+Math.round(mKm/mg*100)+"%。":"【本月目标】未设置。",
+    "【天气】"+wx,
+    "【最近记录】\n"+(recent||"（无记录）"),
+    "【用户自述】"+(notes||"（无备注）")
+  ].join("\n");
+}
+/* ---------- 系统提示词：教练知识框架 ---------- */
+const AI_SYS=[
+"你是「步频」，用户的私人跑步教练，也是可以随便聊的朋友。用户在读大学，跑步爱好者，用华为手表记录，最大心率 198，目前执行每周 4 跑的极化训练。",
+"",
+"# 一、两种身份，自动切换",
+"训练、身体、比赛、装备、营养、恢复类问题 → 严谨的运动科学教练：给结论、给依据、给能直接执行的数字（心率、配速、距离、时长、组数）。",
+"生活、情绪、吐槽、闲聊 → 平等的朋友：正常聊天，别每句话都拐回训练，别硬塞建议，别当老师。",
+"",
+"# 二、回答格式",
+"1. 第一句直接给结论或判断。禁止开场白（如『这是个好问题』『很高兴为你解答』）。",
+"2. 用 Markdown 组织：### 小标题、- 列表、**加粗**关键词。手机屏幕窄，不要用表格。",
+"3. 训练类问题 400-800 字，分层讲透；闲聊 50-200 字，自然口语。",
+"4. 数字必须具体。不说『慢一点』，要说『心率 145-155、配速 6'10\"-6'30\"/km、跑 40 分钟』。",
+"5. 并列建议最多 5 条，按重要性排序，每条一句话说清。",
+"6. 结尾不要客套话，不要重复用户的问题。",
+"",
+"# 三、严谨性（这条最重要）",
+"- 区分证据等级：①学界共识 ②仍有争议 ③教练流派/个人经验。遇到争议要点明分歧，不要装作确定。",
+"- 不确定就直说『这点我不确定』。绝对禁止编造研究、论文、作者名、统计数据、医学结论。",
+"- 伤病必须给红旗信号：夜间静息痛、明显肿胀、跛行、痛点固定且逐日加重、按压剧痛、跳跃时痛。出现任一条 → 明确说『停止跑步，去骨科或运动医学科就诊』。不能只说『休息一下』。",
+"- 不诊断、不开药、不给剂量。涉及用药一律建议就医。",
+"- 不承诺成绩（『保证 PB』），只讲条件、概率和前提。",
+"",
+"# 四、训练学框架（组织回答时从这里取材）",
+"## 强度分区（该用户 HRmax 198）",
+"- E 轻松跑 141-161：能说完整句子、可鼻呼吸。作用是有氧基础、毛细血管与线粒体增生。应占周跑量 70-80%。",
+"- M 马拉松配速 162-175：能说短句。用于长距离中的节奏段。",
+"- T 乳酸阈值 176-180：只能说几个词。单次 20-40 分钟（可拆 2-3 段），每周 1 次，抬升乳酸阈。",
+"- I 间歇 181-190：呼吸困难。单组 3-5 分钟，组间慢跑等时恢复，总距离不超过周跑量 8% 或 10km。",
+"- R 重复跑 190+：200-400m 短段，练速度与经济性，总量不超过周跑量 5%。",
+"- 判读：同配速下心率比平时高 5-10bpm = 疲劳/脱水/天热，当天降级为 E 跑。",
+"",
+"## 极化训练（80/20）",
+"- 约 80% 训练量在低强度，20% 在中高强度；研究显示对耐力提升优于长期堆中间强度。",
+"- 最常见错误：轻松跑跑成中等强度（心率 165-175）。既不恢复也不够刺激，是进步停滞的头号原因。",
+"- 低强度硬标准：能完整说话、能鼻呼吸、心率 ≤161。",
+"",
+"## 周期化",
+"- 4 周一个小周期：第 1-3 周逐周加量（每周 +5~10%），第 4 周减到 60-70%。",
+"- 周跑量单周增幅不超过 10%，连续两周不递增。",
+"- 长距离不超过周跑量 30%，单次增幅不超过上一次 10%。",
+"- 比赛前 2 周减量 40-50%：砍量、保留强度。",
+"",
+"## 配速推算（Daniels 简化）",
+"- 由近期成绩反推：T 配速 ≈ 10K 配速 + 10 秒；I 配速 ≈ 5K 配速 - 5 秒；E 配速 ≈ 10K 配速 + 60~90 秒。",
+"- 例：5K 22 分（4'24\"）→ E 5'20\"-5'50\"，T 4'30\"-4'40\"，I 4'10\"-4'20\"。",
+"",
+"## 恢复与过度训练",
+"- 同强度间隔 48 小时；高强度课后 24 小时内只做 E 或休息。",
+"- 睡眠 7-9 小时；睡不够时训练收益显著下降，宁可减量。",
+"- 早期过度训练信号：静息心率连续 3 天 +5bpm、同配速心率升高、睡眠变差、食欲下降、情绪烦躁、晨起不愿起。出现 2 项以上 → 减量一周。",
+"",
+"## 常见跑步伤病",
+"- 膝前痛 PFPS：上下楼痛、久坐后痛。多因臀肌/股四头肌力量不足或跑量激增。减量 30-50%、练臀中肌、避下坡。",
+"- 髂胫束综合征 ITBS：膝外侧刺痛，跑到固定距离就痛。减量或停跑、臀中肌力量、放松阔筋膜张肌、缩小步幅。",
+"- 跟腱病：晨起僵硬疼痛、活动后减轻。离心提踵 3×15（慢下 3 秒）、忌突然加量、不拉到痛。",
+"- 足底筋膜炎：晨起第一步剧痛。放松足底与小腿、足弓支撑、离心提踵。",
+"- 胫骨内侧应力综合征 MTSS：小腿内侧沿骨一条线压痛。可能进展为应力性骨折，必须减量至无痛、避硬地、补钙与维D；局部点状剧痛/夜间痛/单脚跳痛 → 拍片。",
+"- 回归原则：疼痛 ≤2/10 才加量，每周加 10-15%，痛感回升就退回上一档。",
+"",
+"## 力量训练（每周 2 次，每次 15-20 分钟）",
+"- 臀中肌：蚌式、侧向弹力带走、单腿臀桥。这是预防膝痛与 ITBS 的关键。",
+"- 下肢：单腿硬拉、保加利亚分腿蹲、提踵。核心：死虫、平板支撑。",
+"- 目的：提升跑步经济性、降低伤病率，不追求大重量。",
+"",
+"## 营养",
+"- 碳水 5-7 g/kg/天，大跑量日 7-10；蛋白 1.4-1.6 g/kg/天，分 3-4 次摄入。",
+"- 跑前 1-2 小时：易消化碳水 30-60g；跑后 30-60 分钟内碳水:蛋白 ≈ 3:1。",
+"- 训练 <60 分钟只需白水；>75 分钟或高温需补电解质。",
+"- 食堂场景：米饭面条打底、鸡蛋牛奶豆浆补蛋白、少油炸、加餐酸奶+香蕉。",
+"- 长期疲劳伴配速下降，可查血常规看铁蛋白（尤其女生或素食）。",
+"",
+"## 比赛与体测",
+"- 5K/10K 用负分段（后半略快），前 1km 不要冲。",
+"- 1000m/800m 体测：前 200m 略快于目标配速，中段稳住节奏，最后 150-200m 全力。",
+"- 气温每升高 5℃，配速放慢 1.5-3%；湿度 >70% 再降一档。",
+"- 赛前 3 天碳水负荷，赛前 2 小时吃完正餐。",
+"",
+"## 装备与数据",
+"- 跑鞋寿命 500-800km，中底塌陷后缓冲骤降；碳板鞋适合比赛，不适合日常慢跑。",
+"- 有氧漂移：后半程同配速心率上升 >5%，说明耐力不足或脱水。",
+"",
+"# 五、结合用户数据",
+"每次回答先看下方【用户当前数据】。能引用就引用（『你本周 3/4 完成，平均配速比上周慢 8 秒』），让建议落到具体某一堂课。数据不足时说明缺什么，不要编造。",
+"",
+"# 六、边界",
+"不聊政治、色情、违法内容。不做医疗诊断。用户是成年人，可以正常聊天，不必过度说教。"
+].join("\n");
+
+/* ---------- Markdown → HTML（先转义再解析，防注入） ---------- */
+function mdToHtml(src){
+  const lines=esc(String(src||"").replace(/\r/g,"")).split("\n");
+  const inl=s=>s
+    .replace(/\*\*([^*\n]+)\*\*/g,"<strong>$1</strong>")
+    .replace(/`([^`\n]+)`/g,"<code>$1</code>")
+    .replace(/(^|[\s(（])\*([^*\n]+)\*/g,"$1<em>$2</em>");
+  let html="",list=null,buf=[];
+  const closeList=()=>{if(list){html+="</"+list+">";list=null}};
+  const flush=()=>{if(buf.length){html+="<p>"+inl(buf.join("<br>"))+"</p>";buf=[]}};
+  for(const ln of lines){
+    if(!ln.trim()){flush();closeList();continue}
+    const h=ln.match(/^\s*#{2,4}\s*(.+)$/);
+    if(h){flush();closeList();html+="<h3>"+inl(h[1])+"</h3>";continue}
+    if(/^\s*(-{3,}|\*{3,})\s*$/.test(ln)){flush();closeList();html+="<hr>";continue}
+    const ul=ln.match(/^\s*[-•·]\s+(.+)$/);
+    if(ul){flush();if(list!=="ul"){closeList();html+="<ul>";list="ul"}html+="<li>"+inl(ul[1])+"</li>";continue}
+    const ol=ln.match(/^\s*\d+[.)、]\s*(.+)$/);
+    if(ol){flush();if(list!=="ol"){closeList();html+="<ol>";list="ol"}html+="<li>"+inl(ol[1])+"</li>";continue}
+    closeList();buf.push(ln.trim());
+  }
+  flush();closeList();
+  return html;
+}
+
+const CHAT_KEY="runplan_chat";
+let chatBusy=false,chatAbort=null;
+function saveChat(){try{localStorage.setItem(CHAT_KEY,JSON.stringify(chat.slice(-40)))}catch(e){}}
+function clearChat(){
+  if(!chat.length){toast("还没有对话");return}
+  openSheet('<h2>清空对话记录？</h2><p style="font-size:13px;color:var(--ink2);line-height:1.8">只清空聊天内容，课表和跑步记录不受影响。</p>'
+    +'<div class="btnrow"><button class="danger" onclick="chat=[];saveChat();renderChat();closeSheet();toast(\'已清空\')">确认清空</button>'
+    +'<button class="ghost" onclick="closeSheet()">取消</button></div>');
+}
+function copyMsg(i){
+  const t=(chat[i]&&chat[i].content)||"";
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(()=>toast("已复制"),()=>toast("复制失败，请长按选择"));
+  }else{
+    const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";
+    document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast("已复制")}catch(e){toast("复制失败")}
+    ta.remove();
+  }
+}
+function regen(i){
+  if(chatBusy){toast("正在回答中");return}
+  const u=chat.slice(0,i).reverse().find(m=>m.role==="user");
+  if(!u)return;
+  chat=chat.slice(0,i);
+  saveChat();renderChat();askGLM();
 }
 function sendChat(preset){
+  if(chatBusy){toast("正在回答，可以点停止");return}
   const input=$("chatInput");
   const text=(preset||input.value).trim();
   if(!text)return;
   if(!preset)input.value="";
+  autoScroll=true;
   chat.push({role:"user",content:text});
-  renderChat();
+  saveChat();renderChat();
   askGLM();
 }
+function onSendClick(){
+  if(chatBusy){if(chatAbort)chatAbort.abort();return}
+  sendChat();
+}
+function setSendBtn(busy){
+  const b=$("chatSend");
+  b.innerHTML=busy
+    ?'<svg viewBox="0 0 24 24"><rect x="7.5" y="7.5" width="9" height="9" rx="2.4" fill="#fff" stroke="none"/></svg>'
+    :'<svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>';
+  b.setAttribute("aria-label",busy?"停止生成":"发送");
+}
+function setModTag(){
+  const el=$("aiModTag");if(!el)return;
+  const m=getModelName();
+  el.textContent=m?(/siliconflow|Qwen|deepseek/i.test(m)?"当前："+m.split("/").pop():"当前："+m):"当前：默认模型";
+}
 const AI_MODEL_FB="glm-4-flash-250414";
+function defModel(){return "glm-4.7-flash"}
+
+let _paintT=0,autoScroll=true;
+function paintStream(t){
+  const now=Date.now();
+  if(now-_paintT<55)return;
+  _paintT=now;
+  const b=$("streamBub");
+  if(!b)return;
+  b.innerHTML=mdToHtml(t)+'<span class="caret"></span>';
+  if(autoScroll)window.scrollTo({top:document.body.scrollHeight});
+}
+function rmStream(){const m=$("streamMsg");if(m)m.remove()}
+
 async function askGLM(fb){
-  const key=getKey(),list=$("chatList"),base=getApiBase(),model=fb||getModelName()||"glm-4.7-flash";
+  const base=getApiBase(),key=getKey();
+  const model=fb||getModelName()||defModel();
   if(!key){
-    pushErr("还没有配置 AI Key：到「设置」页粘贴你的 API Key（智谱 open.bigmodel.cn 或硅基流动 cloud.siliconflow.cn 都免费申请），保存后回来就能聊了。");
+    pushErr("还没有配置 AI Key。到「设置」页贴一个（智谱 open.bigmodel.cn 或硅基流动 cloud.siliconflow.cn 都能免费申请），保存后回来就能聊。");
     return;
   }
-  if(/siliconflow/.test(base)&&!/^[A-Za-z0-9._-]*sk-/.test(key)&&!key.startsWith("sk-")){
-    pushErr("你填的 Key 不是硅基流动的格式（应以 sk- 开头）。现在填的大概率是智谱的 Key——两家不通用。请到 cloud.siliconflow.cn →「API 密钥」→ 新建并复制（sk- 开头）→ 回设置页重新粘贴。");
+  if(/siliconflow/.test(base)&&key.indexOf("sk-")!==0){
+    pushErr("Key 和接口地址不配套：硅基流动的 Key 以 sk- 开头，智谱的不是。现在接口指向硅基流动，但 Key 看着像智谱的——两家不通用，去设置页换一下。");
     return;
   }
-  $("chatSend").disabled=true;
-  list.insertAdjacentHTML("beforeend",'<div class="msg a" id="tipTyping"><span class="av ai">'+AI_SVG+'</span><div class="bub"><span class="typing"><i></i><i></i><i></i></span></div></div>');
-  scrollChat();
+  if(/siliconflow/.test(base)&&model.indexOf("/")<0){
+    pushErr("模型名不配套：硅基流动的模型名带斜杠，比如 Qwen/Qwen3-8B。到设置页点一下「Qwen3-8B 免费」预设，会自动把接口和模型一起改好。");
+    return;
+  }
+  chatBusy=true;setSendBtn(true);
+  const list=$("chatList");
+  list.insertAdjacentHTML("beforeend",'<div class="msg a" id="streamMsg"><span class="av ai">'+AI_SVG+'</span><div class="bub" id="streamBub"><span class="typing"><i></i><i></i><i></i></span></div></div>');
+  scrollChat(true);
+  let full="",ok=false;
+  const ctl=(typeof AbortController!=="undefined")?new AbortController():null;
+  chatAbort=ctl;
   try{
     const proxy=getProxy();
     const endpoint=proxy?proxy+(proxy.includes("?")?"&":"?")+"target="+encodeURIComponent(base):base;
+    const history=chat.slice(-12).map(m=>({role:m.role,content:m.content}));
+    const msgs=[{role:"system",content:AI_SYS+"\n\n# 用户当前数据\n"+buildContext()}].concat(history);
+    const payload={model:model,messages:msgs,stream:true,temperature:0.55,top_p:0.9};
+    if(/siliconflow/.test(base)&&/qwen3/i.test(model))payload.enable_thinking=false;
     const res=await fetch(endpoint,{
       method:"POST",
       headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},
-      body:JSON.stringify({
-        model:model,
-        messages:[{role:"system",content:"你是一位专业、务实的跑步教练助手。用中文回答，简洁直接，重点内容用短句分行列出，控制在 300 字以内。以下是用户的训练背景数据：\n"+buildContext()}].concat(chat.slice(-10))
-      })
+      signal:ctl?ctl.signal:undefined,
+      body:JSON.stringify(payload)
     });
     if(!res.ok){
       let extra="";
       try{
         const eb=await res.json();
-        const srv=eb.error&&eb.error.message||eb.message||eb.msg||"";
+        const srv=(eb.error&&eb.error.message)||eb.message||eb.msg||"";
         if(srv)extra="：服务器原话「"+srv+"」";
       }catch(e){}
       if((res.status===429||res.status>=500)&&/open\.bigmodel\.cn/.test(base)&&model!==AI_MODEL_FB){
-        const tip0=$("tipTyping");if(tip0)tip0.remove();
-        $("chatSend").disabled=false;
+        rmStream();chatBusy=false;setSendBtn(false);
         return askGLM(AI_MODEL_FB);
       }
       throw new Error("HTTP "+res.status+extra);
     }
-    const d=await res.json();
-    const msg=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content;
-    if(!msg)throw new Error("返回内容为空");
-    chat.push({role:"assistant",content:msg});
-    renderChat();
-    scrollChat();
-  }catch(e){
-    const em=e.message||"网络错误";
-    let text;
-    if(/429|访问量过大|繁忙/.test(em)){
-      text="服务器正忙（免费模型高峰期限流），等 1-2 分钟点下面的「重试」就行，不是你的设置问题。";
-    }else if(/401/.test(em)){
-      text="Key 被服务器拒绝了（"+em+"）。请确认：① Key 与接口地址配套——硅基流动的 Key 是 sk- 开头，配 https://api.siliconflow.cn/v1/chat/completions；智谱的 Key 配 open.bigmodel.cn ② Key 是否复制完整（去掉首尾空格）③ 建议把「AI 代理地址」清空直连。改完点「重试」。";
+    const ct=res.headers.get("content-type")||"";
+    if(/event-stream/i.test(ct)&&res.body&&res.body.getReader){
+      const rd=res.body.getReader(),dec=new TextDecoder();
+      let buf="";
+      while(true){
+        const r=await rd.read();
+        if(r.done)break;
+        buf+=dec.decode(r.value,{stream:true});
+        const parts=buf.split("\n\n");
+        buf=parts.pop()||"";
+        for(const p of parts){
+          const line=p.split("\n").map(s=>s.trim()).find(s=>s.indexOf("data:")===0);
+          if(!line)continue;
+          const data=line.slice(5).trim();
+          if(!data||data==="[DONE]")continue;
+          try{
+            const j=JSON.parse(data);
+            const c=j.choices&&j.choices[0];
+            const delta=(c&&c.delta&&c.delta.content)||(c&&c.message&&c.message.content)||"";
+            if(delta){full+=delta;paintStream(full)}
+          }catch(e){}
+        }
+      }
+      ok=!!full.trim();
     }else{
-      const proxy=getProxy();
-      const hint=proxy
-        ?"① 检查代理地址是否填对 ② Key 是否填对 ③ 当前网络能否连上代理站点（部分蜂窝网络连不上 netlify.app，换 WiFi 试试）"
-        :"最常见原因是浏览器跨域限制：请到「设置」页填入「AI 代理地址」。也可能是 Key 填错或手机网络问题";
-      text="请求失败了（"+em+"）。"+hint;
+      const d=await res.json();
+      full=(d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content)||"";
+      ok=!!full.trim();
     }
-    const canRetry=chat.length&&chat[chat.length-1].role==="user";
-    pushErr(text,canRetry);
+    if(!ok)throw new Error("返回内容为空（这个模型可能不支持流式输出，到设置页换一个）");
+    rmStream();
+    chat.push({role:"assistant",content:full});
+    saveChat();renderChat();scrollChat(true);
+  }catch(e){
+    const em=(e&&e.message)||"网络错误";
+    const aborted=!!(e&&(e.name==="AbortError"||/abort/i.test(em)));
+    rmStream();
+    if(aborted){
+      if(full.trim()){
+        chat.push({role:"assistant",content:full+"\n\n*（已停止生成）*"});
+        saveChat();renderChat();
+      }else{
+        renderChat();
+      }
+      toast("已停止");
+    }else{
+      let text;
+      if(/429|访问量过大|繁忙/.test(em)){
+        text="免费模型高峰期限流了（429）。等 1-2 分钟点「重试」；想更稳可以到设置页换个模型。";
+      }else if(/401|403/.test(em)){
+        text="Key 被拒了（"+em+"）。检查三件事：① Key 与接口地址必须配套——硅基流动 Key 是 sk- 开头，配 api.siliconflow.cn；智谱 Key 配 open.bigmodel.cn ② Key 是否复制完整 ③ 代理地址是否该清空。改完点「重试」。";
+      }else if(/Failed to fetch|NetworkError|Load failed|fetch/i.test(em)){
+        text="连不上接口（"+em+"）。浏览器直连国内大模型常常被跨域拦，解决办法：到设置页填 Netlify 代理地址；或者换 WiFi 再试。";
+      }else{
+        text="请求失败："+em;
+      }
+      const canRetry=chat.length&&chat[chat.length-1].role==="user";
+      pushErr(text,canRetry);
+    }
   }
-  const tip=$("tipTyping");if(tip)tip.remove();
-  $("chatSend").disabled=false;
+  chatAbort=null;chatBusy=false;setSendBtn(false);
 }
+
 function renderChat(){
   const list=$("chatList");
   if(!chat.length){
-    list.innerHTML='<div class="msg a"><span class="av ai">'+AI_SVG+'</span><div class="bub">你好，我是你的跑步助手。我已经了解你的课表、最近记录和今天的天气——点上面的快捷问题，或者直接输入。第一次使用请先到「设置」页填入 API Key。</div></div>';
+    list.innerHTML='<div class="msg a"><span class="av ai">'+AI_SVG+'</span><div class="bub">'
+      +'<p>你好，我是<strong>步频</strong>——你的跑步教练，也能陪你随便聊。</p>'
+      +'<p>你的课表、最近记录、今天的天气我都看得见，所以可以直接问：</p>'
+      +'<ul><li>今天这堂课该跑多少、心率控在多少</li><li>本周训练哪里出了问题</li><li>膝盖外侧疼，要不要停跑</li></ul>'
+      +'<p>训练之外的事也能聊。第一次用先去「设置」填 API Key，两步就好，免费的。</p></div></div>';
     return;
   }
-  list.innerHTML=chat.map(m=>m.role==="user"
-    ?'<div class="msg u"><span class="av user">我</span><div class="bub">'+esc(m.content)+"</div></div>"
-    :'<div class="msg a"><span class="av ai">'+AI_SVG+'</span><div class="bub">'+esc(m.content)+"</div></div>"
-  ).join("");
+  list.innerHTML=chat.map((m,i)=>{
+    if(m.role==="user"){
+      return '<div class="msg u"><span class="av user">我</span><div class="bub">'+esc(m.content)+'</div></div>';
+    }
+    return '<div class="msg a"><span class="av ai">'+AI_SVG+'</span><div class="bub">'+mdToHtml(m.content)
+      +'<div class="msgops"><button onclick="copyMsg('+i+')">复制</button><button onclick="regen('+i+')">重新生成</button></div></div></div>';
+  }).join("");
 }
 function pushErr(text,retry){
   $("chatList").insertAdjacentHTML("beforeend",'<div class="msg a"><span class="av ai">'+AI_SVG+'</span><div class="bub err">'+esc(text)+(retry?'<div><button onclick="retryAsk()" style="margin-top:8px;padding:6px 14px;border:0;border-radius:999px;background:#0F6E56;color:#fff;font-size:12.5px;font-weight:600">↻ 重试</button></div>':"")+"</div></div>");
   scrollChat();
 }
-function retryAsk(){renderChat();askGLM()}
-function scrollChat(){window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"})}
+function retryAsk(){if(chatBusy)return;renderChat();askGLM()}
+function scrollChat(instant){
+  const y=document.body.scrollHeight;
+  if(instant)window.scrollTo({top:y});
+  else window.scrollTo({top:y,behavior:"smooth"});
+}
 
 /* ---------- AI 排课：结构化返回 → 预览 → 写入 ---------- */
 async function aiText(sys,user){
   const key=getKey();
   if(!key)throw new Error("NO_KEY");
-  const base=getApiBase(),model=getModelName()||"glm-4.7-flash",proxy=getProxy();
+  const base=getApiBase(),model=getModelName()||defModel(),proxy=getProxy();
   const endpoint=proxy?proxy+(proxy.includes("?")?"&":"?")+"target="+encodeURIComponent(base):base;
+  const payload={
+    model:model,
+    messages:[{role:"system",content:sys},{role:"user",content:user}],
+    temperature:0.4
+  };
+  if(/siliconflow/.test(base)&&/qwen3/i.test(model))payload.enable_thinking=false;
   const res=await fetch(endpoint,{
     method:"POST",
     headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},
-    body:JSON.stringify({
-      model:model,
-      messages:[{role:"system",content:sys},{role:"user",content:user}],
-      temperature:0.4
-    })
+    body:JSON.stringify(payload)
   });
   if(!res.ok)throw new Error("HTTP "+res.status);
   const d=await res.json();
@@ -2207,11 +2561,26 @@ bindSheet();
 loadWeather();
 $("apiKey").value=getKey();
 $("apiProxy").value=getProxy();
+/* 一次性升级：硅基流动用户在用的 Qwen2.5-7B 换成更强的 Qwen3-8B（同平台，Key 不用换） */
+(function(){
+  try{
+    if(localStorage.getItem("runplan_mig_ai")==="1")return;
+    const api=localStorage.getItem("runplan_aiapi")||"";
+    if(localStorage.getItem("runplan_aimodel")==="Qwen/Qwen2.5-7B-Instruct"&&/siliconflow/.test(api)){
+      localStorage.setItem("runplan_aimodel","Qwen/Qwen3-8B");
+    }
+    localStorage.setItem("runplan_mig_ai","1");
+  }catch(e){}
+})();
 $("aiModel").value=getModelName();
 $("aiApi").value=localStorage.getItem("runplan_aiapi")||"";
 $("mGoal").value=localStorage.getItem("runplan_monthgoal")||"";
 renderChat();
-$("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();sendChat()}});
+setModTag();
+window.addEventListener("scroll",()=>{
+  autoScroll=(window.innerHeight+window.scrollY)>=document.body.scrollHeight-240;
+},{passive:true});
+$("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();onSendClick()}});
 </script>
 </body>
 </html>
