@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="跑步课表">
@@ -40,6 +40,8 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
+html,body{overflow-x:hidden;touch-action:manipulation}
+button,input,select,textarea,a,label{touch-action:manipulation}
 body{
   font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
   background:var(--bg);
@@ -592,7 +594,7 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
 .field label{display:block;font-size:11.5px;color:var(--ink3);margin-bottom:6px;font-weight:500;letter-spacing:.2px}
 .field input,.field select{
   width:100%;padding:13px;border:1px solid #E4E9E5;border-radius:13px;
-  font-size:15px;font-family:inherit;background:#F7F9F7;color:var(--ink);
+  font-size:16px;font-family:inherit;background:#F7F9F7;color:var(--ink);
   -webkit-appearance:none;appearance:none;transition:.18s;
 }
 .field input::placeholder{color:#B4BCB7}
