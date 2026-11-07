@@ -6,16 +6,26 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="跑步课表">
-<meta name="theme-color" content="#F2F5F2">
+<meta name="theme-color" content="#F2F5F2" media="(prefers-color-scheme:light)">
+<meta name="theme-color" content="#0E1512" media="(prefers-color-scheme:dark)">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" href="./icon-180.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./icon-180.png">
+<link rel="apple-touch-startup-image" href="./splash-1170x2532.png"
+  media="(device-width:390px) and (device-height:844px) and (-webkit-device-pixel-ratio:3)">
+<link rel="apple-touch-startup-image" href="./splash-1290x2796.png"
+  media="(device-width:430px) and (device-height:932px) and (-webkit-device-pixel-ratio:3)">
 <title>跑步课表</title>
 <style>
 :root{
   --bg:#F2F5F2;
-  --card:#FFFFFF;
-  --line:rgba(17,32,24,.08);
+  --line:rgba(17,32,24,.10);
   --ink:#0E1B14;
-  --ink2:#54605A;
-  --ink3:#98A29C;
+  --ink2:#41504A;
+  --ink3:#5E6C64;
+  --card:#FFFFFF;
+  --card2:#FBFDFC;
+  --soft:#F5F8F5;
   --green:#128A5A;
   --green-br:#0F9D63;
   --green-d:#065F3E;
@@ -25,8 +35,8 @@
   --red:#D24B3E;
   --amber:#C97F16;
   --radius:20px;
-  --shadow:0 1px 2px rgba(16,32,24,.05),0 12px 28px -18px rgba(16,32,24,.35);
-  --shadow-lg:0 2px 4px rgba(16,32,24,.05),0 18px 40px -20px rgba(16,32,24,.42);
+  --shadow:0 1px 2px rgba(16,32,24,.035);
+  --shadow-lg:0 2px 6px rgba(16,32,24,.06);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
@@ -481,7 +491,7 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
 .barcol.best .bar{background:linear-gradient(180deg,#0F9D63,#065F3E);box-shadow:0 0 14px -2px rgba(6,95,62,.55),inset 0 1px 0 rgba(255,255,255,.35)}
 .barl{font-size:9px;color:var(--ink3);font-variant-numeric:tabular-nums;white-space:nowrap}
 
-.pacewrap svg{width:100%;height:96px;display:block}
+.pacewrap svg{width:100%;height:auto;display:block;color:var(--ink)}
 .paceLabs{display:flex;justify-content:space-between;font-size:10px;color:var(--ink3);margin-top:7px;font-variant-numeric:tabular-nums}
 .paceEmpty{font-size:12px;color:var(--ink3);padding:30px 0;text-align:center;line-height:1.8}
 
@@ -640,6 +650,197 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
 }
+
+/* ============================================================
+   v2 精修层：可读性 / 视觉减法 / 深色模式 / 大屏
+   ============================================================ */
+
+/* --- 卡片改成描边 + 极淡投影，浅色背景上不发灰 --- */
+.ti,.lr,.card,.tile,.group,.navbtn,.chatbar input,.msg.a .bub{
+  box-shadow:0 1px 2px rgba(16,32,24,.035);
+}
+.ti,.lr,.card,.tile,.group,.navbtn,.chatbar input{background:var(--card)}
+.ti.done{background:linear-gradient(180deg,#FAFDFB,#F3F9F6)}
+
+/* --- 数字去渐变：全页只保留进度环一个视觉焦点 --- */
+.hero-val b,.tile b,.mnum b,.lr-km{
+  background:none;-webkit-background-clip:border-box;background-clip:border-box;
+  -webkit-text-fill-color:currentColor;
+}
+.hero-val b{color:#fff;-webkit-text-fill-color:#fff}
+.tile b{color:var(--green-d)}
+.mnum b{color:var(--ink)}
+.lr-km{color:var(--ink)}
+.lr-km span{-webkit-text-fill-color:var(--ink3)}
+
+/* --- 次级文字：字号与对比度按户外可读性上调 --- */
+.lr-m,.lr-d{font-size:11.5px}
+.ti-note{font-size:12px}
+.barv,.barl{font-size:10px}
+.hero-lab{font-size:11.5px;color:rgba(255,255,255,.78)}
+.hero-meta{font-size:12px;color:rgba(255,255,255,.82)}
+.hero-val i{color:rgba(255,255,255,.84)}
+.hero .wx-sub{font-size:10.5px;color:rgba(255,255,255,.76)}
+.cardhd em,.gitem .gs,.field label{color:var(--ink3)}
+
+/* --- 触控区不小于 44pt --- */
+.navbtn{width:44px;height:44px;border-radius:14px}
+.mini-edit{width:36px;height:36px;margin-top:-5px}
+.tabs button{padding:9px 0 7px}
+
+/* --- 图标线宽统一 1.75 --- */
+.navbtn svg,.abtn svg,.gitem .gi svg,.mini-edit svg,.ti-ic svg,
+.tabs button svg,.chatbar button svg,.msg .av.ai svg{stroke-width:1.75}
+.tabs button.on svg{stroke-width:2}
+
+/* --- Dock：去掉 backdrop-filter，滚动更跟手 --- */
+.tabs{
+  background:rgba(255,255,255,.95);
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+  box-shadow:0 8px 26px -14px rgba(16,32,24,.35);
+}
+
+/* --- 页面切换：短促淡入，避免生硬 --- */
+.page.on{animation:pageIn .18s cubic-bezier(.2,.7,.3,1)}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.day{animation:none}
+
+/* --- 常驻动画收敛 --- */
+.hero::after{animation:driftA 60s ease-in-out 2 alternate}
+.hero::before{animation:driftB 70s ease-in-out 2 alternate}
+.sheen{animation:sheen 7s ease-in-out 2}
+.fab::after{animation:none;inset:-4px;border-width:1.5px;opacity:.45}
+.empty svg{animation:none}
+
+/* --- 备份提醒条 --- */
+.bkbar{display:none;align-items:center;gap:10px;margin-bottom:12px;padding:11px 13px;border-radius:14px;
+  background:#FFF8E8;border:1px solid #F0DDB2;font-size:12px;color:#6E5110;line-height:1.5}
+.bkbar button{border:0;background:#E9B93F;color:#39280A;font-weight:700;font-size:11.5px;
+  padding:7px 12px;border-radius:9px;font-family:inherit;flex-shrink:0}
+.bkbar .cls{border:0;background:none;color:#A78C4C;font-size:17px;padding:0 2px;font-weight:400}
+
+/* --- 周/月 分段控件 --- */
+.seg{display:flex;gap:2px;padding:3px;background:#E7EDE8;border-radius:11px;flex-shrink:0;margin-left:8px}
+.seg button{border:0;background:none;font-family:inherit;font-size:11.5px;font-weight:600;
+  color:var(--ink3);padding:6px 10px;border-radius:8px;cursor:pointer;transition:.15s}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(16,32,24,.14)}
+
+/* --- 月历 --- */
+.mcal{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px 12px 12px;box-shadow:0 1px 2px rgba(16,32,24,.035);margin-bottom:12px}
+.mcal-hd{display:flex;justify-content:space-between;align-items:baseline;padding:0 4px 10px;
+  font-size:11.5px;color:var(--ink3)}
+.mcal-hd b{font-size:13.5px;color:var(--ink);font-weight:700;letter-spacing:-.2px}
+.mgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.mwd{text-align:center;font-size:10px;color:var(--ink3);padding-bottom:5px;font-weight:600}
+.mwd.wk{color:var(--ink2)}
+.mcell{position:relative;aspect-ratio:1;border-radius:11px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:2px;font-size:12.5px;font-variant-numeric:tabular-nums;
+  color:var(--ink2);border:1px solid transparent;cursor:pointer;transition:.15s}
+.mcell:active{transform:scale(.94)}
+.mcell.out{color:#BFC7C2;pointer-events:none}
+.mcell.today{border-color:rgba(18,138,90,.4)}
+.mcell.has{background:#F0F7F3}
+.mcell .mdots{display:flex;gap:2px;height:4px;align-items:center}
+.mcell .mdots i{width:4px;height:4px;border-radius:50%}
+.mcell .mkm{font-size:8.5px;color:var(--ink3);line-height:1}
+.mcal-ft{display:flex;gap:16px;padding:12px 4px 0;margin-top:11px;border-top:1px solid var(--line)}
+.mcal-ft div{font-size:10.5px;color:var(--ink3)}
+.mcal-ft b{display:block;font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums;margin-top:1px}
+
+/* --- 周报 --- */
+.wrep{padding:12px 0;border-bottom:1px solid var(--line)}
+.wrep:first-child{padding-top:0}
+.wrep:last-child{border-bottom:0;padding-bottom:0}
+.wrep-hd{display:flex;justify-content:space-between;align-items:baseline;font-size:11.5px;
+  color:var(--ink3);margin-bottom:9px}
+.wrep-hd b{font-size:13px;color:var(--ink);font-weight:700}
+.wrep-g{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:9px}
+.wrep-g div{background:var(--soft);border-radius:10px;padding:8px 9px}
+.wrep-g span{display:block;font-size:10px;color:var(--ink3)}
+.wrep-g b{display:block;font-size:15px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums;color:var(--ink)}
+.wrep-tip{font-size:11.5px;color:var(--ink2);line-height:1.7}
+.pol{display:flex;height:6px;border-radius:99px;overflow:hidden;background:#E9EEE9;margin:8px 0 6px}
+.pol i{display:block;height:100%}
+.pollab{display:flex;justify-content:space-between;font-size:10px;color:var(--ink3)}
+
+/* --- 全局错误兜底条 --- */
+.errbar{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 92px);
+  z-index:400;background:#2A1512;color:#FFD9D4;border-radius:14px;padding:12px 14px;font-size:12px;
+  line-height:1.6;display:none;box-shadow:0 12px 30px -10px rgba(0,0,0,.5)}
+.errbar.on{display:block}
+.errbar button{margin-top:9px;border:0;background:#C8503C;color:#fff;font-weight:600;font-size:12px;
+  padding:7px 13px;border-radius:9px;font-family:inherit;margin-right:8px}
+
+/* --- 桌面 / iPad 双列 --- */
+@media (min-width:820px){
+  .wrap{max-width:880px}
+  #page-plan.on{display:grid;grid-template-columns:340px minmax(0,1fr);
+    grid-template-areas:"bk bk" "hero list" "wk list" "act list";gap:0 22px;align-items:start}
+  #page-plan.on .bkbar{grid-area:bk}
+  #page-plan.on .hero{grid-area:hero;margin-bottom:10px}
+  #page-plan.on .wkbar{grid-area:wk;margin-bottom:14px}
+  #page-plan.on #planList{grid-area:list}
+  #page-plan.on .actions{grid-area:act}
+  #page-stat.on{display:grid;grid-template-columns:1fr 1fr;gap:0 14px;align-items:start}
+  #page-stat.on .stathero,#page-stat.on .tiles{grid-column:1/-1}
+  .tabs{left:50%;right:auto;transform:translateX(-50%);width:520px}
+  .sheet{max-width:560px}
+}
+
+/* --- 深色模式 --- */
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0E1512;--line:rgba(255,255,255,.10);
+    --ink:#EAF2EC;--ink2:#BBC8C0;--ink3:#94A49B;
+    --card:#18211C;--card2:#1C2621;--soft:#202B25;
+    --green:#4FD39A;--green-br:#54D79E;--green-d:#8FE8C0;--green-l:#1B2E24;
+    --shadow:0 1px 2px rgba(0,0,0,.3);
+  }
+  body{background:#0E1512;background-image:
+    radial-gradient(120% 50% at 85% -10%,#14301F 0%,rgba(20,48,31,0) 55%),
+    radial-gradient(100% 40% at -10% 5%,#122619 0%,rgba(18,38,25,0) 50%)}
+  .ti,.lr,.card,.tile,.group,.navbtn,.chatbar input,.msg.a .bub,.sheet{background:var(--card);border-color:var(--line)}
+  .ti.done{background:linear-gradient(180deg,#1B2A21,#17231C)}
+  .ti-km{background:var(--soft);color:var(--ink2)}
+  .rest{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.12);color:var(--ink3)}
+  .tabs{background:rgba(22,31,26,.97)}
+  .tabs button.on{background:linear-gradient(140deg,#1D9668,#0C6242)}
+  .seg{background:#202B25}
+  .seg button.on{background:#2C3A32;color:var(--ink)}
+  .field input,.field select,.ginput,.chatbar input{background:var(--soft);border-color:rgba(255,255,255,.12)}
+  .field input:focus,.field select:focus,.ginput:focus,.chatbar input:focus{background:#1E2A24}
+  .srow,.gitem{border-color:rgba(255,255,255,.08)}
+  .gitem:active{background:#1E2A24}
+  .gitem .gi{background:linear-gradient(140deg,#1E3328,#1A2B22);box-shadow:inset 0 0 0 1px rgba(79,211,154,.16)}
+  .gitem.danger .gi{background:linear-gradient(140deg,#33201D,#2A1A18)}
+  .hmcell{background:#202B25}
+  .hmcell.l1{background:#255C43}.hmcell.l2{background:#2E8A5F}.hmcell.l3{background:#43B27C}
+  .hmleg i{background:#202B25}.hmleg i.l1{background:#255C43}.hmleg i.l2{background:#2E8A5F}.hmleg i.l3{background:#43B27C}
+  .badge{border-color:rgba(255,255,255,.16);color:var(--ink3)}
+  .badge.on{background:linear-gradient(135deg,#1C3327,#172A20);color:#8FE8C0;border-color:rgba(79,211,154,.32)}
+  .chip{background:linear-gradient(180deg,#1C3327,#182A21);color:#8FE8C0;border-color:rgba(79,211,154,.22)}
+  .abtn{border-color:rgba(255,255,255,.16)}
+  .abtn.solid{background:linear-gradient(180deg,#1C3327,#172A20);color:#8FE8C0;border-color:rgba(79,211,154,.24)}
+  .ghost{background:var(--soft);color:var(--ink2)}
+  .danger{background:#371D19;color:#F0A296}
+  .mprog,.pol{background:#25322B}
+  .bkbar{background:#33290F;border-color:#54441C;color:#F0D08A}
+  .mcell.has{background:#1E2C25}
+  .mcell.out{color:#4A574F}
+  .mcell.today{border-color:rgba(79,211,154,.5)}
+  .wrep-g div{background:var(--soft)}
+  .toast{background:rgba(238,245,240,.95);color:#12201A}
+  .errbar{background:#3A1E1A}
+  .empty svg{stroke:#3A4A42}
+  .lr-dot{box-shadow:0 0 0 4px rgba(79,211,154,.08)}
+  .sheet::before{background:#2C3A32}
+  .ringbig .rbg{stroke:#25322B}
+  .stathero{background:linear-gradient(180deg,#18211C,#151E1A)}
+  .bar{background:linear-gradient(180deg,#2F7A5C,#27654C)}
+  .barcol.cur .bar{background:linear-gradient(180deg,#4FD39A,#2E8A5F)}
+  .barcol.best .bar{background:linear-gradient(180deg,#8FE8C0,#43B27C)}
+}
 </style>
 </head>
 <body>
@@ -651,7 +852,8 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
 
   <!-- 课表页 -->
   <div class="page on" id="page-plan">
-    <div class="hero">
+    <div class="bkbar" id="bkBanner"></div>
+    <div class="hero" id="heroBox">
       <div class="sheen"></div>
       <div class="hero-top">
         <div>
@@ -689,6 +891,10 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
       <button class="navbtn" id="nextWeek" aria-label="下一周">
         <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
       </button>
+      <div class="seg">
+        <button class="on" id="segWeek" onclick="setCal('week')">周</button>
+        <button id="segMonth" onclick="setCal('month')">月</button>
+      </div>
     </div>
 
     <div id="planList"></div>
@@ -758,6 +964,11 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
     </div>
 
     <div class="card">
+      <div class="cardhd">周报<em>每周自动生成 · 存本地</em></div>
+      <div id="reportBox"></div>
+    </div>
+
+    <div class="card">
       <div class="cardhd">里程碑</div>
       <div class="badges" id="badges"></div>
     </div>
@@ -778,6 +989,7 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
       <button class="chip" onclick="sendChat('结合我的课表和最近记录，分析一下我本周的训练质量')">分析本周训练</button>
       <button class="chip" onclick="sendChat('结合今天的天气和我的课表，今天这堂课该怎么跑？')">今天怎么跑</button>
       <button class="chip" onclick="sendChat('根据我最近的完成情况，下周课表怎么调整更合理？')">调整下周课表</button>
+      <button class="chip" onclick="genWeekPlan()">AI 排下周课表</button>
       <button class="chip" onclick="sendChat('我是大学生跑者，每周 4 跑，给我讲讲怎么预防跑步伤病')">预防伤病</button>
     </div>
     <div id="chatList"></div>
@@ -831,7 +1043,12 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
     <div class="group">
       <button class="gitem" onclick="exportData()">
         <span class="gi"><svg viewBox="0 0 24 24"><path d="M12 3v11M8 10l4 4 4-4"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></span>
-        <span class="gt">导出备份<span class="gs">存成 JSON 文件，放到文件 App 或网盘</span></span>
+        <span class="gt">导出备份<span class="gs" id="expInfo">存成 JSON 文件，放到文件 App 或网盘</span></span>
+        <span class="chev"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+      </button>
+      <button class="gitem" onclick="restoreSheet()">
+        <span class="gi"><svg viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3 4v5h5"/></svg></span>
+        <span class="gt">恢复自动快照<span class="gs" id="snapInfo">每次打开自动存一份，保留最近 4 份</span></span>
         <span class="chev"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
       </button>
       <button class="gitem" onclick="document.getElementById('impFile').click()">
@@ -884,17 +1101,25 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
   <div class="sheet" id="sheet"></div>
 </div>
 <div class="toast" id="toast"></div>
+<div class="errbar" id="errBar"></div>
 
 <script>
 const TYPES=["轻松跑","配速跑","间歇跑","长距离","恢复跑","其他"];
-const TYPEC={"轻松跑":"#2E9E6B","配速跑":"#E08A28","间歇跑":"#D4553F","长距离":"#3E6FD9","恢复跑":"#3AA6A0","其他":"#8A928C"};
+const TYPEC={"轻松跑":"#2F7D5F","配速跑":"#A9691F","间歇跑":"#AC4A3C","长距离":"#3B5C8C","恢复跑":"#2E7B76","其他":"#6E7772"};
 const DN=["周一","周二","周三","周四","周五","周六","周日"];
 const KEY="runplan_v1";
 let db=JSON.parse(localStorage.getItem(KEY)||'{"tpl":[],"recs":[]}');
-let weekOffset=0;
+let weekOffset=0, calMode="week", monthOffset=0;
 
-function save(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
+function curPage(){const p=document.querySelector(".page.on");return p?p.id:"page-plan"}
+function renderPage(id){
+  if(id==="page-plan")renderPlan();
+  else if(id==="page-log")renderLog();
+  else if(id==="page-stat")renderStat();
+}
+function save(){localStorage.setItem(KEY,JSON.stringify(db));renderPage(curPage());checkBackup()}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function kmHint(s){const m=String(s||"").match(/\d+(?:\.\d+)?/);return m?m[0]:""}
 function esc(s){return String(s??"").replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]))}
 function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("on");clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove("on"),1700)}
 function $(id){return document.getElementById(id)}
@@ -964,17 +1189,21 @@ const TYPE_ICON={
 function greetWord(){const h=new Date().getHours();return h<5?"夜深了":h<11?"早上好":h<14?"中午好":h<18?"下午好":"晚上好"}
 
 function tab(btn){
+  const pid=btn.dataset.p;
   document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("on"));
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("on"));
   btn.classList.add("on");
-  $(btn.dataset.p).classList.add("on");
-  $("fab").classList.toggle("show",btn.dataset.p==="page-log");
-  window.scrollTo({top:0,behavior:"smooth"});
-  renderAll();
+  $(pid).classList.add("on");
+  $("fab").classList.toggle("show",pid==="page-log");
+  renderPage(pid);
+  window.scrollTo(0,0);
 }
 
 /* ---------- 课表 ---------- */
 function renderPlan(){
+  const heroBox=$("heroBox");
+  if(calMode==="month"){heroBox.style.display="none";renderMonth();return}
+  heroBox.style.display="";
   const base=weekBase(),end=new Date(base);end.setDate(end.getDate()+6);
   const ds0=iso(base),ds1=iso(end),todayDS=iso(new Date());
   const wkRecs=db.recs.filter(r=>r.date>=ds0&&r.date<=ds1);
@@ -1063,6 +1292,88 @@ function renderPlan(){
 
   const st=streakDays();
   $("subline").innerHTML = st>0 ? (BOLT_SVG+"连续 "+st+" 天") : (db.recs.length?db.recs.length+" 次记录":"开始吧");
+}
+
+/* ---------- 月历视图 ---------- */
+function setCal(mode){
+  calMode=mode;
+  $("segWeek").classList.toggle("on",mode==="week");
+  $("segMonth").classList.toggle("on",mode==="month");
+  renderPlan();
+}
+
+function renderMonth(){
+  const ref=new Date();ref.setDate(1);ref.setMonth(ref.getMonth()+monthOffset);
+  const Y=ref.getFullYear(),M=ref.getMonth();
+  $("weekLabel").textContent=Y+" 年 "+(M+1)+" 月";
+  const lead=(new Date(Y,M,1).getDay()+6)%7;      // 周一为第一列
+  const days=new Date(Y,M+1,0).getDate();
+  const todayDS=iso(new Date());
+  const cells=[];
+  for(let i=lead;i>0;i--)cells.push({d:new Date(Y,M,1-i),out:true});
+  for(let i=1;i<=days;i++)cells.push({d:new Date(Y,M,i),out:false});
+  let t=1;
+  while(cells.length%7)cells.push({d:new Date(Y,M+1,t++),out:true});
+
+  const byDay={};
+  db.recs.forEach(r=>{(byDay[r.date]=byDay[r.date]||[]).push(r)});
+  const mKey=Y+"-"+String(M+1).padStart(2,"0");
+  const mRecs=db.recs.filter(r=>(r.date||"").slice(0,7)===mKey);
+  const mKm=mRecs.reduce((s,r)=>s+(+r.km||0),0);
+  const mDays=new Set(mRecs.map(r=>r.date)).size;
+  const mDone=mRecs.filter(r=>r.tplId).length;
+  const expect=db.tpl.length*Math.round(days/7);
+
+  const week=["一","二","三","四","五","六","日"];
+  let html='<div class="mcal"><div class="mcal-hd"><b>'+Y+" 年 "+(M+1)+" 月</b><span>点某天看详情</span></div><div class=\"mgrid\">";
+  html+=week.map((w,i)=>'<div class="mwd'+(i>4?" wk":"")+'">'+w+"</div>").join("");
+  html+=cells.map(c=>{
+    const ds=iso(c.d),rs=byDay[ds]||[];
+    const km=rs.reduce((s,r)=>s+(+r.km||0),0);
+    const dots=rs.slice(0,3).map(r=>'<i style="background:'+(TYPEC[r.type]||TYPEC["其他"])+'"></i>').join("");
+    return '<div class="mcell'+(c.out?" out":"")+(rs.length?" has":"")+(ds===todayDS?" today":"")
+      +'" onclick="openDay(\''+ds+'\')"><span>'+c.d.getDate()+"</span>"
+      +(rs.length?'<div class="mdots">'+dots+'</div><span class="mkm">'+(km?km.toFixed(0)+"km":"")+"</span>":"")
+      +"</div>";
+  }).join("");
+  html+='</div><div class="mcal-ft">'
+    +"<div>打卡<b>"+mRecs.length+" 次</b></div>"
+    +"<div>跑量<b>"+mKm.toFixed(1)+" km</b></div>"
+    +"<div>出勤<b>"+mDays+" 天</b></div>"
+    +"<div>计划完成<b>"+(expect?Math.round(Math.min(1,mDone/expect)*100)+"%":"—")+"</b></div>"
+    +"</div></div>";
+  $("planList").innerHTML=html;
+}
+
+function openDay(ds){
+  const wd=(dateObj(ds).getDay()+6)%7;
+  const items=db.tpl.filter(t=>t.weekday===wd);
+  const recs=db.recs.filter(r=>r.date===ds);
+  let body="";
+  if(items.length){
+    body+=items.map(t=>{
+      const rec=recs.find(r=>r.tplId===t.id);
+      const c=TYPEC[t.type]||TYPEC["其他"];
+      return '<div class="ti" style="--tc:'+c+'" onclick="closeSheet();openEditor(\'done\',\''+t.id+'\',\''+ds+'\')">'
+        +'<div class="ti-body"><div class="ti-top"><span class="ti-type">'+esc(t.type)+"</span>"
+        +(t.km?'<span class="ti-km">'+esc(t.km)+"</span>":"")+"</div>"
+        +(t.note?'<div class="ti-note">'+esc(t.note)+"</div>":"")
+        +'<div class="ti-done">'+(rec?"已打卡 "+(rec.km||"?")+" km":"点这里打卡")+"</div></div></div>";
+    }).join("");
+  }else{
+    body+='<div class="rest" style="margin-bottom:10px"><i></i>这天没有排课</div>';
+  }
+  const extra=recs.filter(r=>!r.tplId);
+  if(extra.length){
+    body+='<div style="font-size:11.5px;color:var(--ink3);margin:12px 0 8px">当天补录</div>'
+      +extra.map(r=>'<div class="lr" style="--tc:'+(TYPEC[r.type]||TYPEC["其他"])+'" onclick="closeSheet();openEditor(\'doneTpl\',\''+r.id+'\')">'
+        +'<span class="lr-dot"></span><div class="lr-l"><div class="lr-t">'+esc(r.type||"跑步")+"</div>"
+        +'<div class="lr-d">'+(r.note?esc(r.note):"补录")+"</div></div>"
+        +'<div class="lr-r"><div class="lr-km">'+(r.km||"—")+"<span>km</span></div>"
+        +'<div class="lr-m">'+(r.min?r.min+" 分":"—")+"</div></div></div>").join("");
+  }
+  openSheet('<h2>'+fmtCN(ds)+" · "+DN[wd]+"</h2>"+body
+    +'<div class="btnrow" style="margin-top:14px"><button class="ghost" onclick="closeSheet()">关闭</button></div>');
 }
 
 /* ---------- 记录 ---------- */
@@ -1158,11 +1469,15 @@ function renderStat(){
     wkArr.push({km,label:(b.getMonth()+1)+"/"+b.getDate(),cur:w===0});
     if(km>best)best=km;
   }
-  $("bars").innerHTML=wkArr.map(x=>{
-    const h=best>0?Math.max(4,Math.round(x.km/best*88)):4;
-    const cls="barcol"+(x.cur?" cur":"")+(best>0&&x.km===best?" best":"");
-    return `<div class="${cls}"><div class="barv">${x.km?x.km.toFixed(0):"·"}</div><div class="bar" style="height:${h}%"></div><div class="barl">${x.label}</div></div>`;
-  }).join("");
+  if(!db.recs.length){
+    $("bars").innerHTML='<div class="paceEmpty" style="width:100%;padding:22px 0">还没有跑量数据<br>打完第一次卡，这里会出现 8 周趋势</div>';
+  }else{
+    $("bars").innerHTML=wkArr.map(x=>{
+      const h=best>0?Math.max(4,Math.round(x.km/best*88)):4;
+      const cls="barcol"+(x.cur?" cur":"")+(best>0&&x.km===best?" best":"");
+      return `<div class="${cls}"><div class="barv">${x.km?x.km.toFixed(0):"·"}</div><div class="bar" style="height:${h}%"></div><div class="barl">${x.label}</div></div>`;
+    }).join("");
+  }
 
   // 配速趋势折线（数值越小越快，画在上方）
   const prs=db.recs.filter(r=>+r.km>0&&+r.min>0).sort((a,b)=>a.date.localeCompare(b.date)).slice(-10);
@@ -1174,28 +1489,31 @@ function renderStat(){
     const mn=Math.min(...secs),mx=Math.max(...secs);
     const span=Math.max(mx-mn,30),mid=(mn+mx)/2;
     const lo=mid-span/2-8,hi=mid+span/2+8;
-    const W=300,H=96,P=8;
-    const pts=secs.map((s,i)=>{
-      const x=P+i*(W-2*P)/(secs.length-1);
-      const y=P+(H-2*P)*(1-(s-lo)/(hi-lo));
-      return [x,y];
-    });
+    const W=300,H=96,P=10;
+    const yOf=s=>P+(H-2*P)*(1-(s-lo)/(hi-lo));
+    const pts=secs.map((s,i)=>[P+i*(W-2*P)/(secs.length-1),yOf(s)]);
     const path=pts.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ");
     const area="M"+pts.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" L")
       +" L"+pts[pts.length-1][0].toFixed(1)+","+(H-P)+" L"+pts[0][0].toFixed(1)+","+(H-P)+" Z";
     const last=pts[pts.length-1];
+    const mean=Math.round(secs.reduce((a,b)=>a+b,0)/secs.length);
+    const my=yOf(mean).toFixed(1);
+    const grid=[0.25,0.5,0.75].map(k=>{
+      const y=(P+(H-2*P)*k).toFixed(1);
+      return `<line x1="${P}" y1="${y}" x2="${W-P}" y2="${y}" stroke="currentColor" stroke-opacity=".1" stroke-width="1" stroke-dasharray="2 5"/>`;
+    }).join("");
     const fmt=s=>Math.floor(s/60)+"′"+String(s%60).padStart(2,"0")+"″";
-    pbox.innerHTML=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-      <defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0F9D63" stop-opacity=".26"/><stop offset="1" stop-color="#0F9D63" stop-opacity="0"/></linearGradient></defs>
-      <line x1="${P}" y1="${P}" x2="${W-P}" y2="${P}" stroke="#EDF1EE" stroke-width="1"/>
-      <line x1="${P}" y1="${H-P}" x2="${W-P}" y2="${H-P}" stroke="#EDF1EE" stroke-width="1"/>
+    pbox.innerHTML=`<svg viewBox="0 0 ${W} ${H}">
+      <defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0F9D63" stop-opacity=".24"/><stop offset="1" stop-color="#0F9D63" stop-opacity="0"/></linearGradient></defs>
+      ${grid}
+      <line x1="${P}" y1="${my}" x2="${W-P}" y2="${my}" stroke="currentColor" stroke-opacity=".32" stroke-width="1.2" stroke-dasharray="5 4"/>
       <path d="${area}" fill="url(#pg)"/>
       <polyline points="${path}" fill="none" stroke="#0F9D63" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="9" fill="rgba(15,157,99,.16)"/>
+      <circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="8" fill="rgba(15,157,99,.14)"/>
       ${pts.slice(0,-1).map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.6" fill="#4CB483"/>`).join("")}
       <circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="4.2" fill="#0F9D63" stroke="#fff" stroke-width="1.6"/>
     </svg>
-    <div class="paceLabs"><span>最快 ${fmt(mn)}/km</span><span>最新 ${fmt(secs[secs.length-1])}/km</span></div>`;
+    <div class="paceLabs"><span>最快 ${fmt(mn)}</span><span>均值 ${fmt(mean)}</span><span>最新 ${fmt(secs[secs.length-1])}</span></div>`;
   }
 
   // 里程碑徽章
@@ -1212,6 +1530,80 @@ function renderStat(){
     ["连续 21 天",bst>=21]
   ];
   $("badges").innerHTML=BADGES.map(([n,on])=>`<span class="badge${on?" on":""}"><i></i>${n}</span>`).join("");
+  renderReportBox();
+}
+
+/* ---------- 周报（本地生成，不依赖 AI） ---------- */
+const REP="runplan_reports";
+function fmtPace(s){
+  if(!s||!isFinite(s))return "—";
+  const v=Math.round(s);
+  return Math.floor(v/60)+"′"+String(v%60).padStart(2,"0")+"″";
+}
+function calcPolar(recs){
+  let low=0,high=0;
+  recs.forEach(r=>{
+    const t=+r.min||0;if(!t)return;
+    if(/轻松|恢复|长距离/.test(r.type||""))low+=t;else high+=t;
+  });
+  return {low,high,total:low+high};
+}
+function buildReport(b){
+  const e=new Date(b);e.setDate(e.getDate()+6);
+  const recs=db.recs.filter(r=>r.date>=iso(b)&&r.date<=iso(e));
+  if(!recs.length)return null;
+  const km=recs.reduce((s,r)=>s+(+r.km||0),0);
+  const mins=recs.reduce((s,r)=>s+(+r.min||0),0);
+  const pol=calcPolar(recs);
+  const paceV=km>0&&mins>0?mins*60/km:0;
+  const pb=new Date(b);pb.setDate(pb.getDate()-7);
+  const pe=new Date(pb);pe.setDate(pe.getDate()+6);
+  const prevKm=db.recs.filter(r=>r.date>=iso(pb)&&r.date<=iso(pe)).reduce((s,r)=>s+(+r.km||0),0);
+  const days=new Set(recs.map(r=>r.date)).size;
+  const lp=pol.total?Math.round(pol.low/pol.total*100):0;
+  let tip;
+  if(prevKm>0&&km>prevKm*1.4)tip="跑量比上周涨了 "+Math.round((km/prevKm-1)*100)+"%，加得有点急，下周先持平再谈加量。";
+  else if(days>=6)tip="这周出勤 "+days+" 天几乎没休息，安排 1 天完全休息，恢复也是训练的一部分。";
+  else if(pol.total&&lp<70)tip="低强度只占 "+lp+"%，极化训练建议守在 80% 左右——轻松跑就真的跑轻松。";
+  else if(km>0)tip="节奏很稳，低强度占比 "+lp+"%，保持这个结构继续堆有氧。";
+  else tip="这周只记了次数没填距离，下次顺手补上距离和用时，趋势才看得出来。";
+  return {wk:iso(b),km:+km.toFixed(1),cnt:recs.length,days,mins:Math.round(mins),pace:Math.round(paceV),pol,tip,ts:Date.now()};
+}
+function ensureReports(){
+  let arr=[];try{arr=JSON.parse(localStorage.getItem(REP)||"[]")}catch(e){}
+  const keys=new Set(arr.map(r=>r.wk));
+  const cur=monday(new Date());
+  let added=false;
+  for(let i=1;i<=4;i++){
+    const b=new Date(cur);b.setDate(b.getDate()-7*i);
+    const k=iso(b);
+    if(keys.has(k))continue;
+    const rep=buildReport(b);
+    if(rep){arr.push(rep);added=true}
+  }
+  if(added){
+    arr.sort((a,b)=>b.wk.localeCompare(a.wk));
+    try{localStorage.setItem(REP,JSON.stringify(arr.slice(0,12)))}catch(e){}
+  }
+}
+function renderReportBox(){
+  const box=$("reportBox");if(!box)return;
+  let arr=[];try{arr=JSON.parse(localStorage.getItem(REP)||"[]")}catch(e){}
+  if(!arr.length){
+    box.innerHTML='<div class="paceEmpty" style="padding:16px 0">跑完一整周就会自动生成周报<br>跑量、配速、强度分布都会记下来</div>';
+    return;
+  }
+  box.innerHTML=arr.slice(0,2).map(r=>{
+    const lp=r.pol&&r.pol.total?Math.round(r.pol.low/r.pol.total*100):0;
+    const hp=100-lp;
+    return '<div class="wrep"><div class="wrep-hd"><b>'+r.wk.slice(5).replace("-","/")+" 那周</b><span>"+r.cnt+" 次 · "+r.days+" 天</span></div>"
+      +'<div class="wrep-g"><div><span>跑量</span><b>'+r.km+' km</b></div>'
+      +"<div><span>平均配速</span><b>"+fmtPace(r.pace)+"</b></div>"
+      +"<div><span>低强度</span><b>"+lp+"%</b></div></div>"
+      +'<div class="pol"><i style="width:'+lp+'%;background:#2F7D5F"></i><i style="width:'+hp+'%;background:#AC4A3C"></i></div>'
+      +'<div class="pollab"><span>低强度 '+lp+'%</span><span>高强度 '+hp+'%</span></div>'
+      +'<div class="wrep-tip">'+esc(r.tip)+"</div></div>";
+  }).join("");
 }
 
 function bestStreak(){
@@ -1232,8 +1624,66 @@ function saveMonthGoal(){
 }
 
 /* ---------- 弹层 ---------- */
-function openSheet(html){$("sheet").innerHTML=html;$("mask").classList.add("on");document.body.style.overflow="hidden"}
-function closeSheet(){$("mask").classList.remove("on");document.body.style.overflow=""}
+function openSheet(html){
+  const sh=$("sheet");
+  sh.innerHTML=html;
+  sh.scrollTop=0;
+  sh.style.transition="";
+  sh.style.transform="";
+  $("mask").classList.add("on");
+  document.body.style.overflow="hidden";
+  sh.querySelectorAll("input").forEach(i=>{if(!i.getAttribute("enterkeyhint"))i.setAttribute("enterkeyhint","done")});
+  const first=sh.querySelector("input,select,textarea");
+  if(first){
+    setTimeout(()=>{
+      try{
+        first.focus({preventScroll:true});
+        if(first.tagName==="INPUT"&&first.type==="text")first.select();
+      }catch(e){}
+    },300);
+  }
+}
+function closeSheet(){
+  const sh=$("sheet");
+  sh.style.transition="";
+  sh.style.transform="";
+  $("mask").classList.remove("on");
+  document.body.style.overflow="";
+}
+
+/* 回车提交 + 下滑关闭 */
+function bindSheet(){
+  const sh=$("sheet");
+  sh.addEventListener("keydown",e=>{
+    if(e.key!=="Enter"||e.target.tagName!=="INPUT")return;
+    const btn=sh.querySelector(".btnrow .primary");
+    if(btn){e.preventDefault();btn.click()}
+  });
+  let sy=0,dy=0,drag=false;
+  sh.addEventListener("touchstart",e=>{
+    const tg=e.target.tagName;
+    if(tg==="INPUT"||tg==="SELECT"||tg==="TEXTAREA")return;
+    if(sh.scrollTop>0)return;
+    sy=e.touches[0].clientY;dy=0;drag=true;sh.style.transition="none";
+  },{passive:true});
+  sh.addEventListener("touchmove",e=>{
+    if(!drag)return;
+    dy=e.touches[0].clientY-sy;
+    if(dy<0||sh.scrollTop>0){dy=0;drag=false;sh.style.transform="";return}
+    sh.style.transform="translateY("+dy+"px)";
+  },{passive:true});
+  sh.addEventListener("touchend",()=>{
+    if(!drag)return;
+    drag=false;
+    sh.style.transition="transform .26s cubic-bezier(.2,.8,.3,1)";
+    if(dy>96){
+      sh.style.transform="translateY(110%)";
+      setTimeout(closeSheet,190);
+    }else{
+      sh.style.transform="";
+    }
+  });
+}
 
 function openEditor(kind,id,date){
   if(kind==="plan"){
@@ -1254,7 +1704,7 @@ function openEditor(kind,id,date){
         <span style="font-size:11px;font-weight:600;color:${c};background:${c}14;padding:4px 9px;border-radius:7px">${t.km?esc(t.km)+" km":"未设距离"}</span>
         ${t.note?`<span style="font-size:11px;color:var(--ink3);padding:4px 0">${esc(t.note)}</span>`:""}
       </div>
-      <div class="field"><label>实际距离（km）</label><input id="fKm" type="text" inputmode="decimal" step="0.1" value="${rec?rec.km||"":""}" placeholder="手表上看到的"></div>
+      <div class="field"><label>实际距离（km）</label><input id="fKm" type="text" inputmode="decimal" step="0.1" value="${rec?rec.km||"":kmHint(t.km)}" placeholder="手表上看到的"></div>
       <div class="field"><label>用时（分钟）</label><input id="fMin" type="number" inputmode="numeric" value="${rec?rec.min||"":""}" placeholder="如 35"></div>
       <div class="field"><label>备注</label><input id="fNote" value="${rec?esc(rec.note||""):""}" placeholder="今天状态如何"></div>
       <div class="btnrow">
@@ -1550,11 +2000,88 @@ function pushErr(text,retry){
 function retryAsk(){renderChat();askGLM()}
 function scrollChat(){window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"})}
 
+/* ---------- AI 排课：结构化返回 → 预览 → 写入 ---------- */
+async function aiText(sys,user){
+  const key=getKey();
+  if(!key)throw new Error("NO_KEY");
+  const base=getApiBase(),model=getModelName()||"glm-4.7-flash",proxy=getProxy();
+  const endpoint=proxy?proxy+(proxy.includes("?")?"&":"?")+"target="+encodeURIComponent(base):base;
+  const res=await fetch(endpoint,{
+    method:"POST",
+    headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},
+    body:JSON.stringify({
+      model:model,
+      messages:[{role:"system",content:sys},{role:"user",content:user}],
+      temperature:0.4
+    })
+  });
+  if(!res.ok)throw new Error("HTTP "+res.status);
+  const d=await res.json();
+  const msg=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content;
+  if(!msg)throw new Error("返回内容为空");
+  return msg;
+}
+let aiPlanBuf=null;
+async function genWeekPlan(){
+  if(!getKey()){
+    pushErr("先到「设置」页填 API Key，才能让 AI 排课表。");
+    return;
+  }
+  toast("AI 正在排课表…");
+  try{
+    const sys="你是专业跑步教练。只输出一个 JSON 对象，不要解释、不要 markdown 代码块。格式："
+      +'{"week":[{"weekday":0,"type":"轻松跑","km":"6-8","note":"心率 141-161"}],"reason":"一句话"}。'
+      +"weekday 0=周一 … 6=周日；type 只能是 轻松跑/配速跑/间歇跑/长距离/恢复跑/其他 之一；"
+      +"km 用区间字符串如 6-8；note 不超过 20 字，写心率或要点。共 3-5 项。";
+    const user="训练背景：\n"+buildContext()+"\n请为下周（周一起）排课表，保持每周 3-5 次、极化训练结构（80% 低强度 + 20% 强度）。";
+    const txt=await aiText(sys,user);
+    const s=txt.indexOf("{"),e=txt.lastIndexOf("}");
+    if(s<0||e<0)throw new Error("返回格式不对");
+    const obj=JSON.parse(txt.slice(s,e+1));
+    if(!obj.week||!obj.week.length)throw new Error("没有排到课");
+    previewPlan(obj);
+  }catch(err){
+    const m=err.message||"请求失败";
+    pushErr("AI 排课失败（"+m+"）。可能是网络、Key 或模型输出格式问题，稍后再点一次「AI 排下周课表」。");
+  }
+}
+function previewPlan(obj){
+  aiPlanBuf=obj.week;
+  const rows=obj.week.filter(x=>x&&DN[x.weekday]).map(t=>{
+    const c=TYPEC[t.type]||TYPEC["其他"];
+    return '<div class="gitem" style="cursor:default;padding:12px 0;border-bottom:1px solid var(--line)">'
+      +'<span class="gi" style="background:'+c+'1A;color:'+c+';font-size:10px;font-weight:700">'+DN[t.weekday][1]+"</span>"
+      +'<span class="gt" style="font-size:13px;font-weight:500">'+esc(t.type)+(t.km?" · "+esc(t.km)+" km":"")
+      +(t.note?'<span class="gs">'+esc(t.note)+"</span>":"")+"</span></div>";
+  }).join("");
+  openSheet('<h2>AI 排的下周课表</h2>'
+    +(obj.reason?'<p style="font-size:12.5px;color:var(--ink2);line-height:1.7;margin-bottom:12px">'+esc(obj.reason)+"</p>":"")
+    +rows
+    +'<p style="font-size:11.5px;color:var(--red);line-height:1.7;margin-top:12px">替换后当前全部课表项会被覆盖，已有的打卡记录会保留。</p>'
+    +'<div class="btnrow"><button class="primary" onclick="applyPlan()">替换课表</button>'
+    +'<button class="ghost" onclick="closeSheet()">先不用</button></div>');
+}
+function applyPlan(){
+  if(!aiPlanBuf)return;
+  db.tpl=aiPlanBuf.filter(x=>x&&DN[x.weekday]).map(t=>({
+    id:uid(),
+    weekday:+t.weekday,
+    type:TYPES.includes(t.type)?t.type:"其他",
+    km:String(t.km||"").replace(/[～~—–]/g,"-").replace(/[^\d.\-]/g,""),
+    note:String(t.note||"").slice(0,24)
+  }));
+  aiPlanBuf=null;
+  save();closeSheet();toast("课表已替换");
+}
+
 /* ---------- 备份 ---------- */
 function exportData(){
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:"application/json"}));
   a.download="跑步课表备份-"+iso(new Date())+".json";a.click();
+  localStorage.setItem("runplan_lastexport",String(Date.now()));
+  toast("已导出，存到文件 App 或网盘");
+  checkBackup();
 }
 function importData(input){
   const f=input.files[0];if(!f)return;
@@ -1562,21 +2089,119 @@ function importData(input){
   rd.onload=()=>{try{
     const d=JSON.parse(rd.result);
     if(!d.tpl||!d.recs)throw 0;
-    db=d;save();toast("导入成功");
+    db=d;localStorage.setItem(KEY,JSON.stringify(db));
+    ensureReports();renderAll();toast("导入成功");
   }catch(e){toast("文件格式不对")}};
   rd.readAsText(f);input.value="";
 }
 function clearAll(){
   openSheet(`<h2>清空全部数据？</h2>
     <p style="font-size:13px;color:var(--ink2);line-height:1.8;margin-bottom:4px">课表和所有记录都会删除，且无法恢复。建议先去导出备份。</p>
-    <div class="btnrow"><button class="danger" onclick="db={tpl:[],recs:[]};save();closeSheet();toast('已清空')">确认清空</button>
+    <div class="btnrow"><button class="danger" onclick="clearAllDo()">确认清空</button>
     <button class="ghost" onclick="closeSheet()">取消</button></div>`);
+}
+function clearAllDo(){
+  db={tpl:[],recs:[]};
+  localStorage.removeItem(KEY);
+  localStorage.removeItem("runplan_reports");
+  renderAll();closeSheet();toast("已清空");
 }
 
 function renderAll(){renderPlan();renderLog();renderStat()}
-$("prevWeek").onclick=()=>{weekOffset--;renderAll()};
-$("nextWeek").onclick=()=>{weekOffset++;renderAll()};
+$("prevWeek").onclick=()=>{
+  if(calMode==="month"){monthOffset--;renderMonth();return}
+  weekOffset--;renderPlan();
+};
+$("nextWeek").onclick=()=>{
+  if(calMode==="month"){monthOffset++;renderMonth();return}
+  weekOffset++;renderPlan();
+};
+
+/* ---------- 数据兜底：自动快照 / 导出提醒 ---------- */
+const SNAP="runplan_snaps", SNAPDAY="runplan_snapday", LASEXP="runplan_lastexport";
+function takeSnapshot(){
+  if(!db.recs.length&&!db.tpl.length)return;
+  const day=iso(new Date());
+  if(localStorage.getItem(SNAPDAY)===day)return;
+  let arr=[];
+  try{arr=JSON.parse(localStorage.getItem(SNAP)||"[]")}catch(e){}
+  const payload=JSON.stringify(db);
+  if(arr[0]&&arr[0].d===payload){localStorage.setItem(SNAPDAY,day);return}
+  arr.unshift({t:Date.now(),d:payload,n:db.recs.length});
+  try{
+    localStorage.setItem(SNAP,JSON.stringify(arr.slice(0,4)));
+    localStorage.setItem(SNAPDAY,day);
+  }catch(e){}
+}
+function daysSinceExport(){
+  const v=+localStorage.getItem(LASEXP)||0;
+  if(!v)return db.recs.length>=5?999:0;
+  return Math.floor((Date.now()-v)/86400000);
+}
+function checkBackup(){
+  const el=$("bkBanner");if(!el)return;
+  const d=daysSinceExport();
+  if(db.recs.length>=5&&d>=14){
+    el.innerHTML="<span>已经有 "+(d===999?"很久":d+" 天")+"没导出备份了。数据只存在这台手机上，清理缓存会一起消失。</span>"
+      +'<button onclick="exportData()">导出</button>'
+      +'<button class="cls" onclick="this.parentNode.style.display=\'none\'">×</button>';
+    el.style.display="flex";
+  }else{
+    el.style.display="none";
+  }
+  const info=$("expInfo");
+  if(info){
+    const v=+localStorage.getItem(LASEXP)||0;
+    info.textContent=v?"上次导出："+iso(new Date(v)):"还没导出过，建议一周一次";
+  }
+}
+function restoreSheet(){
+  let arr=[];
+  try{arr=JSON.parse(localStorage.getItem(SNAP)||"[]")}catch(e){}
+  if(!arr.length){
+    openSheet('<h2>没有可用快照</h2><p style="font-size:13px;color:var(--ink2);line-height:1.8">App 每次打开会自动存一份，目前还没有。先正常用几天，或者手动导出一次备份。</p><div class="btnrow"><button class="ghost" onclick="closeSheet()">知道了</button></div>');
+    return;
+  }
+  openSheet('<h2>恢复自动快照</h2><p style="font-size:12px;color:var(--ink3);line-height:1.7;margin-bottom:14px">快照只在本机，恢复会覆盖当前数据。重要数据请先用「导出备份」存一份文件。</p>'
+    +arr.map((s,i)=>{
+      const d=new Date(s.t);
+      let cnt=0;try{cnt=(JSON.parse(s.d).recs||[]).length}catch(e){}
+      return '<div class="gitem" style="padding:13px 0;border-bottom:1px solid var(--line)" onclick="doRestore('+i+')">'
+        +'<span class="gi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span>'
+        +'<span class="gt">'+(d.getMonth()+1)+" 月 "+d.getDate()+" 日 "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")
+        +'<span class="gs">'+cnt+" 条记录</span></span>"
+        +'<span class="chev"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span></div>';
+    }).join("")
+    +'<div class="btnrow"><button class="ghost" onclick="closeSheet()">取消</button></div>');
+}
+function doRestore(i){
+  let arr=[];
+  try{arr=JSON.parse(localStorage.getItem(SNAP)||"[]")}catch(e){}
+  if(!arr[i])return;
+  try{
+    const d=JSON.parse(arr[i].d);
+    if(!d.tpl||!d.recs)throw 0;
+    db=d;localStorage.setItem(KEY,JSON.stringify(db));
+    ensureReports();renderAll();closeSheet();toast("已恢复到该快照");
+  }catch(e){toast("这份快照损坏了")}
+}
+
+/* ---------- 全局错误兜底 ---------- */
+function showErrBar(msg){
+  const b=$("errBar");if(!b)return;
+  b.innerHTML="<div>出了点问题："+esc(String(msg).slice(0,80))+"。数据还在本机，先导出一份备份更稳妥。</div>"
+    +'<button onclick="exportData()">立即导出</button>'
+    +'<button onclick="this.parentNode.classList.remove(\'on\')" style="background:#4A342F">知道了</button>';
+  b.classList.add("on");
+}
+window.onerror=function(m){showErrBar(m);return false};
+window.onunhandledrejection=function(e){showErrBar((e.reason&&e.reason.message)||"未处理的错误")};
+
+ensureReports();
+takeSnapshot();
 renderAll();
+checkBackup();
+bindSheet();
 loadWeather();
 $("apiKey").value=getKey();
 $("apiProxy").value=getProxy();

@@ -1,0 +1,25 @@
+{
+  "name": "跑步课表",
+  "short_name": "跑步课表",
+  "description": "个人跑步课表打卡本：周计划、打卡记录、跑量统计与训练助手",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B3D2A",
+  "theme_color": "#F2F5F2",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "./icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
