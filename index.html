@@ -39,8 +39,11 @@
   --shadow-lg:0 2px 6px rgba(16,32,24,.06);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;height:100%}
 html,body{overflow-x:hidden;touch-action:manipulation}
+/* 关键：内容不足一屏时（空记录页等）强制文档占满视口，
+   否则 iOS standalone WebKit 的布局视口会被内容高度带偏，fixed 元素不贴真实屏底 */
+body{min-height:100vh;min-height:100dvh}
 button,input,select,textarea,a,label{touch-action:manipulation}
 body{
   font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
