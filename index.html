@@ -18,25 +18,26 @@
 <title>跑步课表</title>
 <style>
 :root{
-  --bg:#F2F5F2;
-  --line:rgba(17,32,24,.10);
-  --ink:#0E1B14;
-  --ink2:#41504A;
-  --ink3:#5E6C64;
+  --bg:#F5F7F5;
+  --line:rgba(9,52,36,.09);
+  --edge:rgba(9,52,36,.075);
+  --ink:#081C13;
+  --ink2:#3B4A43;
+  --ink3:#5D6C64;
   --card:#FFFFFF;
   --card2:#FBFDFC;
-  --soft:#F5F8F5;
-  --green:#128A5A;
-  --green-br:#0F9D63;
-  --green-d:#065F3E;
+  --soft:#F3F6F4;
+  --green:#0F8F5E;
+  --green-br:#12A56B;
+  --green-d:#062E20;
   --green-l:#E7F6EE;
-  --mint:#6FE3A6;
-  --gold:#F5B93E;
+  --mint:#5BE8A8;
+  --gold:#E3B65B;
   --red:#D24B3E;
   --amber:#C97F16;
-  --radius:20px;
-  --shadow:0 1px 2px rgba(16,32,24,.035);
-  --shadow-lg:0 2px 6px rgba(16,32,24,.06);
+  --radius:22px;
+  --shadow:0 1px 2px rgba(9,52,36,.035);
+  --shadow-lg:0 2px 6px rgba(9,52,36,.06);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%;height:100%}
@@ -843,6 +844,189 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
   .sheet{max-width:560px}
 }
 
+/* ============================================================
+   v3 视觉层：排印升级 / 材质表面 / 深色重点卡 / 精致空状态
+   ============================================================ */
+
+/* --- 背景：冷白纸感 + 薄荷微光 + 极细颗粒 --- */
+body{
+  background-color:#F5F7F5;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E"),
+    radial-gradient(125% 42% at 90% -8%,#DCF3E7 0%,rgba(220,243,231,0) 62%),
+    radial-gradient(95% 38% at -14% 0%,#E9F7F0 0%,rgba(233,247,240,0) 58%),
+    linear-gradient(180deg,#F6F8F6 0%,#F1F4F2 100%);
+  background-repeat:repeat,no-repeat,no-repeat,no-repeat;
+  background-size:140px 140px,auto,auto,auto;
+  background-attachment:scroll;
+}
+
+/* --- 页头 --- */
+header{padding:calc(env(safe-area-inset-top,0px) + 14px) 0 16px}
+header h1{font-size:21px;letter-spacing:-.7px}
+.logo{
+  width:34px;height:34px;border-radius:11.5px;margin-right:10px;
+  background:linear-gradient(155deg,#12A56B 0%,#07301F 100%);
+  box-shadow:0 12px 22px -12px rgba(6,46,32,.9),inset 0 1px 0 rgba(255,255,255,.26),
+    0 0 0 1px rgba(9,52,36,.05);
+}
+.logo svg{width:17px;height:17px;stroke:#8CF2BE;filter:drop-shadow(0 0 5px rgba(91,232,168,.55))}
+.hsub{
+  background:rgba(255,255,255,.92);border:1px solid var(--edge);color:var(--ink2);
+  font-size:11px;letter-spacing:.04em;padding:6px 12px;
+  box-shadow:0 1px 2px rgba(9,52,36,.04),inset 0 1px 0 #fff;
+}
+
+/* --- Hero：墨绿玻璃 + 幽灵网格 --- */
+.hero{
+  border-radius:26px;padding:20px 18px 16px;
+  background:
+    radial-gradient(115% 85% at 84% 6%,rgba(91,232,168,.26),rgba(91,232,168,0) 58%),
+    linear-gradient(158deg,#052519 0%,#083B29 44%,#0B5C3F 100%);
+  border:1px solid rgba(255,255,255,.07);
+  box-shadow:0 30px 54px -30px rgba(5,37,25,.95),inset 0 1px 0 rgba(255,255,255,.16);
+}
+.hero::before{
+  content:"";position:absolute;inset:0;pointer-events:none;animation:none;
+  background-image:
+    radial-gradient(circle at 8% 112%,rgba(91,232,168,.26),rgba(91,232,168,0) 40%),
+    linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:100% 100%,34px 34px,34px 34px;
+  -webkit-mask-image:radial-gradient(130% 95% at 24% 0%,#000 26%,rgba(0,0,0,0) 78%);
+  mask-image:radial-gradient(130% 95% at 24% 0%,#000 26%,rgba(0,0,0,0) 78%);
+}
+.hero-lab{font-size:10.5px;letter-spacing:.16em;font-weight:700;color:rgba(255,255,255,.62)}
+.hero-val{margin-top:8px;gap:6px}
+.hero-val b{font-size:44px;letter-spacing:-2px;line-height:.95}
+.hero-val i{font-size:12.5px;color:rgba(255,255,255,.7)}
+.hero-meta{font-size:12px;color:rgba(255,255,255,.78);margin-top:9px}
+.ringwrap,.ring{width:92px;height:92px}
+.ring circle{stroke-width:6.5}
+.rbg{stroke:rgba(255,255,255,.13)}
+.ringpct{font-size:17px;letter-spacing:-.5px}
+.wx{border-radius:16px;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.16)}
+
+/* --- 周条 --- */
+.strip{gap:6px;margin-top:16px}
+.strip .sc{
+  border-radius:12px;padding:7px 0;background:rgba(255,255,255,.07);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
+}
+.strip .sc b{font-size:10px;letter-spacing:.06em;color:rgba(255,255,255,.55)}
+.strip .sc.done{
+  background:linear-gradient(180deg,#FFFFFF,#E9FBF2);color:#0A3B29;
+  box-shadow:0 8px 16px -12px rgba(0,0,0,.7),inset 0 1px 0 #fff;
+}
+.strip .sc.done b{color:#0A3B29}
+
+/* --- 卡片：材质表面（渐变 + 顶部内高光 + 极淡描边） --- */
+.card,.ti,.lr,.tile,.group,.mcal,.bkbar{
+  background:linear-gradient(180deg,#FFFFFF 0%,#FCFDFC 100%);
+  border-color:var(--edge);
+  box-shadow:0 1px 2px rgba(9,52,36,.03),0 18px 34px -28px rgba(9,52,36,.55),inset 0 1px 0 #fff;
+}
+.card,.group,.mcal{border-radius:22px}
+.ti,.lr{border-radius:19px}
+
+/* --- 小标题：疏排（editorial micro-caps 感） --- */
+.cardhd{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--ink3)}
+.cardhd em{font-size:10px;letter-spacing:.05em;font-weight:500}
+.lhd{font-size:11px;letter-spacing:.05em}
+.lhd b{font-size:13.5px;letter-spacing:-.3px}
+.mcal-hd{letter-spacing:.06em}
+
+/* --- 三宫格 KPI --- */
+.tiles{gap:9px}
+.tile{padding:16px 8px 14px;border-radius:19px}
+.tile::before{
+  left:16px;right:16px;width:auto;height:1px;transform:none;border-radius:0;
+  background:linear-gradient(90deg,rgba(15,143,94,.6),rgba(15,143,94,0));
+}
+.tile b{font-size:25px;letter-spacing:-1.1px}
+.tile span{font-size:9.5px;letter-spacing:.1em;margin-top:7px}
+
+/* --- 统计页本周卡 --- */
+.stathero{padding:20px 18px;background:linear-gradient(180deg,#FFFFFF,#FAFCFB)}
+.ringbig,.ringbig svg{width:116px;height:116px}
+.rcenter b{font-size:24px;letter-spacing:-1px}
+.srow{padding:9px 0}
+.srow b{font-size:13.5px}
+
+/* --- 深色重点卡：本月里程（页面唯一深色块，形成层次） --- */
+.card-feature{
+  position:relative;overflow:hidden;color:#fff;
+  background:
+    radial-gradient(110% 120% at 88% 0%,rgba(91,232,168,.24),rgba(91,232,168,0) 55%),
+    linear-gradient(158deg,#062A1D 0%,#08402E 55%,#0A5138 100%);
+  border:1px solid rgba(91,232,168,.16);
+  box-shadow:0 26px 46px -30px rgba(5,37,25,.9),inset 0 1px 0 rgba(255,255,255,.14);
+}
+.card-feature::after{
+  content:"";position:absolute;right:-40px;bottom:-74px;width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(91,232,168,.2),rgba(91,232,168,0) 68%);
+  pointer-events:none;
+}
+.card-feature .cardhd{color:rgba(255,255,255,.6)}
+.card-feature .cardhd em{color:rgba(255,255,255,.42)}
+.card-feature .mnum{position:relative;z-index:1}
+.card-feature .mnum b{color:#fff}
+.card-feature .mnum span{color:rgba(255,255,255,.62)}
+.card-feature .mprog{background:rgba(255,255,255,.13);box-shadow:inset 0 1px 2px rgba(0,0,0,.18);position:relative;z-index:1}
+.card-feature .mprog i{background:linear-gradient(90deg,#5BE8A8,#C6F7DF);box-shadow:0 0 16px rgba(91,232,168,.55)}
+
+/* --- Dock：更轻的高光 + 更深的激活胶囊 --- */
+.tabs{
+  padding:7px;border-radius:27px;
+  background:rgba(255,255,255,.93);
+  border:1px solid rgba(9,52,36,.06);
+  box-shadow:0 26px 48px -30px rgba(9,52,36,.6),0 2px 6px rgba(9,52,36,.045),inset 0 1px 0 #fff;
+}
+.tabs button{height:50px;border-radius:20px;font-size:9.5px;letter-spacing:.04em}
+.tabs button.on::before{
+  left:2px;right:2px;top:2px;bottom:2px;border-radius:18px;
+  background:linear-gradient(158deg,#0C6446 0%,#062F20 100%);
+  box-shadow:0 12px 22px -14px rgba(6,47,32,.9),inset 0 1px 0 rgba(255,255,255,.16),
+    inset 0 0 0 1px rgba(91,232,168,.16);
+}
+.tabs button.on svg{filter:drop-shadow(0 0 7px rgba(91,232,168,.4))}
+
+/* --- 按钮 --- */
+.primary{
+  background:linear-gradient(160deg,#12A96D 0%,#062F20 100%);
+  box-shadow:0 18px 30px -16px rgba(6,47,32,.85),inset 0 1px 0 rgba(255,255,255,.2);
+}
+.abtn{border-radius:16px;border-color:rgba(9,52,36,.14);background:rgba(255,255,255,.5)}
+.abtn.solid{
+  background:#fff;border:1px solid rgba(15,143,94,.26);color:var(--green);
+  box-shadow:0 1px 2px rgba(9,52,36,.04),0 12px 22px -20px rgba(9,52,36,.5),inset 0 1px 0 #fff;
+}
+.abtn.solid:active{background:#F7FCF9}
+
+/* --- 列表排印 --- */
+.ti-type{font-size:15.5px;letter-spacing:-.3px}
+.ti-km{border-radius:8px;background:#F1F5F2}
+.lr-t{font-size:15px;letter-spacing:-.3px}
+.lr-km{font-size:19px;letter-spacing:-.7px}
+.dhd .dn{letter-spacing:.02em}
+
+/* --- 空状态：圆形光晕底板 + 线稿图标 --- */
+.empty{padding:56px 22px;line-height:1.95}
+.empty svg{
+  width:44px;height:44px;padding:18px;box-sizing:content-box;border-radius:50%;
+  stroke:#8CA79A;margin-bottom:18px;
+  background:radial-gradient(circle at 32% 26%,#FFFFFF,#EDF4F0 72%);
+  border:1px solid rgba(9,52,36,.06);
+  box-shadow:0 18px 30px -24px rgba(9,52,36,.7),inset 0 1px 0 #fff;
+}
+
+/* --- 表单与弹层 --- */
+.field input,.field select{border-radius:14px;border-color:rgba(9,52,36,.1);background:#F4F7F5}
+.sheet{border-radius:30px 30px 0 0}
+.mask{background:rgba(5,20,13,.52)}
+.seg{background:#E9EEEA;border-radius:12px}
+.seg button.on{box-shadow:0 1px 3px rgba(9,52,36,.16),inset 0 1px 0 #fff}
+
 /* --- 深色模式 --- */
 @media (prefers-color-scheme:dark){
   :root{
@@ -895,6 +1079,44 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
   .bar{background:linear-gradient(180deg,#2F7A5C,#27654C)}
   .barcol.cur .bar{background:linear-gradient(180deg,#4FD39A,#2E8A5F)}
   .barcol.best .bar{background:linear-gradient(180deg,#8FE8C0,#43B27C)}
+
+  /* --- v3 深色对齐 --- */
+  body{
+    background-color:#0B120F;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E"),
+      radial-gradient(120% 42% at 90% -8%,#14301F 0%,rgba(20,48,31,0) 60%),
+      radial-gradient(95% 38% at -14% 0%,#122619 0%,rgba(18,38,25,0) 55%);
+    background-repeat:repeat,no-repeat,no-repeat;
+    background-size:140px 140px,auto,auto;
+  }
+  .card,.ti,.lr,.tile,.group,.mcal,.bkbar{
+    background:linear-gradient(180deg,#1A231E 0%,#161E1A 100%);
+    border-color:rgba(255,255,255,.075);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 18px 34px -28px rgba(0,0,0,.9);
+  }
+  .card-feature{
+    background:
+      radial-gradient(110% 120% at 88% 0%,rgba(91,232,168,.2),rgba(91,232,168,0) 55%),
+      linear-gradient(158deg,#062A1D 0%,#08402E 55%,#0A5138 100%);
+    border-color:rgba(91,232,168,.2);
+  }
+  .tile b{color:#8FE8C0}
+  .tile::before{background:linear-gradient(90deg,rgba(91,232,168,.55),rgba(91,232,168,0))}
+  .tabs{background:rgba(18,26,22,.94);border-color:rgba(255,255,255,.075);
+    box-shadow:0 26px 48px -30px rgba(0,0,0,.95),inset 0 1px 0 rgba(255,255,255,.06)}
+  .abtn{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.14)}
+  .abtn.solid{background:rgba(79,211,154,.08);border-color:rgba(79,211,154,.26)}
+  .empty svg{
+    background:radial-gradient(circle at 32% 26%,#22302A,#18221D 72%);
+    border-color:rgba(255,255,255,.07);stroke:#5C7266;
+    box-shadow:0 18px 30px -24px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.05);
+  }
+  .hsub{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);color:var(--ink2)}
+  .strip .sc.done{background:linear-gradient(180deg,#DFF7EA,#BCEBD3);color:#08301F}
+  .strip .sc.done b{color:#08301F}
+  .stathero{background:linear-gradient(180deg,#1A231E,#161E1A)}
+  .seg{background:#1E2822}
 }
 </style>
 </head>
@@ -1002,7 +1224,7 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
       <div class="tile"><b id="tH">0</b><span>总时长 h</span></div>
     </div>
 
-    <div class="card">
+    <div class="card card-feature">
       <div class="cardhd">本月里程<em id="mGoalLab"></em></div>
       <div class="mnum"><b id="mKm">0.0</b><span id="mGoalTxt">km · 设置页可设月度目标</span></div>
       <div class="mprog"><i id="mBar" style="width:0%"></i></div>
