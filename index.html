@@ -581,7 +581,7 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
   box-shadow:0 14px 36px -14px rgba(16,32,24,.4),inset 0 1px 0 rgba(255,255,255,.9);
 }
 .tabs button{
-  flex:1;background:none;border:none;padding:7px 0 5px;border-radius:17px;
+  flex:1;position:relative;background:none;border:none;padding:7px 0 5px;border-radius:17px;
   display:flex;flex-direction:column;align-items:center;gap:3px;
   font-size:10px;font-family:inherit;color:var(--ink3);cursor:pointer;
   transition:color .18s,background .18s,box-shadow .18s;
@@ -591,8 +591,12 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
   stroke-linecap:round;stroke-linejoin:round;transition:stroke-width .18s;
 }
 .tabs button.on{
-  color:#fff;font-weight:600;
+  color:#fff;font-weight:600;background:none;box-shadow:none;
+}
+.tabs button.on::before{
+  content:"";position:absolute;left:3px;right:3px;top:2px;bottom:2px;z-index:-1;
   background:linear-gradient(140deg,#16A56B,#0B6B45);
+  border-radius:14px;
   box-shadow:0 7px 16px -7px rgba(15,122,82,.65),inset 0 1px 0 rgba(255,255,255,.22);
 }
 .tabs button.on svg{stroke-width:2.1}
@@ -853,7 +857,7 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
   .ti-km{background:var(--soft);color:var(--ink2)}
   .rest{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.12);color:var(--ink3)}
   .tabs{background:rgba(22,31,26,.97)}
-  .tabs button.on{background:linear-gradient(140deg,#1D9668,#0C6242)}
+  .tabs button.on::before{background:linear-gradient(140deg,#1D9668,#0C6242)}
   .seg{background:#202B25}
   .seg button.on{background:#2C3A32;color:var(--ink)}
   .field input,.field select,.ginput,.chatbar input{background:var(--soft);border-color:rgba(255,255,255,.12)}
