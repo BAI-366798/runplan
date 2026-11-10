@@ -147,6 +147,9 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
 .strip .sc.done i{background:var(--green-br);width:5px;height:5px}
 .strip .sc.today{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.75)}
 .strip .sc.done.today{box-shadow:inset 0 0 0 1.5px rgba(10,82,56,.4)}
+.strip .sc.miss{background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 1.5px rgba(255,196,150,.55)}
+.strip .sc.miss i{background:#E7A97D;width:5px;height:5px}
+.strip .sc.miss b{color:rgba(255,232,214,.92)}
 @keyframes pop{0%{transform:scale(.7)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
 
 /* ---------- week bar ---------- */
@@ -221,6 +224,50 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
 .ti-check svg .ckp{stroke-dasharray:24;stroke-dashoffset:24;animation:draw .38s .12s ease forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
 .ti.done .ti-type{color:var(--ink2);font-weight:500}
+
+/* ---------- 未完成 / 没跑成 ---------- */
+.ti.missed{
+  background:linear-gradient(180deg,#FCFAF7,#F8F3EE);
+  border-style:dashed;border-color:rgba(150,110,85,.28);
+}
+.ti.missed::before{background:linear-gradient(180deg,#B58466 16%,rgba(0,0,0,0))}
+.ti.missed .ti-type{color:var(--ink2);font-weight:500}
+.ti.missed .ti-check{border:1.5px dashed rgba(160,116,88,.5);background:transparent;color:#A9785C}
+.ti-miss{
+  display:flex;align-items:center;gap:5px;flex-wrap:wrap;
+  font-size:11.5px;color:#94664A;margin-top:6px;font-weight:600;line-height:1.5;
+}
+.ti-miss svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.ti-miss em{font-style:normal;font-weight:400;color:var(--ink3)}
+
+/* 原因快选 */
+.rgrid{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 2px}
+.rchip{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:12.5px;font-weight:500;color:var(--ink2);
+  background:#F5F7F5;border:1px solid rgba(9,52,36,.11);border-radius:99px;
+  padding:8px 13px;font-family:inherit;cursor:pointer;transition:.15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.rchip:active{transform:scale(.95)}
+.rchip.on{
+  color:#fff;background:linear-gradient(140deg,#A5704F,#7C5040);border-color:transparent;
+  box-shadow:0 4px 10px -5px rgba(124,80,64,.6),inset 0 1px 0 rgba(255,255,255,.16);
+}
+.rchip svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round}
+.missnote{
+  display:flex;gap:7px;align-items:flex-start;
+  font-size:11.5px;color:#94664A;background:#FBF4EE;
+  border:1px solid rgba(150,110,85,.22);border-radius:12px;
+  padding:9px 11px;margin:-8px 0 14px;line-height:1.6;
+}
+.missnote svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;margin-top:1px}
+.missbtn{
+  width:100%;margin-top:9px;padding:11px;border-radius:14px;
+  border:1px dashed rgba(150,110,85,.45);background:transparent;
+  font-size:12.5px;font-family:inherit;color:#94664A;cursor:pointer;transition:.15s;
+}
+.missbtn:active{transform:scale(.98);background:#FBF4EE}
 
 .rest{
   display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink3);
@@ -799,6 +846,12 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
 .mcell .mdots{display:flex;gap:2px;height:4px;align-items:center}
 .mcell .mdots i{width:4px;height:4px;border-radius:50%}
 .mcell .mkm{font-size:8.5px;color:var(--ink3);line-height:1}
+.mcell.miss{background:#FBF4EE}
+.mcell.miss::after{
+  content:"";position:absolute;top:4px;right:4px;width:5px;height:5px;border-radius:50%;
+  background:#C08A62;
+}
+.mcell.miss .mkm{color:#96664A}
 .mcal-ft{display:flex;gap:16px;padding:12px 4px 0;margin-top:11px;border-top:1px solid var(--line)}
 .mcal-ft div{font-size:10.5px;color:var(--ink3)}
 .mcal-ft b{display:block;font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums;margin-top:1px}
@@ -1041,6 +1094,18 @@ header h1{font-size:21px;letter-spacing:-.7px}
     radial-gradient(100% 40% at -10% 5%,#122619 0%,rgba(18,38,25,0) 50%)}
   .ti,.lr,.card,.tile,.group,.navbtn,.chatbar input,.msg.a .bub,.sheet{background:var(--card);border-color:var(--line)}
   .ti.done{background:linear-gradient(180deg,#1B2A21,#17231C)}
+  .ti.missed{background:linear-gradient(180deg,#241D18,#1F1915);border-color:rgba(206,158,120,.34)}
+  .ti.missed .ti-check{border-color:rgba(206,158,120,.5);color:#D8A57E}
+  .ti-miss{color:#D8A57E}
+  .ti-miss em{color:var(--ink3)}
+  .rchip{background:#202B25;border-color:rgba(255,255,255,.12);color:var(--ink2)}
+  .rchip.on{color:#1A120D;background:linear-gradient(140deg,#E2B492,#C79067);border-color:transparent;
+    box-shadow:0 4px 10px -5px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.3)}
+  .mcell.miss{background:#221D18}
+  .mcell.miss .mkm{color:#D8A57E}
+  .missnote{background:#241D18;border-color:rgba(206,158,120,.28);color:#D8A57E}
+  .missbtn{color:#D8A57E;border-color:rgba(206,158,120,.42)}
+  .missbtn:active{background:#241D18}
   .ti-km{background:var(--soft);color:var(--ink2)}
   .rest{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.12);color:var(--ink3)}
   .tabs{background:rgba(22,31,26,.97)}
@@ -1397,8 +1462,23 @@ header h1{font-size:21px;letter-spacing:-.7px}
 const TYPES=["轻松跑","配速跑","间歇跑","长距离","恢复跑","其他"];
 const TYPEC={"轻松跑":"#2F7D5F","配速跑":"#A9691F","间歇跑":"#AC4A3C","长距离":"#3B5C8C","恢复跑":"#2E7B76","其他":"#6E7772"};
 const DN=["周一","周二","周三","周四","周五","周六","周日"];
+/* 没跑成的常见原因（雨天排在第一位，跑步最常见的打断） */
+const MISS_REASONS=[
+  {k:"下雨",ic:'<path d="M7 15a4 4 0 010-8 5.5 5.5 0 0110.4 1.4A3.3 3.3 0 0117 15"/><path d="M8 18l-1 2.5M12 18l-1 2.5M16 18l-1 2.5"/>'},
+  {k:"太热",ic:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19"/>'},
+  {k:"空气差",ic:'<path d="M3 8h11a3 3 0 10-3-3"/><path d="M3 13h14a3 3 0 11-3 3"/><path d="M3 18h7"/>'},
+  {k:"身体不适",ic:'<path d="M3 12h3.5l1.8-4 3 8 2.2-5 1.4 3H21"/>'},
+  {k:"时间不够",ic:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5.5l3.5 2"/>'},
+  {k:"临时有事",ic:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/>'},
+  {k:"太累了",ic:'<path d="M4 13a8 8 0 0116 0"/><path d="M2 13h20"/><path d="M7 17h10"/>'},
+  {k:"其他",ic:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.6 2.6 0 015 .9c0 1.7-2.5 2-2.5 3.6"/><circle cx="12" cy="17" r=".8"/>'}
+];
+const MISS_REASON_KEYS=MISS_REASONS.map(r=>r.k);
 const KEY="runplan_v1";
 let db=JSON.parse(localStorage.getItem(KEY)||'{"tpl":[],"recs":[]}');
+if(!Array.isArray(db.tpl))db.tpl=[];
+if(!Array.isArray(db.recs))db.recs=[];
+if(!Array.isArray(db.miss))db.miss=[];   // 未完成记录：{id,tplId,date,reason,note}
 let weekOffset=0, calMode="week", monthOffset=0;
 
 function curPage(){const p=document.querySelector(".page.on");return p?p.id:"page-plan"}
@@ -1497,6 +1577,7 @@ function renderPlan(){
   const base=weekBase(),end=new Date(base);end.setDate(end.getDate()+6);
   const ds0=iso(base),ds1=iso(end),todayDS=iso(new Date());
   const wkRecs=db.recs.filter(r=>r.date>=ds0&&r.date<=ds1);
+  const wkMiss=db.miss.filter(m=>m.date>=ds0&&m.date<=ds1);
   const done=wkRecs.filter(r=>r.tplId).length;
   const total=db.tpl.length;
   const km=wkRecs.reduce((s,r)=>s+(+r.km||0),0);
@@ -1507,7 +1588,8 @@ function renderPlan(){
   countUp($("hDone"),done);
   $("hTotal").textContent=total;
   countUp($("hKm"),km,1);
-  $("hLeft").textContent = total===0?"还没排课表":(done>=total?"本周全部完成":("还差 "+(total-done)+" 次"));
+  $("hLeft").textContent = (total===0?"还没排课表":(done>=total?"本周全部完成":("还差 "+(total-done)+" 次")))
+    + (wkMiss.length?" · "+wkMiss.length+" 项未完成":"");
   $("hPct").textContent=pct+"%";
   const C=2*Math.PI*32;
   const ring=$("hRing");
@@ -1522,7 +1604,8 @@ function renderPlan(){
     const ds=iso(d);
     const hasPlan=db.tpl.some(t=>t.weekday===i);
     const hasRec=db.recs.some(r=>r.date===ds);
-    const cls=hasRec?"done":(hasPlan?"":"rest");
+    const hasMiss=db.miss.some(m=>m.date===ds);
+    const cls=hasRec?"done":(hasMiss?"miss":(hasPlan?"":"rest"));
     const isToday=ds===todayDS;
     strip+=`<div class="sc ${cls}${isToday?" today":""}"><b>${DN[i][1]}</b><i></i></div>`;
   }
@@ -1539,6 +1622,7 @@ function renderPlan(){
     const ds=iso(d);
     const items=db.tpl.filter(t=>t.weekday===i);
     const recsHere=db.recs.filter(r=>r.date===ds);
+    const missHere=db.miss.filter(m=>m.date===ds);
     const isToday=ds===todayDS;
 
     html+=`<div class="day"><div class="dhd">
@@ -1548,16 +1632,18 @@ function renderPlan(){
     items.forEach(t=>{
       const rec=recsHere.find(r=>r.tplId===t.id);
       const isDone=!!rec;
+      const miss=isDone?null:missHere.find(m=>m.tplId===t.id);
       const c=TYPEC[t.type]||TYPEC["其他"];
-      html+=`<div class="ti ${isDone?"done":""}" style="--tc:${c};--tcbg:${c}14" onclick="openEditor('done','${t.id}','${ds}')">
+      html+=`<div class="ti ${isDone?"done":(miss?"missed":"")}" style="--tc:${c};--tcbg:${c}14" onclick="openEditor('done','${t.id}','${ds}')">
         <div class="ti-ic">${TYPE_ICON[t.type]||TYPE_ICON["其他"]}</div>
         <div class="ti-body">
           <div class="ti-top"><span class="ti-type">${esc(t.type)}</span>${t.km?`<span class="ti-km">${esc(t.km)} km</span>`:""}</div>
           ${t.note?`<div class="ti-note">${esc(t.note)}</div>`:""}
           ${isDone?`<div class="ti-done">已完成 ${rec.km?rec.km+" km":""}${rec.km&&rec.min?" · ":""}${rec.min?rec.min+" 分钟":""}${pace(rec.km,rec.min)?" · "+pace(rec.km,rec.min)+"/km":""}</div>`:""}
+          ${miss?`<div class="ti-miss"><svg viewBox="0 0 24 24"><path d="M7 15a4 4 0 010-8 5.5 5.5 0 0110.4 1.4A3.3 3.3 0 0117 15"/><path d="M9 18l-.8 2M13 18l-.8 2M17 18l-.8 2"/></svg><span>未完成 · ${esc(miss.reason||"未填原因")}</span>${miss.note?`<em>${esc(miss.note)}</em>`:""}</div>`:""}
         </div>
         <button class="mini-edit" onclick="event.stopPropagation();openTplEditor('${t.id}')" aria-label="编辑课表项"><svg viewBox="0 0 24 24"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></button>
-        <div class="ti-check">${isDone?CHECK_SVG:""}</div>
+        <div class="ti-check">${isDone?CHECK_SVG:(miss?'<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 12h12"/></svg>':"")}</div>
       </div>`;
     });
 
@@ -1573,7 +1659,7 @@ function renderPlan(){
       </div>`;
     });
 
-    if(!items.length&&!recsHere.length)
+    if(!items.length&&!recsHere.length&&!missHere.length)
       html+=`<div class="rest"><i></i>休息日 · 好好恢复</div>`;
 
     html+=`</div>`;
@@ -1607,6 +1693,8 @@ function renderMonth(){
 
   const byDay={};
   db.recs.forEach(r=>{(byDay[r.date]=byDay[r.date]||[]).push(r)});
+  const missDay={};
+  db.miss.forEach(m=>{missDay[m.date]=(missDay[m.date]||0)+1});
   const mKey=Y+"-"+String(M+1).padStart(2,"0");
   const mRecs=db.recs.filter(r=>(r.date||"").slice(0,7)===mKey);
   const mKm=mRecs.reduce((s,r)=>s+(+r.km||0),0);
@@ -1622,8 +1710,10 @@ function renderMonth(){
     const km=rs.reduce((s,r)=>s+(+r.km||0),0);
     const dots=rs.slice(0,3).map(r=>'<i style="background:'+(TYPEC[r.type]||TYPEC["其他"])+'"></i>').join("");
     return '<div class="mcell'+(c.out?" out":"")+(rs.length?" has":"")+(ds===todayDS?" today":"")
+      +((missDay[ds]&&!rs.length)?" miss":"")
       +'" onclick="openDay(\''+ds+'\')"><span>'+c.d.getDate()+"</span>"
-      +(rs.length?'<div class="mdots">'+dots+'</div><span class="mkm">'+(km?km.toFixed(0)+"km":"")+"</span>":"")
+      +(rs.length?'<div class="mdots">'+dots+'</div><span class="mkm">'+(km?km.toFixed(0)+"km":"")+"</span>"
+        :(missDay[ds]?'<span class="mkm">未完成</span>':""))
       +"</div>";
   }).join("");
   html+='</div><div class="mcal-ft">'
@@ -1643,12 +1733,16 @@ function openDay(ds){
   if(items.length){
     body+=items.map(t=>{
       const rec=recs.find(r=>r.tplId===t.id);
+      const m=rec?null:db.miss.find(x=>x.tplId===t.id&&x.date===ds);
       const c=TYPEC[t.type]||TYPEC["其他"];
-      return '<div class="ti" style="--tc:'+c+'" onclick="closeSheet();openEditor(\'done\',\''+t.id+'\',\''+ds+'\')">'
+      return '<div class="ti'+(rec?" done":(m?" missed":""))+'" style="--tc:'+c+'" onclick="closeSheet();openEditor(\'done\',\''+t.id+'\',\''+ds+'\')">'
         +'<div class="ti-body"><div class="ti-top"><span class="ti-type">'+esc(t.type)+"</span>"
         +(t.km?'<span class="ti-km">'+esc(t.km)+"</span>":"")+"</div>"
         +(t.note?'<div class="ti-note">'+esc(t.note)+"</div>":"")
-        +'<div class="ti-done">'+(rec?"已打卡 "+(rec.km||"?")+" km":"点这里打卡")+"</div></div></div>";
+        +(rec?'<div class="ti-done">'+"已打卡 "+(rec.km||"?")+" km</div>"
+          :(m?'<div class="ti-miss"><span>未完成 · '+esc(m.reason||"未填原因")+"</span>"+(m.note?"<em>"+esc(m.note)+"</em>":"")+"</div>"
+             :'<div class="ti-done">点这里打卡</div>'))
+        +"</div></div>";
     }).join("");
   }else{
     body+='<div class="rest" style="margin-bottom:10px"><i></i>这天没有排课</div>';
@@ -1886,7 +1980,9 @@ function renderReportBox(){
   box.innerHTML=arr.slice(0,2).map(r=>{
     const lp=r.pol&&r.pol.total?Math.round(r.pol.low/r.pol.total*100):0;
     const hp=100-lp;
-    return '<div class="wrep"><div class="wrep-hd"><b>'+r.wk.slice(5).replace("-","/")+" 那周</b><span>"+r.cnt+" 次 · "+r.days+" 天</span></div>"
+    const wkE=new Date(r.wk);wkE.setDate(wkE.getDate()+6);
+    const mc=db.miss.filter(m=>m.date>=r.wk&&m.date<=iso(wkE)).length;
+    return '<div class="wrep"><div class="wrep-hd"><b>'+r.wk.slice(5).replace("-","/")+" 那周</b><span>"+r.cnt+" 次 · "+r.days+" 天"+(mc?" · "+mc+" 项未完成":"")+"</span></div>"
       +'<div class="wrep-g"><div><span>跑量</span><b>'+r.km+' km</b></div>'
       +"<div><span>平均配速</span><b>"+fmtPace(r.pace)+"</b></div>"
       +"<div><span>低强度</span><b>"+lp+"%</b></div></div>"
@@ -1923,7 +2019,8 @@ function openSheet(html){
   $("mask").classList.add("on");
   document.body.style.overflow="hidden";
   sh.querySelectorAll("input").forEach(i=>{if(!i.getAttribute("enterkeyhint"))i.setAttribute("enterkeyhint","done")});
-  const first=sh.querySelector("input,select,textarea");
+  // 原因快选这类表单不自动弹键盘，免得挡住选项
+  const first=sh.querySelector(".rgrid")?null:sh.querySelector("input,select,textarea");
   if(first){
     setTimeout(()=>{
       try{
@@ -1988,23 +2085,48 @@ function openEditor(kind,id,date){
     const t=db.tpl.find(x=>x.id===id);
     if(!t)return;
     const rec=db.recs.find(r=>r.tplId===id&&r.date===date);
+    const miss=db.miss.find(m=>m.tplId===id&&m.date===date);
     const c=TYPEC[t.type]||TYPEC["其他"];
     openSheet(`<h2>${esc(t.type)} · ${fmtCN(date)}</h2>
       <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
         <span style="font-size:11px;font-weight:600;color:${c};background:${c}14;padding:4px 9px;border-radius:7px">${t.km?esc(t.km)+" km":"未设距离"}</span>
         ${t.note?`<span style="font-size:11px;color:var(--ink3);padding:4px 0">${esc(t.note)}</span>`:""}
       </div>
+      ${miss?`<div class="missnote"><svg viewBox="0 0 24 24"><path d="M7 15a4 4 0 010-8 5.5 5.5 0 0110.4 1.4A3.3 3.3 0 0117 15"/><path d="M9 18l-.8 2M13 18l-.8 2M17 18l-.8 2"/></svg><span>已标记未完成 · <b>${esc(miss.reason||"未填原因")}</b>${miss.note?"（"+esc(miss.note)+"）":""}</span></div>`:""}
       <div class="field"><label>实际距离（km）</label><input id="fKm" type="text" inputmode="decimal" step="0.1" value="${rec?rec.km||"":kmHint(t.km)}" placeholder="手表上看到的"></div>
       <div class="field"><label>用时（分钟）</label><input id="fMin" type="number" inputmode="numeric" value="${rec?rec.min||"":""}" placeholder="如 35"></div>
       <div class="field"><label>备注</label><input id="fNote" value="${rec?esc(rec.note||""):""}" placeholder="今天状态如何"></div>
       <div class="btnrow">
-        <button class="primary" onclick="saveDone('${id}','${date}')">${rec?"保存修改":"标记完成"}</button>
+        <button class="primary" onclick="saveDone('${id}','${date}')">${rec?"保存修改":(miss?"改记为完成":"标记完成")}</button>
         ${rec?`<button class="danger" onclick="delRec('${rec.id}')">删除</button>`:`<button class="ghost" onclick="closeSheet()">取消</button>`}
       </div>
+      ${miss
+        ?`<button class="missbtn" onclick="clearMiss('${miss.id}')">撤销未完成标记</button>`
+        :`<button class="missbtn" onclick="openMissForm('${id}','${date}')">今天没跑成 · 记一下原因</button>`}
       <div class="btnrow" style="margin-top:9px">
         <button class="ghost" onclick="openTplEditor('${id}')">编辑课表项</button>
         <button class="danger" onclick="delTpl('${id}')">删除课表项</button>
       </div>`);
+  }
+  else if(kind==="miss"){
+    const t=db.tpl.find(x=>x.id===id);
+    if(!t)return;
+    const old=db.miss.find(m=>m.tplId===id&&m.date===date);
+    missPick=old?old.reason:"";
+    openSheet(`<h2>这次没跑成</h2>
+      <div style="font-size:12px;color:var(--ink3);margin:-6px 0 16px;line-height:1.7">
+        ${esc(t.type)} · ${fmtCN(date)}${t.km?" · 目标 "+esc(t.km)+" km":""}<br>
+        <span style="font-size:11.5px">记下来就行，不扣分——训练断一次不可怕，断两周才可怕。</span>
+      </div>
+      <div class="field" style="margin-bottom:12px"><label>原因是</label>
+        <div class="rgrid" id="rgrid">${MISS_REASONS.map(r=>`<button class="rchip${missPick===r.k?" on":""}" data-r="${esc(r.k)}" onclick="pickReason(this)"><svg viewBox="0 0 24 24">${r.ic}</svg>${esc(r.k)}</button>`).join("")}</div>
+      </div>
+      <div class="field"><label>补充一句（可选）</label><input id="mNote" value="${old?esc(old.note||""):""}" placeholder="如：雨太大，改到明天补"></div>
+      <div class="btnrow">
+        <button class="primary" onclick="saveMiss('${id}','${date}')">${old?"保存修改":"确认未完成"}</button>
+        <button class="ghost" onclick="openEditor('done','${id}','${date}')">返回</button>
+      </div>
+      ${old?`<button class="missbtn" onclick="clearMiss('${old.id}')">撤销这个标记</button>`:""}`);
   }
   else if(kind==="doneTpl"){
     const r=db.recs.find(x=>x.id===id);
@@ -2041,8 +2163,34 @@ function saveDone(tplId,date){
   const isNew=!r;
   if(!r){r={id:uid(),tplId,date,type:t.type};db.recs.push(r)}
   r.km=km?+km:"";r.min=min?+min:"";r.note=note;
+  db.miss=db.miss.filter(m=>!(m.tplId===tplId&&m.date===date));   // 打卡与未完成互斥
   save();closeSheet();toast("打卡完成");
   if(isNew)confetti();
+}
+
+/* ---------- 未完成（没跑成） ---------- */
+let missPick="";
+function openMissForm(tplId,date){openEditor("miss",tplId,date)}
+function pickReason(el){
+  missPick=el.dataset.r;
+  document.querySelectorAll("#rgrid .rchip").forEach(b=>b.classList.toggle("on",b.dataset.r===missPick));
+}
+function saveMiss(tplId,date){
+  const t=db.tpl.find(x=>x.id===tplId);if(!t)return;
+  if(!missPick){toast("先选一个原因");return}
+  const d=new Date();d.setHours(0,0,0,0);
+  if(dateObj(date)>d&&!confirm("这一天还没到，确定要标记为未完成吗？"))return;
+  // 与打卡互斥：同一天同一项若已有记录，先删掉
+  db.recs=db.recs.filter(r=>!(r.tplId===tplId&&r.date===date));
+  let m=db.miss.find(x=>x.tplId===tplId&&x.date===date);
+  if(!m){m={id:uid(),tplId,date};db.miss.push(m)}
+  m.reason=missPick;
+  m.note=($("mNote")&&$("mNote").value.trim())||"";
+  save();closeSheet();toast("已记为未完成 · "+missPick);
+}
+function clearMiss(mid){
+  db.miss=db.miss.filter(m=>m.id!==mid);
+  save();closeSheet();toast("已撤销未完成");
 }
 function addManual(){
   const km=$("fKm").value,min=$("fMin").value;
@@ -2079,7 +2227,9 @@ function saveTplEdit(id){
   save();closeSheet();toast("课表已更新");
 }
 function delTpl(id){
-  db.tpl=db.tpl.filter(x=>x.id!==id);save();closeSheet();toast("已删除课表项");
+  db.tpl=db.tpl.filter(x=>x.id!==id);
+  db.miss=db.miss.filter(m=>m.tplId!==id);
+  save();closeSheet();toast("已删除课表项");
 }
 
 /* ---------- 训练模板 ---------- */
