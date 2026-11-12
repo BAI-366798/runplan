@@ -142,7 +142,7 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
 }
 .strip .sc b{display:block;font-size:10.5px;font-weight:600;margin-bottom:5px}
 .strip .sc i{display:block;width:4px;height:4px;border-radius:50%;margin:0 auto;background:rgba(255,255,255,.28)}
-.strip .sc.rest{opacity:.45}
+.strip .sc.off{opacity:.45}
 .strip .sc.done{background:rgba(255,255,255,.96);color:#0A5238;animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
 .strip .sc.done i{background:var(--green-br);width:5px;height:5px}
 .strip .sc.today{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.75)}
@@ -271,18 +271,24 @@ header h1{font-size:20px;font-weight:800;letter-spacing:-.4px;display:flex;align
 
 .rest{
   display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink3);
-  background:rgba(255,255,255,.55);border:1px dashed #DCE2DD;border-radius:15px;
+  background:rgba(235,246,240,.62);border:1px dashed #D5E0D8;border-radius:15px;
   padding:11px 14px;margin-bottom:7px;
 }
 .rest i{width:5px;height:5px;border-radius:50%;background:#CFD6D1;flex-shrink:0}
+.rest svg{
+  width:13px;height:13px;stroke:var(--ink3);fill:none;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;
+}
 
 /* ---------- action buttons ---------- */
 .actions{display:flex;gap:8px;margin-top:14px}
 .abtn{
   flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
-  padding:12px;border-radius:15px;border:1.5px dashed #CBD3CD;background:transparent;
+  padding:12px;border-radius:15px;border:1px solid rgba(9,52,36,.13);
+  background:#fff;
   font-size:13px;font-family:inherit;color:var(--ink2);cursor:pointer;
   transition:.15s;
+  box-shadow:0 1px 2px rgba(9,52,36,.04),inset 0 1px 0 #fff;
 }
 .abtn:active{transform:scale(.97)}
 .abtn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
@@ -929,6 +935,7 @@ header h1{font-size:21px;letter-spacing:-.7px}
   font-size:11px;letter-spacing:.04em;padding:6px 12px;
   box-shadow:0 1px 2px rgba(9,52,36,.04),inset 0 1px 0 #fff;
 }
+.hsub svg{color:#C7951F;filter:drop-shadow(0 1px 1px rgba(199,149,31,.25))}
 
 /* --- Hero：墨绿玻璃 + 幽灵网格 --- */
 .hero{
@@ -972,6 +979,12 @@ header h1{font-size:21px;letter-spacing:-.7px}
   box-shadow:0 8px 16px -12px rgba(0,0,0,.7),inset 0 1px 0 #fff;
 }
 .strip .sc.done b{color:#0A3B29}
+.strip .sc.plan{
+  background:rgba(91,232,168,.2);
+  box-shadow:inset 0 0 0 1px rgba(141,242,190,.3);
+}
+.strip .sc.plan b{color:rgba(224,255,238,.88)}
+.strip .sc.plan i{background:rgba(141,242,190,.55)}
 
 /* --- 卡片：材质表面（渐变 + 顶部内高光 + 极淡描边） --- */
 .card,.ti,.lr,.tile,.group,.mcal,.bkbar{
@@ -1049,7 +1062,8 @@ header h1{font-size:21px;letter-spacing:-.7px}
   background:linear-gradient(160deg,#12A96D 0%,#062F20 100%);
   box-shadow:0 18px 30px -16px rgba(6,47,32,.85),inset 0 1px 0 rgba(255,255,255,.2);
 }
-.abtn{border-radius:16px;border-color:rgba(9,52,36,.14);background:rgba(255,255,255,.5)}
+.abtn{border-radius:16px;border-color:rgba(9,52,36,.13);background:#fff;
+  box-shadow:0 1px 2px rgba(9,52,36,.03),0 10px 20px -18px rgba(9,52,36,.45),inset 0 1px 0 #fff}
 .abtn.solid{
   background:#fff;border:1px solid rgba(15,143,94,.26);color:var(--green);
   box-shadow:0 1px 2px rgba(9,52,36,.04),0 12px 22px -20px rgba(9,52,36,.5),inset 0 1px 0 #fff;
@@ -1107,6 +1121,8 @@ header h1{font-size:21px;letter-spacing:-.7px}
   .missbtn{color:#D8A57E;border-color:rgba(206,158,120,.42)}
   .missbtn:active{background:#241D18}
   .ti-km{background:var(--soft);color:var(--ink2)}
+  .ti-km[style]{filter:brightness(1.55) saturate(1.05)}
+  .hsub svg{color:#E8C063;filter:drop-shadow(0 0 4px rgba(232,192,99,.4))}
   .rest{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.12);color:var(--ink3)}
   .tabs{background:rgba(22,31,26,.97)}
   .tabs button.on::before{background:linear-gradient(140deg,#1D9668,#0C6242)}
@@ -1124,7 +1140,7 @@ header h1{font-size:21px;letter-spacing:-.7px}
   .badge{border-color:rgba(255,255,255,.16);color:var(--ink3)}
   .badge.on{background:linear-gradient(135deg,#1C3327,#172A20);color:#8FE8C0;border-color:rgba(79,211,154,.32)}
   .chip{background:linear-gradient(180deg,#1C3327,#182A21);color:#8FE8C0;border-color:rgba(79,211,154,.22)}
-  .abtn{border-color:rgba(255,255,255,.16)}
+  .abtn{border-color:rgba(255,255,255,.16);background:var(--card);box-shadow:0 1px 2px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.05)}
   .abtn.solid{background:linear-gradient(180deg,#1C3327,#172A20);color:#8FE8C0;border-color:rgba(79,211,154,.24)}
   .ghost{background:var(--soft);color:var(--ink2)}
   .danger{background:#371D19;color:#F0A296}
@@ -1605,7 +1621,7 @@ function renderPlan(){
     const hasPlan=db.tpl.some(t=>t.weekday===i);
     const hasRec=db.recs.some(r=>r.date===ds);
     const hasMiss=db.miss.some(m=>m.date===ds);
-    const cls=hasRec?"done":(hasMiss?"miss":(hasPlan?"":"rest"));
+    const cls=hasRec?"done":(hasMiss?"miss":(hasPlan?"plan":"off"));
     const isToday=ds===todayDS;
     strip+=`<div class="sc ${cls}${isToday?" today":""}"><b>${DN[i][1]}</b><i></i></div>`;
   }
@@ -1637,7 +1653,7 @@ function renderPlan(){
       html+=`<div class="ti ${isDone?"done":(miss?"missed":"")}" style="--tc:${c};--tcbg:${c}14" onclick="openEditor('done','${t.id}','${ds}')">
         <div class="ti-ic">${TYPE_ICON[t.type]||TYPE_ICON["其他"]}</div>
         <div class="ti-body">
-          <div class="ti-top"><span class="ti-type">${esc(t.type)}</span>${t.km?`<span class="ti-km">${esc(t.km)} km</span>`:""}</div>
+          <div class="ti-top"><span class="ti-type">${esc(t.type)}</span>${t.km?`<span class="ti-km" style="background:${c}14;color:${c}">${esc(t.km)} km</span>`:""}</div>
           ${t.note?`<div class="ti-note">${esc(t.note)}</div>`:""}
           ${isDone?`<div class="ti-done">已完成 ${rec.km?rec.km+" km":""}${rec.km&&rec.min?" · ":""}${rec.min?rec.min+" 分钟":""}${pace(rec.km,rec.min)?" · "+pace(rec.km,rec.min)+"/km":""}</div>`:""}
           ${miss?`<div class="ti-miss"><svg viewBox="0 0 24 24"><path d="M7 15a4 4 0 010-8 5.5 5.5 0 0110.4 1.4A3.3 3.3 0 0117 15"/><path d="M9 18l-.8 2M13 18l-.8 2M17 18l-.8 2"/></svg><span>未完成 · ${esc(miss.reason||"未填原因")}</span>${miss.note?`<em>${esc(miss.note)}</em>`:""}</div>`:""}
@@ -1652,7 +1668,7 @@ function renderPlan(){
       html+=`<div class="ti done" style="--tc:${c};--tcbg:${c}14" onclick="openEditor('recEdit','${r.id}')">
         <div class="ti-ic">${TYPE_ICON[r.type]||TYPE_ICON["其他"]}</div>
         <div class="ti-body">
-          <div class="ti-top"><span class="ti-type">${esc(r.type||"跑步")}</span><span class="ti-km">加练</span></div>
+          <div class="ti-top"><span class="ti-type">${esc(r.type||"跑步")}</span><span class="ti-km" style="background:${c}14;color:${c}">加练</span></div>
           <div class="ti-done">已完成 ${r.km?r.km+" km":""}${r.km&&r.min?" · ":""}${r.min?r.min+" 分钟":""}${pace(r.km,r.min)?" · "+pace(r.km,r.min)+"/km":""}</div>
         </div>
         <div class="ti-check">${CHECK_SVG}</div>
@@ -1660,7 +1676,7 @@ function renderPlan(){
     });
 
     if(!items.length&&!recsHere.length&&!missHere.length)
-      html+=`<div class="rest"><i></i>休息日 · 好好恢复</div>`;
+      html+=`<div class="rest"><svg viewBox="0 0 24 24"><path d="M20.2 14.5A8.3 8.3 0 1 1 9.5 3.8a6.8 6.8 0 1 0 10.7 10.7z"/></svg>休息日 · 好好恢复</div>`;
 
     html+=`</div>`;
   }
@@ -1737,7 +1753,7 @@ function openDay(ds){
       const c=TYPEC[t.type]||TYPEC["其他"];
       return '<div class="ti'+(rec?" done":(m?" missed":""))+'" style="--tc:'+c+'" onclick="closeSheet();openEditor(\'done\',\''+t.id+'\',\''+ds+'\')">'
         +'<div class="ti-body"><div class="ti-top"><span class="ti-type">'+esc(t.type)+"</span>"
-        +(t.km?'<span class="ti-km">'+esc(t.km)+"</span>":"")+"</div>"
+        +(t.km?'<span class="ti-km" style="background:'+c+'14;color:'+c+'">'+esc(t.km)+"</span>":"")+"</div>"
         +(t.note?'<div class="ti-note">'+esc(t.note)+"</div>":"")
         +(rec?'<div class="ti-done">'+"已打卡 "+(rec.km||"?")+" km</div>"
           :(m?'<div class="ti-miss"><span>未完成 · '+esc(m.reason||"未填原因")+"</span>"+(m.note?"<em>"+esc(m.note)+"</em>":"")+"</div>"
